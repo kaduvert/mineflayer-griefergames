@@ -6,6 +6,7 @@ const { once } = require('events')
 module.exports = function inject(bot, options) {
 	bot.chatAddPattern(/^[^ ]+ \| [^ ]+ : (.*)/, 'blacklist')
 	bot.chatAddPattern(/^Bitte unterlasse das Spammen von Commands\!$/, 'spamWarning')
+	bot.chatAddPattern(/^\[Switcher\] Daten werden noch heruntergeladen\. Bitte warte \.\.\.$/, 'spamWarning')
 	// bot.chatAddPattern(/^\[Start(?:Kick|Jail)\] Stimme für oder gegen (?:den Rauswurf|die Bestrafung) von ([^ ]+)/, 'punishment')
 	
 	bot.chatNative = bot.chat
@@ -16,6 +17,7 @@ module.exports = function inject(bot, options) {
 		sentMsgLately: false,
 		slow: false,
 		lastMessage: null,
+		spamLock: false,
 		events: new EventEmitter()
 	}
 
@@ -54,12 +56,13 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.chat.send = async (msg, priority) => {
-		console.log(msg)
+		if (bot.chat.spamLock) await once(bot.chat.events, 'spamLockReleased')
 		if (msg.startsWith('/')) bot.chat.sendCommand(msg, priority)
 		else bot.chat.sendMessage(msg)
 	}
 
 	bot.chat.log = (msg, pos) => {
+		if (bot.noLog) return
 		const str = msg.toString()
 		if (pos === 'game_info' || str === '»' || str === '') return
 		console.log(chalk.cyan(bot.timeStamp()), msg.toAnsi())
@@ -70,12 +73,17 @@ module.exports = function inject(bot, options) {
 		else bot.chat.sentMsgLately = false
 	}
 
+	bot.on('kicked', function logKick(reason) {
+		reason = JSON.parse(reason).text
+		console.log(chalk.red(bot.timeStamp()), chalk.yellowBright(`Kicked: ${chalk.red(reason)}`))
+	})
+
 	bot.on('spamWarning', async () => {
-		bot.chat.sentCmdsLately = 3
+		bot.chat.spamLock = true
 		bot.chat.send(bot.chat.lastMessage)
 		await bot.delay(3500)
-		bot.chat.events.emit('commandCountdownExpired')
-		bot.chat.sentCmdsLately = 0
+		bot.chat.events.emit('spamLockReleased')
+		bot.chat.spamLock = false
 	})
 
 	bot.on('message', bot.chat.log)
