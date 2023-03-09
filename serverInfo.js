@@ -31,6 +31,25 @@ module.exports = function inject(bot, options) {
 
     bot.serverInfo.isPortal = () => bot.serverInfo.getTranslatedServer() === 'portal'
 
+    bot.serverInfo.getRank = (username = bot.entity.username) => {
+        const displayNameParts = bot.players[username].displayName.toString().split(' ')
+        if (displayNameParts.length === 3) {
+            return displayNameParts[0]
+        }
+        return null
+    }
+
+    bot.serverInfo.getRealname = (nickname) => {
+		if (!nickname.startsWith('~') || bot.players[nickname]) return nickname
+
+        for (const player of Object.values(bot.players)) {
+            const splitDisplayName = player.displayName.toString().split(' ')
+            if (splitDisplayName.length !== 3) continue
+            if (splitDisplayName[2] === nickname) return player.username
+        }
+        return null
+	}
+
     bot.on('scoreUpdated', (_, scoreboardItem) => {
         if (scoreboardItem.value === 14) {
             bot.serverInfo.events.emit('scoreboardLoaded')

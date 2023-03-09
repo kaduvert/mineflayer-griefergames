@@ -10,9 +10,20 @@ module.exports = function inject(bot, options) {
 	const mcData = require('minecraft-data')(bot.version)
 
 	bot.chatAddPattern(/^\[Switcher\] Daten heruntergeladen\!$/, 'loadedData')
+	bot.chatAddPattern(/^Der Server ist voll\. \[\d+\/\d+\]$/, 'serverFull')
 	bot.chatAddPattern(/^Kicked whilst connecting to ([a-zA-Z0-9\-_]+): (.+)$/, 'switchFailed')
 	bot.chatAddPattern(/^\[GrieferGames\] Du wurdest automatisch auf ([a-zA-Z0-9\-_]+) verbunden\.$/, 'switchSucceeded')
 	bot.chatAddPattern(/^Der Server wird JETZT heruntergefahren!/, 'shutdown')
+
+	const rankCaps = {
+		'Spieler': 0,
+		'Premium': 50,
+		'Ultra': 50,
+		'Legende': 50,
+		'Titan': 85,
+		'Griefer': 115,
+		'Supreme': 150
+	}
 
 	bot.switcher = {
 		targetServer: null,
@@ -52,6 +63,14 @@ module.exports = function inject(bot, options) {
 			bot.pathfinder.setGoal(stop)
 			await once(bot, 'goal_reached')
 		}
+		bot.pathfinder.stop()
+	}
+
+	bot.switcher.isRankPermittedToJoin = (server, freeSlots, rank = bot.serverInfo.getRank()) => {
+		return (
+			(freeSlots > 0) ||
+			((freeSlots + rankCaps[rank]) > 0 && server !== 'cbevil')
+		)
 	}
 
 	bot.switcher.getJoinableFromBotPosition = () => {
@@ -61,7 +80,8 @@ module.exports = function inject(bot, options) {
 			const nameTag = stand.nameTag.replace(/§./g, '')
 			if (/^\d+\/\d+$/.test(nameTag)) {
 				const [onlinePlayers, maxPlayers] = nameTag.split('/').map(e => +e)
-				if (maxPlayers - onlinePlayers <= 0) isJoinable = false
+				const freeSlots = maxPlayers - onlinePlayers
+				if (!bot.switcher.isRankPermittedToJoin(bot.switcher.targetServer, freeSlots)) isJoinable = false
 			} else if (/^[A-Z][a-z]+$/.test(nameTag)) {
 				if (nameTag !== 'Online') isJoinable = false
 			}
@@ -69,12 +89,13 @@ module.exports = function inject(bot, options) {
 		return isJoinable
 	}
 
-	bot.switcher.navigator = async (failedSwitch = false) => {
+	bot.switcher.navigator = async () => {
 		const targetServer = bot.switcher.targetServer
 		if (!targetServer) return
 
 		if (bot.serverInfo.getTranslatedServer() === targetServer) {
 			bot.switcher.targetServer = null
+			bot.pathfinder.setGoal(null)
 			bot.clearControlStates()
 			bot.switcher.events.emit('joinedTargetServer')
 			return
@@ -84,24 +105,26 @@ module.exports = function inject(bot, options) {
 			bot.chat.send('/portal')
 		} else if (bot.serverInfo.isPortal()) {
 			if (bot.switcher.currentlySwitching) return
+			bot.clearControlStates()
 			await bot.waitForChunksToLoad()
 
-			if (!failedSwitch) {
-				const closestStableBlock = v(cbblocks[targetServer]).offset(0.5, 0, 0.5)
+			const closestStableBlock = v(cbblocks[targetServer]).offset(0.5, 0, 0.5)
+			const isInPortal = bot.entity.position.xzDistanceTo(closestStableBlock) < 2
+			if (!isInPortal) {
 				await bot.switcher.travelToPortal(closestStableBlock)
 	
 				const closestPortalBlock = bot.findBlocks({
-					point: closestStableBlock,
+					point: closestStableBlock.offset(0, 1 + bot.entity.height, 0),
 					matching: [mcData.blocksByName['end_portal'].id, mcData.blocksByName['portal'].id],
 					maxDistance: 5,
 					count: 9
 				})[0]
-				await bot.lookAt(closestPortalBlock, true)
+				await bot.lookAt(closestPortalBlock.offset(0.5, 0.5, 0.5), true)
 			}
 
 			await bot.delay(12000 - (Date.now() - bot.switcher.serverJoinedAt))
 			while (!bot.switcher.getJoinableFromBotPosition()) await bot.delay(10)
-			bot.setControlState(failedSwitch ? 'jump' : 'forward', true)
+			bot.setControlState(isInPortal ? 'jump' : 'forward', true)
 		} else {
 			await bot.delay(10000 - (Date.now() - bot.switcher.serverJoinedAt))
 			bot.chat.send('/switch ' + targetServer)
@@ -112,8 +135,13 @@ module.exports = function inject(bot, options) {
 	bot.on('switchFailed', () => {
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
-		bot.clearControlStates()
-		bot.switcher.navigator(true)
+		bot.switcher.navigator()
+	})
+
+	bot.on('serverFull', () => {
+		if (bot.switcher.currentlySwitching) bot.switcher.currentlySwitching = false
+		bot.switcher.serverJoinedAt = Date.now()
+		bot.switcher.navigator()
 	})
 
 	bot.on('switchSucceeded', () => {
