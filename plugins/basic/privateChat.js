@@ -21,9 +21,11 @@ module.exports = function inject(bot, options) {
 	}
 }
 
+/*
 // msgtoggle
 Das Empfangen von Nachrichten wurde deaktiviert.
 Das Empfangen von Nachrichten wurde aktiviert.
+Ultra ┃ ColaKanone_HD hat Nachrichten deaktiviert.
 
 // ignore
 
@@ -31,3 +33,4 @@ Du ignorierst ab jetzt Spieler Airasoon.
 Du ignorierst Spieler Airasoon nicht mehr.
 
 Ignoriert: !spionelefant557 1enton
+*/

@@ -2,7 +2,6 @@ const chalk = require('chalk')
 
 const EventEmitter = require('events')
 const { once } = require('events')
-const booster = require('./booster')
 
 module.exports = function inject(bot, options) {
 	bot.chatAddPattern(/^\[Chat\] Der Chat wurde von \S+ ┃ \S+ auf normal gestellt\.$/, 'chatreset')

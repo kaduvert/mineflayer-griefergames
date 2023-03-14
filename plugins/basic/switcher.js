@@ -1,7 +1,6 @@
 const v = require('vec3')
 const chalk = require('chalk')
 const { GoalBlock } = require('mineflayer-pathfinder').goals
-const cbblocks = require('../coords/cbblocks.json')
 
 const EventEmitter = require('events')
 const { once } = require('events')
@@ -115,7 +114,7 @@ module.exports = function inject(bot, options) {
 			bot.clearControlStates()
 			await bot.waitForChunksToLoad()
 
-			const closestStableBlock = v(cbblocks[targetServer]).offset(0.5, 0, 0.5)
+			const closestStableBlock = v(bot.cbBlocks[targetServer]).offset(0.5, 0, 0.5)
 			const isInPortal = bot.entity.position.xzDistanceTo(closestStableBlock) < 2
 			if (!isInPortal) {
 				await bot.switcher.travelToPortal(closestStableBlock)

@@ -5,24 +5,30 @@ function getPlugin (name) {
 }
 
 const plugins = [
+    getPlugin('plot'),
     getPlugin('antiAfk'),
     getPlugin('chat'),
-    getPlugin('globalChat'),
+    // getPlugin('ggauth'),
+    // getPlugin('globalChat'),
+    // getPlugin('home'),
     getPlugin('itemClear'),
     getPlugin('mobRemover'),
     getPlugin('money'),
+    getPlugin('mysteryMod'),
     getPlugin('near'),
     getPlugin('pathfinder'),
     getPlugin('playerUtils'),
+    getPlugin('privateChat'),
     getPlugin('serverInfo'),
     getPlugin('shutdown'),
     getPlugin('switcher'),
     getPlugin('tpa'),
-    getPlugin('plot'),
+    // getPlugin('warp')
 ]
 
 module.exports = function inject(bot, options) {
     bot.loadPlugins(plugins)
+    bot.cbBlocks = require('../../coords/cbblocks.json')
     bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
     bot.timeStamp = () => '[' + (new Date()).toLocaleTimeString() + ']'
 

@@ -38,8 +38,10 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult('/tpdeny', 'tpaDenied', ['tpaNotFound', 'tpaNull'], 7500)
     }
 }
-
+/*
 // tptoggle
 
 Teleportation deaktiviert.
 Teleportation aktiviert.
+Fehler: Ultra ┃ ColaKanone_HD verweigert die Teleportierung.
+*/
