@@ -18,22 +18,27 @@ module.exports = function inject(bot, options) {
 
 	bot.chatAddPattern(/^(?:\[.+\] )?(\S+) ┃ (\S+) » (.*)$/, 'playerChatMessage')
 	bot.chatAddPattern(/^\[Rundruf\] (.*)$/, 'broadcast')
+
+	// backlist, unknown, permissions
+
+	const CMD_BATCH_DELAY = 3600
 	
 	bot.chatNative = bot.chat
 	bot.chat = {
 		cmdQueue: [[], [], []],
-		sentCmdsLately: 0,
-		activeCmdDelay: 0,
+		cmdBatchStart: Date.now(),
+		cmdBatchCount: 0,
+		cmdSpamLock: false,
+		lastCommand: null,
 		sentMsgLately: false,
 		slow: false,
-		lastMessage: null,
-		spamLock: false,
 		events: new EventEmitter()
 	}
 
 	bot.chat.sendCommand = async (msg, priority = 3) => {
+		if (bot.chat.cmdSpamLock) await once(bot.chat.events, 'cmdSpamLockReleased')
 		bot.chat.cmdQueue[priority - 1].push(msg)
-		while (bot.chat.sentCmdsLately > 2) await once(bot.chat.events, 'commandCountdownExpired')
+		while ((Date.now() - bot.chat.cmdBatchStart) < CMD_BATCH_DELAY && bot.chat.cmdBatchCount >= 3) await bot.delay(CMD_BATCH_DELAY - (Date.now() - bot.chat.cmdBatchStart))
 
 		let msgToSend
 		for (let i = 0; i < 3; i++) {
@@ -43,20 +48,20 @@ module.exports = function inject(bot, options) {
 			}
 		}
 
-		bot.chat.lastMessage = msg
+		bot.chat.lastCommand = msgToSend
 		bot.chatNative(msgToSend)
 
-		bot.chat.sentCmdsLately++
-		const activeDelay = ++bot.chat.activeCmdDelay
-		await bot.delay([1150, 2300, 3500][bot.chat.sentCmdsLately - 1])
-		bot.chat.events.emit('commandCountdownExpired')
-		if (activeDelay === bot.chat.activeCmdDelay) bot.chat.sentCmdsLately = 0
+		const now = Date.now()
+		if (now - bot.chat.cmdBatchStart >= CMD_BATCH_DELAY) {
+			bot.chat.cmdBatchStart = now
+			bot.chat.cmdBatchCount = 0
+		}
+		bot.chat.cmdBatchCount++
 	}
 
 	bot.chat.sendMessage = async (msg) => {
 		while (bot.chat.sentMsgLately) await once(bot.chat.events, 'messageCountdownExpired')
 
-		bot.chat.lastMessage = msg
 		bot.chatNative(msg)
 
 		bot.chat.sentMsgLately = true
@@ -66,7 +71,6 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.chat.send = async (msg, priority) => {
-		if (bot.chat.spamLock) await once(bot.chat.events, 'spamLockReleased')
 		if (msg.startsWith('/')) bot.chat.sendCommand(msg, priority)
 		else bot.chat.sendMessage(msg)
 	}
@@ -79,7 +83,7 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.chat.blacklist = (msg) => {
-		if (msg.startsWith('/')) bot.chat.sentCmdsLately--
+		if (msg.startsWith('/')) bot.chat.cmdBatchCount--
 		else bot.chat.sentMsgLately = false
 	}
 
@@ -104,10 +108,10 @@ module.exports = function inject(bot, options) {
 
 	bot.on('spamWarning', async (recommendedWaitDuration) => {
 		const waitDelay = (recommendedWaitDuration * 1000) || 3500
-		bot.chat.spamLock = true
+		bot.chat.cmdSpamLock = true
 		await bot.delay(waitDelay)
-		bot.chat.events.emit('spamLockReleased')
-		bot.chat.spamLock = false
+		bot.chat.events.emit('cmdSpamLockReleased')
+		bot.chat.cmdSpamLock = false
 	})
 
 	bot.on('message', bot.chat.log)
