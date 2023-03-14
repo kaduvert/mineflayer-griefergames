@@ -8,7 +8,6 @@ module.exports = function inject(bot, options) {
 	bot.chatAddPattern(/^\[Chat\] Der Chat wurde von \S+ ┃ \S+ verlangsamt\.$/, 'slowchat')
 	bot.chatAddPattern(/^\[GrieferGames\] Du kannst nur jede 10 Sekunden schreiben\.$/, 'slowchatWarn')
 
-	bot.chatAddPattern(/^\S+ \| \S+ : (.*)/, 'blacklist')
 	bot.chatAddPattern(/^\[\S+\] Du kannst diesen Befehl erst nach (\d+) Sekunden benutzen\.$/, 'spamWarning')
 	bot.chatAddPattern(/^\[\S+\] Du musst (\d+) Sekunden warten, bevor du diesen Befehl erneut ausführen kannst\.$/, 'spamWarning')
 	bot.chatAddPattern(/^\[\S+\] Du kannst diesen Befehl nur alle (\d+) Sekunden benutzen\.$/, 'spamWarning')
@@ -19,7 +18,10 @@ module.exports = function inject(bot, options) {
 	bot.chatAddPattern(/^(?:\[.+\] )?(\S+) ┃ (\S+) » (.*)$/, 'playerChatMessage')
 	bot.chatAddPattern(/^\[Rundruf\] (.*)$/, 'broadcast')
 
-	// backlist, unknown, permissions
+	bot.chatAddPattern(/^\S+ \| \S+ : (.*)/, 'blacklistError')
+	bot.chatAddPattern(/^Unknown command\. Type "\/help" for help\.$/, 'unknownCommandError')
+	bot.chatAddPattern(/^I'm sorry, but you do not have permission to perform this command\. Please contact the server administrators if you believe that this is in error\.$/, 'insufficientPermissionsError')
+	bot.chatAddPattern(/^Unzureichende Rechte\.$/, 'insufficientPermissionsError')
 
 	const CMD_BATCH_DELAY = 3600
 	
@@ -32,6 +34,7 @@ module.exports = function inject(bot, options) {
 		lastCommand: null,
 		sentMsgLately: false,
 		slow: false,
+		commandErrorEvents: ['blacklistError', 'unknownCommandError', 'insufficientPermissionsError'],
 		events: new EventEmitter()
 	}
 
@@ -82,20 +85,33 @@ module.exports = function inject(bot, options) {
 		console.log(chalk.cyan(bot.timeStamp()), msg.toAnsi())
 	}
 
-	bot.chat.blacklist = (msg) => {
+	bot.chat.onBlacklistError = (msg) => {
 		if (msg.startsWith('/')) bot.chat.cmdBatchCount--
 		else bot.chat.sentMsgLately = false
 	}
 
 	bot.chat.getChatActionResult = (msg, ...args) => {
-		return new Promise((r) => {
+		return new Promise((res) => {
+			const onCommandError = (commandErrorEvent, ...eventArgs) => {
+                res({
+                    status: 1,
+                    triggeredEvent: commandErrorEvent,
+                    eventArgs: eventArgs
+                })
+            }
 			const sendToChat = () => {
 				bot.chat.send(msg)
 				bot.once('spamWarning', sendToChat)
+				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
+					bot.once(commandErrorEvent, onCommandError)
+				})
 			}
 			bot.getActionResult(...args).then((actionResult) => {
+				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
+					bot.off(commandErrorEvent, onCommandError)
+				})
 				bot.removeListener('spamWarning', sendToChat)
-				r(actionResult)
+				res(actionResult)
 			})
 			sendToChat()
 		})
@@ -115,7 +131,7 @@ module.exports = function inject(bot, options) {
 	})
 
 	bot.on('message', bot.chat.log)
-	bot.on('blacklist', bot.chat.blacklist)
+	bot.on('blacklistError', bot.chat.onBlacklistError)
 
 	bot.on('chatreset', () => (bot.chat.slow = false))
 	bot.on('slowchat', () => (bot.chat.slow = true))

@@ -1,6 +1,6 @@
 const PLUGINS_PATH = './'
 
-function getPlugin (name) {
+function getPlugin(name) {
     return require(PLUGINS_PATH + name)
 }
 
