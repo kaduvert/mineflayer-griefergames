@@ -1,15 +1,14 @@
+const PLUGINS_PATH = './plugins/'
+
+function getPlugin (name) {
+    return require(PLUGINS_PATH + name)
+}
+
 const plugins = [
-    require('./cashCollection'),
-    require('./privateChat'),
-    require('./serverInfo'),
-    require('./pathfinder'),
-    require('./switcher'),
-    require('./antiAfk'),
-    require('./chat'),
+    getPlugin('basic'),
+    getPlugin('advanced')
 ]
 
-module.exports = function loader(bot, options) {
+module.exports = function inject(bot, options) {
     bot.loadPlugins(plugins)
-    bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
-    bot.timeStamp = () => '[' + (new Date()).toLocaleTimeString() + ']'
 }

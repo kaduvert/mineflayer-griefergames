@@ -2,12 +2,23 @@ const chalk = require('chalk')
 
 const EventEmitter = require('events')
 const { once } = require('events')
+const booster = require('./booster')
 
 module.exports = function inject(bot, options) {
-	bot.chatAddPattern(/^[^ ]+ \| [^ ]+ : (.*)/, 'blacklist')
+	bot.chatAddPattern(/^\[Chat\] Der Chat wurde von \S+ ┃ \S+ auf normal gestellt\.$/, 'chatreset')
+	bot.chatAddPattern(/^\[Chat\] Der Chat wurde von \S+ ┃ \S+ verlangsamt\.$/, 'slowchat')
+	bot.chatAddPattern(/^\[GrieferGames\] Du kannst nur jede 10 Sekunden schreiben\.$/, 'slowchatWarn')
+
+	bot.chatAddPattern(/^\S+ \| \S+ : (.*)/, 'blacklist')
+	bot.chatAddPattern(/^\[\S+\] Du kannst diesen Befehl erst nach (\d+) Sekunden benutzen\.$/, 'spamWarning')
+	bot.chatAddPattern(/^\[\S+\] Du musst (\d+) Sekunden warten, bevor du diesen Befehl erneut ausführen kannst\.$/, 'spamWarning')
+	bot.chatAddPattern(/^\[\S+\] Du kannst diesen Befehl nur alle (\d+) Sekunden benutzen\.$/, 'spamWarning')
+	bot.chatAddPattern(/^\[GrieferGames\] Bitte warte kurz\.$/, 'spamWarning')
 	bot.chatAddPattern(/^Bitte unterlasse das Spammen von Commands\!$/, 'spamWarning')
 	bot.chatAddPattern(/^\[Switcher\] Daten werden noch heruntergeladen\. Bitte warte \.\.\.$/, 'spamWarning')
-	// bot.chatAddPattern(/^\[Start(?:Kick|Jail)\] Stimme für oder gegen (?:den Rauswurf|die Bestrafung) von ([^ ]+)/, 'punishment')
+
+	bot.chatAddPattern(/^(?:\[.+\] )?(\S+) ┃ (\S+) » (.*)$/, 'playerChatMessage')
+	bot.chatAddPattern(/^\[Rundruf\] (.*)$/, 'broadcast')
 	
 	bot.chatNative = bot.chat
 	bot.chat = {
@@ -73,15 +84,29 @@ module.exports = function inject(bot, options) {
 		else bot.chat.sentMsgLately = false
 	}
 
+	bot.chat.getChatActionResult = (msg, ...args) => {
+		return new Promise((r) => {
+			const sendToChat = () => {
+				bot.chat.send(msg)
+				bot.once('spamWarning', sendToChat)
+			}
+			bot.getActionResult(...args).then((actionResult) => {
+				bot.removeListener('spamWarning', sendToChat)
+				r(actionResult)
+			})
+			sendToChat()
+		})
+	}
+
 	bot.on('kicked', function logKick(reason) {
 		reason = JSON.parse(reason).text
 		console.log(chalk.red(bot.timeStamp()), chalk.yellowBright(`Kicked: ${chalk.red(reason)}`))
 	})
 
-	bot.on('spamWarning', async () => {
+	bot.on('spamWarning', async (recommendedWaitDuration) => {
+		const waitDelay = (recommendedWaitDuration * 1000) || 3500
 		bot.chat.spamLock = true
-		bot.chat.send(bot.chat.lastMessage)
-		await bot.delay(3500)
+		await bot.delay(waitDelay)
 		bot.chat.events.emit('spamLockReleased')
 		bot.chat.spamLock = false
 	})

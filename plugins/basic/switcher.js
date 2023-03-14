@@ -1,7 +1,7 @@
 const v = require('vec3')
 const chalk = require('chalk')
 const { GoalBlock } = require('mineflayer-pathfinder').goals
-const cbblocks = require('./coords/cbblocks.json')
+const cbblocks = require('../coords/cbblocks.json')
 
 const EventEmitter = require('events')
 const { once } = require('events')
@@ -13,7 +13,13 @@ module.exports = function inject(bot, options) {
 	bot.chatAddPattern(/^Der Server ist voll\. \[\d+\/\d+\]$/, 'serverFull')
 	bot.chatAddPattern(/^Kicked whilst connecting to ([a-zA-Z0-9\-_]+): (.+)$/, 'switchFailed')
 	bot.chatAddPattern(/^\[GrieferGames\] Du wurdest automatisch auf ([a-zA-Z0-9\-_]+) verbunden\.$/, 'switchSucceeded')
+
 	bot.chatAddPattern(/^Der Server wird JETZT heruntergefahren!/, 'shutdown')
+	
+	bot.chatAddPattern(/^Du kannst erst am ([\d\.]+ um [\d:]+) wieder beitreten\./, 'switchTimeout')
+	bot.chatAddPattern(/^\[GrieferGames\] Bitte warte 12 Sekunden zwischen jedem Teleport\.$/, 'portalWarning')
+	bot.chatAddPattern(/^Versuche auf die Lobby zu verbinden\.$/, 'lobbyConnectionAttempt')
+	bot.chatAddPattern(/^Versuche in den Portalraum zu verbinden\.$/, 'portalRoomConnectionAttempt')
 
 	const rankCaps = {
 		'Spieler': 0,
@@ -28,6 +34,7 @@ module.exports = function inject(bot, options) {
 	bot.switcher = {
 		targetServer: null,
 		serverJoinedAt: null,
+		switchTimeout: null,
 		currentlySwitching: false,
 		cbStatusMap: {},
 		events: new EventEmitter()
@@ -66,7 +73,7 @@ module.exports = function inject(bot, options) {
 		bot.pathfinder.stop()
 	}
 
-	bot.switcher.isRankPermittedToJoin = (server, freeSlots, rank = bot.serverInfo.getRank()) => {
+	bot.switcher.isRankPermittedToJoin = (server, freeSlots, rank = bot.playerUtils.getRank()) => {
 		return (
 			(freeSlots > 0) ||
 			((freeSlots + rankCaps[rank]) > 0 && server !== 'cbevil')
@@ -132,6 +139,13 @@ module.exports = function inject(bot, options) {
 		}
 	}
 
+	bot.on('switchTimeout', async () => { // TODO: optimize for minimal waiting
+		bot.switcher.currentlySwitching = false
+		bot.switcher.serverJoinedAt = Date.now()
+		await bot.delay(5 * 60 * 1000)
+		bot.switcher.navigator()
+	})
+
 	bot.on('switchFailed', () => {
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
@@ -139,7 +153,7 @@ module.exports = function inject(bot, options) {
 	})
 
 	bot.on('serverFull', () => {
-		if (bot.switcher.currentlySwitching) bot.switcher.currentlySwitching = false
+		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
 		bot.switcher.navigator()
 	})
