@@ -51,8 +51,6 @@ module.exports = function inject(bot, options) {
         bot.mapInfo.listening = false
         bot.mapInfo.events.emit('mapInfo', [...bot.mapInfo.current]) // clone it!
     })
-
-	return bot.chat.getChatActionResult(''``, '', [], 5000)
 }
 
 
