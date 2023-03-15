@@ -39,7 +39,7 @@ module.exports = function inject(bot, options) {
 
 	bot.on('message', (msg, pos) => {
         if (!bot.mapInfo.listening || pos !== 'system' || msg === '»') return
-        bot.plot.currentInfo.push(msg)
+        bot.mapInfo.current.push(msg)
     })
 
     bot.on('mapInfoStart', () => {
