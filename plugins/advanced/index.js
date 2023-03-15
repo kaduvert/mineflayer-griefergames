@@ -18,7 +18,7 @@ const plugins = [
     getPlugin('hopper'),
     getPlugin('jail'),
     getPlugin('lottery'),
-    getPlugin('maps'),
+    getPlugin('mapInfo'),
     getPlugin('prefix'),
     getPlugin('profile'),
     getPlugin('spawner'),

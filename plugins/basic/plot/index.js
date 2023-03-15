@@ -37,7 +37,7 @@ module.exports = function inject(bot, options) {
 
     bot.plot = {
         listeningForInfo: false,
-        currentPlotInfo: [],
+        currentInfo: [],
         events: new EventEmitter()
     }
     
@@ -89,7 +89,7 @@ module.exports = function inject(bot, options) {
         return flagsObj
     }
 
-    bot.plot.parsePlotInfo = (rawPlotInfo) => {
+    bot.plot.parseInfo = (rawPlotInfo) => {
         const plotInfo = rawPlotInfo.join('\n').match(plotInfoReg)
         if (!plotInfo) return null
         const [_, id, alias, owners, biome, helpers, trusted, denied, flags] = plotInfo
@@ -105,22 +105,22 @@ module.exports = function inject(bot, options) {
         }
     }
 
-    bot.plot.getRawPlotInfo = (targetId = []) => {
+    bot.plot.getRawInfo = (targetId = []) => {
         return bot.chat.getChatActionResult(`/p i ${targetId.join(';')}`, 'plotInfo', ['plotUnclaimedError'], 5000, bot.plot.events)
     }
 
     bot.on('message', (msg, pos) => {
         if (!bot.plot.listeningForInfo || pos !== 'system' || msg === '»' || plotInfoEndReg.test(msg)) return
-        bot.plot.currentPlotInfo.push(msg)
+        bot.plot.currentInfo.push(msg)
     })
 
     bot.on('plotInfoStart', () => {
         bot.plot.listeningForInfo = true
-        bot.plot.currentPlotInfo = []
+        bot.plot.currentInfo = []
     })
 
     bot.on('plotInfoEnd', () => {
         bot.plot.listeningForInfo = false
-        bot.plot.events.emit('plotInfo', [...bot.plot.currentPlotInfo]) // clone it!
+        bot.plot.events.emit('plotInfo', [...bot.plot.currentInfo]) // clone it!
     })
 }
