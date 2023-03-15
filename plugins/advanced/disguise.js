@@ -5,8 +5,10 @@ module.exports = function inject(bot, options) {
 	bot.chatAddPattern(/^Du hast deine Verkleidung entfernt\.$/, 'disguiseRemoved')
 
 	bot.chatAddPattern(/^Du bist als bat verkleidet\.$/, 'disguiseStatus')
-	bot.chatAddPattern(/^(bat; visibility=everyone; visibility-param=; custom-name=; custom-name-visible)$/, 'disguiseStatusRaw')
 	bot.chatAddPattern(/^Du bist nicht verkleidet.$/, 'disguiseNotFound')
+
+    // (bat; visibility=everyone; visibility-param=; custom-name=; custom-name-visible)
+	// bot.chatAddPattern(/^\((\S+); visibility=everyone; visibility-param=; custom-name=; custom-name-visible\)$/, 'disguiseStatusRaw')
 
     bot.chatAddPattern(/^Falsche Benutzung: (.+) sind unbekannte Argumente\.$/, 'disguiseUnknownArgumentsError')
     bot.chatAddPattern(/^Du darfst das nicht tun\.$/, 'disguiseInsufficientPermissionsError')
