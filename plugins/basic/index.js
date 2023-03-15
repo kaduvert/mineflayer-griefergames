@@ -28,7 +28,7 @@ const plugins = [
 
 module.exports = function inject(bot, options) {
     bot.loadPlugins(plugins)
-    bot.cbBlocks = require('../../coords/cbblocks.json')
+    bot.ggBlocks = require('../../coords/ggBlocks.js')
     bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
     bot.timeStamp = () => '[' + (new Date()).toLocaleTimeString() + ']'
 

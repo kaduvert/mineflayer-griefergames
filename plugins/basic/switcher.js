@@ -114,7 +114,7 @@ module.exports = function inject(bot, options) {
 			bot.clearControlStates()
 			await bot.waitForChunksToLoad()
 
-			const closestStableBlock = v(bot.cbBlocks[targetServer]).offset(0.5, 0, 0.5)
+			const closestStableBlock = v(bot.ggBlocks.portalBlocks[targetServer]).offset(0.5, 0, 0.5)
 			const isInPortal = bot.entity.position.xzDistanceTo(closestStableBlock) < 2
 			if (!isInPortal) {
 				await bot.switcher.travelToPortal(closestStableBlock)
