@@ -20,6 +20,7 @@ module.exports = function inject(bot, options) {
     bot.chatAddPattern(/^Laufende Teleportierung abgebrochen\.$/, 'tpaCancelled')
     bot.chatAddPattern(/^\[GrieferGames\] Du konntest nicht teleportiert werden\.$/, 'tpFailure')
     bot.chatAddPattern(/^Fehler: Zeit bis zur nächsten Teleportation: (now|\d+ Sekunden)$/, 'tpSpamWarning')
+    // bot.chatAddPattern(/^Teleportierungsvorgang startet in (\d+) Sekunden\. Bewege dich nicht\.$/, 'tpCountdown')
 
 	bot.tpa = {
         // events: new EventEmitter()

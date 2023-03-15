@@ -1,0 +1,45 @@
+{
+    "stadt": {
+        "Adventurer": {
+            "position": [145, 24, 3]
+        },
+        "Admin-Shop": {
+            "position": [147, 24, 1]
+        },
+        "Vote-System": {
+            "position": [129, 25, -18]
+        },
+        "Lotterie": {
+            "position": [139, 25, -30]
+        },
+        "Statistik": {
+            "position": [140, 25, -39]
+        },
+        "Rand-Schmied": {
+            "position": [140, 25, -54]
+        },
+        "Händler": {
+            "position": [172, 25, -42]
+        },
+        "Verkäufer": {
+            "position": [172, 25, -31]
+        }
+    },
+    "hub": {
+        "Skyblock Museum": {
+            "position": [42, 68, -182]
+        },
+        "Citybuild 1.19": {
+            "position": [20, 71, -170]
+        },
+        "Citybuild 1.8": {
+            "position": [16, 71, -170]
+        },
+        "Impressum": {
+            "position": [6, 71, -167]
+        },
+        "Datenschutz": {
+            "position": [2, 71, -171]
+        }
+    }
+}
