@@ -6,7 +6,10 @@ module.exports = function inject(bot, options) {
     bot.chatAddPattern(/^Anfrage gesendet an \S+ ┃ (\S+)\.$/, 'tpaSent')
     bot.chatAddPattern(/^\S+ | (\S+) hat deine Teleportierungsanfrage angenommen\.$/, 'tpaAccepted')
     bot.chatAddPattern(/^\S+ | (\S+) hat deine Teleportierungsanfrage abgelehnt\.$/, 'tpaRefused')
+    bot.chatAddPattern(/^Teleportation aktiviert\.$/, 'tpaActivated')
+    bot.chatAddPattern(/^Teleportation deaktiviert\.$/, 'tpaDeactivated')
 
+    bot.chatAddPattern(/^Fehler: \S+ ┃ (\S+) verweigert die Teleportierung\.$/, 'tpaToggled')
     bot.chatAddPattern(/^Teleportierungsanfrage verweigert\.$/, 'tpaDenied')
     bot.chatAddPattern(/^Fehler: Teleportierungsanfrage ist abgelaufen\.$/, 'tpaExpired')
     bot.chatAddPattern(/^Fehler: null$/, 'tpaNull')
@@ -23,11 +26,11 @@ module.exports = function inject(bot, options) {
     }
 
     bot.tpa.request = (username) => {
-        return bot.chat.getChatActionResult(`/tpa ${username}`, 'sentTpa', ['tpaDisallowed'], 7500)
+        return bot.chat.getChatActionResult(`/tpa ${username}`, 'sentTpa', ['tpaToggled', 'tpaDisallowed'], 7500)
     }
-    
+
     bot.tpa.requestHere = (username) => {
-        return bot.chat.getChatActionResult(`/tpahere ${username}`, 'sentTpa', ['tpaDisallowed'], 7500)
+        return bot.chat.getChatActionResult(`/tpahere ${username}`, 'sentTpa', ['tpaToggled', 'tpaDisallowed'], 7500)
     }
 
     bot.tpa.accept = () => {
@@ -37,11 +40,8 @@ module.exports = function inject(bot, options) {
     bot.tpa.deny = () => {
         return bot.chat.getChatActionResult('/tpdeny', 'tpaDenied', ['tpaNotFound', 'tpaNull'], 7500)
     }
-}
-/*
-// tptoggle
 
-Teleportation deaktiviert.
-Teleportation aktiviert.
-Fehler: Ultra ┃ ColaKanone_HD verweigert die Teleportierung.
-*/
+    bot.tpa.toggle = () => {
+        return bot.chat.getChatActionResult('/tptoggle', ['tpaActivated', 'tpaDeactivated'], ['tpaNotFound', 'tpaNull'], 7500)
+    }
+}

@@ -38,17 +38,24 @@ module.exports = function inject(bot, options) {
         TIMEOUT: 2
     }
 
-    bot.getActionResult = async (successEvent, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
+    bot.getActionResult = async (successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
+        if (typeof successEvents === 'string') {
+            successEvents = [ successEvents ]
+        }
 		return new Promise((res, rej) => {
-            const onSuccess = (...eventArgs) => {
+            bot.delay(timeoutLimit).then(() => {
+                res({
+                    status: resultStatus.TIMEOUT
+                })
+            })
+            
+            const onSuccess = (successEvent, ...eventArgs) => {
                 res({
                     status: resultStatus.SUCCESS,
                     triggeredEvent: successEvent,
                     eventArgs: eventArgs
                 })
             }
-
-			successEventEmitter.once(successEvent, onSuccess)
 
             const onFailure = (failureEvent, ...eventArgs) => {
                 res({
@@ -58,19 +65,23 @@ module.exports = function inject(bot, options) {
                 })
             }
 
-            failureEvents.forEach(failureEvent => {
-                failureEventEmitter.once(failureEvent, (...args) => {
-                    onFailure(failureEvent, args)
+            successEvents.forEach(successEvent => {
+                const onSuccessWrapper = (...args) => {
+                    onSuccess(successEvent, args)
+                }
+                successEventEmitter.once(successEvent, onSuccessWrapper)
+                bot.delay(timeoutLimit).then(() => {
+                    successEventEmitter.off(successEvent, onSuccessWrapper)
                 })
             })
 
-            bot.delay(timeoutLimit).then(() => {
-                successEventEmitter.off(successEvent, onSuccess)
-                failureEvents.forEach(failureEvent => {
-                    failureEventEmitter.off(failureEvent, onFailure)
-                })
-                res({
-                    status: resultStatus.TIMEOUT
+            failureEvents.forEach(failureEvent => {
+                const onFailureWrapper = (...args) => {
+                    onFailure(failureEvent, args)
+                }
+                failureEventEmitter.once(failureEvent, onFailureWrapper)
+                bot.delay(timeoutLimit).then(() => {
+                    failureEventEmitter.off(failureEvent, onFailureWrapper)
                 })
             })
 		})
