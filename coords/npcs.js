@@ -42,7 +42,18 @@ module.exports = {
             "openedWindowTitleRegex": /^Rand-Konfigurator$/,
             "position": [140, 25, -54]
         },
-
+    },
+    "spawn": {
+        "Adventurer": {
+            "npcIdentifier": "Adventurer",
+            "openedWindowTitleRegex": /^Adventure-Jobs$/,
+            "position": [202, 64, 387]
+        },
+        "Adventure Admin-Shop": {
+            "npcIdentifier": "Admin-Shop",
+            "openedWindowTitleRegex": /^Shop$/,
+            "position": [200, 64, 387]
+        }
     },
     "hub": {
         "Skyblock": {
