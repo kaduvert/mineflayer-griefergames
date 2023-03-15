@@ -8,9 +8,9 @@ const plugins = [
     getPlugin('plot'),
     getPlugin('antiAfk'),
     getPlugin('chat'),
-    // getPlugin('ggauth'),
-    // getPlugin('globalChat'),
-    // getPlugin('home'),
+    getPlugin('ggauth'),
+    getPlugin('globalChat'),
+    getPlugin('home'),
     getPlugin('itemClear'),
     getPlugin('mobRemover'),
     getPlugin('money'),
@@ -23,7 +23,7 @@ const plugins = [
     getPlugin('shutdown'),
     getPlugin('switcher'),
     getPlugin('tpa'),
-    // getPlugin('warp')
+    getPlugin('warp')
 ]
 
 module.exports = function inject(bot, options) {
