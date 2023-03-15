@@ -6,14 +6,27 @@ function getPlugin(name) {
 
 const plugins = [
     getPlugin('adventurer'),
+    getPlugin('orbs'),
+    getPlugin('perks'),
+    getPlugin('bank'),
     getPlugin('booster'),
+    getPlugin('caseOpening'),
+    getPlugin('clan'),
+    getPlugin('deleteparticle'),
+    getPlugin('disguise'),
+    getPlugin('friends'),
     getPlugin('hopper'),
     getPlugin('jail'),
-    getPlugin('mysteryMod'),
-    getPlugin('orbs'),
+    getPlugin('lottery'),
+    getPlugin('maps'),
+    getPlugin('prefix'),
+    getPlugin('profile'),
+    getPlugin('spawner'),
+    getPlugin('specialPotions'),
     getPlugin('startkick'),
+    getPlugin('status'),
+    getPlugin('trails'),
     getPlugin('vote'),
-    getPlugin('perks')
 ]
 
 module.exports = function inject(bot, options) {
