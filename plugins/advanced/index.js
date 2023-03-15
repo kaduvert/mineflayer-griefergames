@@ -8,6 +8,7 @@ const plugins = [
     getPlugin('adventurer'),
     getPlugin('orbs'),
     getPlugin('perks'),
+    getPlugin('antiCopy'),
     getPlugin('bank'),
     getPlugin('booster'),
     getPlugin('caseOpening'),
