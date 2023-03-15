@@ -32,7 +32,7 @@ module.exports = function inject(bot, options) {
     bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
     bot.timeStamp = () => '[' + (new Date()).toLocaleTimeString() + ']'
 
-    const resultStatus = {
+    bot.actionResultStatus = {
         SUCCESS: 0,
         FAILURE: 1,
         TIMEOUT: 2
@@ -45,13 +45,13 @@ module.exports = function inject(bot, options) {
 		return new Promise((res, rej) => {
             bot.delay(timeoutLimit).then(() => {
                 res({
-                    status: resultStatus.TIMEOUT
+                    status: bot.actionResultStatus.TIMEOUT
                 })
             })
             
             const onSuccess = (successEvent, ...eventArgs) => {
                 res({
-                    status: resultStatus.SUCCESS,
+                    status: bot.actionResultStatus.SUCCESS,
                     triggeredEvent: successEvent,
                     eventArgs: eventArgs
                 })
@@ -59,7 +59,7 @@ module.exports = function inject(bot, options) {
 
             const onFailure = (failureEvent, ...eventArgs) => {
                 res({
-                    status: resultStatus.FAILURE,
+                    status: bot.actionResultStatus.FAILURE,
                     triggeredEvent: failureEvent,
                     eventArgs: eventArgs
                 })
