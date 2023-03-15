@@ -6,6 +6,7 @@ function getPlugin(name) {
 
 const plugins = [
     // getPlugin('adventurer'),
+    // getPlugin('edgeBlacksmith'),
     getPlugin('orbs'),
     // getPlugin('perks'),
     getPlugin('antiCopy'),
