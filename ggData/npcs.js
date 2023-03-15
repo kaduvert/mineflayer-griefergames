@@ -4,103 +4,128 @@ module.exports = {
      * Stadt NPC's
      */
 
-    "Orb-Händler": {
-        "npcIdentifier": "Händler",
-        "openedWindowTitleRegex": /^Händler$/,
+    "orbBuyer": {
+        "name": "orbBuyer",
+        "identifier": "Händler",
         "position": [172, 25, -42],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Händler$/,
     },
-    "Orb-Verkäufer": {
-        "npcIdentifier": "Verkäufer",
-        "openedWindowTitleRegex": /^Verkäufer$/,
+    "orbStuffSeller": {
+        "name": "orbStuffSeller",
+        "identifier": "Verkäufer",
         "position": [172, 25, -31],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Verkäufer$/,
     },
-    "Orb-Statistik": {
-        "npcIdentifier": "Statistik",
-        "openedWindowTitleRegex": /^Statistik von (\S+)$/,
+    "orbStats": {
+        "name": "orbStats",
+        "identifier": "Statistik",
         "position": [140, 25, -39],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Statistik von (\S+)$/,
     },
-    "Adventurer": {
-        "npcIdentifier": "Adventurer",
-        "openedWindowTitleRegex": /^Adventure-Jobs$/,
+    "adventurer": {
+        "name": "adventurer",
+        "identifier": "Adventurer",
         "position": [145, 24, 3],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Adventure-Jobs$/,
     },
-    "Adventurer Admin-Shop": {
-        "npcIdentifier": "Admin-Shop",
-        "openedWindowTitleRegex": /^Shop$/,
+    "adventurerShop": {
+        "name": "adventurerShop",
+        "identifier": "Admin-Shop",
         "position": [147, 24, 1],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Shop$/,
     },
-    "VoteTyp": {
-        "npcIdentifier": "Vote-System",
-        "openedWindowTitleRegex": /^Vote-System$/,
+    "vote": {
+        "name": "vote",
+        "identifier": "Vote-System",
         "position": [129, 25, -18],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Vote-System$/,
     },
-    "Lotterie": {
-        "npcIdentifier": "Lotterie",
-        "openedWindowTitleRegex": /^Lotterie$/,
+    "lottery": {
+        "name": "lottery",
+        "identifier": "Lotterie",
         "position": [139, 25, -30],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Lotterie$/,
     },
-    "Rand-Schmied": {
-        "npcIdentifier": "Rand-Schmied",
-        "openedWindowTitleRegex": /^Rand-Konfigurator$/,
+    "edgeBlacksmith": {
+        "name": "edgeBlacksmith",
+        "identifier": "Rand-Schmied",
         "position": [140, 25, -54],
-        "world": "stadt"
+        "world": "stadt",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Rand-Konfigurator$/,
     },
 
     /*
      * Spawn NPC's
      */
 
-    "Adventurer2": {
-        "npcIdentifier": "Adventurer",
-        "openedWindowTitleRegex": /^Adventure-Jobs$/,
+    "adventurer2": {
+        "name": "adventurer2",
+        "identifier": "Adventurer",
         "position": [202, 64, 387],
-        "world": "spawn"
+        "world": "spawn",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Adventure-Jobs$/,
     },
-    "Adventure Admin-Shop2": {
-        "npcIdentifier": "Admin-Shop",
-        "openedWindowTitleRegex": /^Shop$/,
+    "adventurerShop2": {
+        "name": "adventurerShop2",
+        "identifier": "Admin-Shop",
         "position": [200, 64, 387],
-        "world": "spawn"
+        "world": "spawn",
+        "onInteract": "windowOpen",
+        "titleRegex": /^Shop$/,
     },
 
     /*
      * Hub NPC's
      */
 
-    "Skyblock": {
-        "npcIdentifier": "Skyblock Museum",
-        "action": "teleport",
+    "skyblock": {
+        "name": "skyblock",
+        "identifier": "Skyblock Museum",
+        "onInteract": "teleport",
         "position": [42, 68, -182],
         "world": "hub"
     },
     "CB1.19": {
-        "npcIdentifier": "Citybuild 1.19",
-        "action": "teleport",
+        "name": "CB1.19",
+        "identifier": "Citybuild 1.19",
+        "onInteract": "teleport",
         "position": [20, 71, -170],
         "world": "hub"
     },
     "CB1.8": {
-        "npcIdentifier": "Citybuild 1.8",
-        "action": "teleport",
+        "name": "CB1.8",
+        "identifier": "Citybuild 1.8",
+        "onInteract": "teleport",
         "position": [16, 71, -170],
         "world": "hub"
     },
-    "Impressum": {
-        "npcIdentifier": "Impressum",
-        "action": "chat",
+    "impressum": {
+        "name": "impressum",
+        "identifier": "Impressum",
+        "onInteract": "chat",
         "position": [6, 71, -167],
         "world": "hub"
     },
-    "Datenschutz": {
-        "npcIdentifier": "Datenschutz",
-        "action": "chat",
+    "privacyPolicy": {
+        "name": "privacyPolicy",
+        "identifier": "Datenschutz",
+        "onInteract": "chat",
         "position": [2, 71, -171],
         "world": "hub"
     }

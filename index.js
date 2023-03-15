@@ -6,7 +6,7 @@ function getPlugin (name) {
 
 const plugins = [
     getPlugin('basic'),
-    // getPlugin('advanced')
+    getPlugin('advanced')
 ]
 
 module.exports = function inject(bot, options) {

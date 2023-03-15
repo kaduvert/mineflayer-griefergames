@@ -5,9 +5,7 @@ function getPlugin(name) {
 }
 
 const plugins = [
-    // getPlugin('adventurer'),
-    // getPlugin('edgeBlacksmith'),
-    getPlugin('orbs'),
+    getPlugin('npc'),
     // getPlugin('perks'),
     getPlugin('antiCopy'),
     getPlugin('bank'),
@@ -19,7 +17,6 @@ const plugins = [
     // getPlugin('friends'),
     // getPlugin('hopper'),
     // getPlugin('jail'),
-    // getPlugin('lottery'),
     getPlugin('mapInfo'),
     // getPlugin('prefix'),
     // getPlugin('profile'),
@@ -28,7 +25,7 @@ const plugins = [
     getPlugin('startkick'),
     getPlugin('status'),
     // getPlugin('trails'),
-    getPlugin('vote'),
+    getPlugin('vote')
 ]
 
 module.exports = function inject(bot, options) {

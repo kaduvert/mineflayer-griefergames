@@ -5,11 +5,16 @@ function getPlugin (name) {
 }
 
 const plugins = [
-    getPlugin('buyer'),
-    getPlugin('seller'),
+    // getPlugin('buyer'),
+    // getPlugin('seller'),
     // getPlugin('stats')
 ]
 
+const EventEmitter = require('events')
+
 module.exports = function inject(bot, options) {
+    bot.orbs = {
+        events: new EventEmitter()
+    }
     bot.loadPlugins(plugins)
 }

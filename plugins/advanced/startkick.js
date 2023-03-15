@@ -1,4 +1,4 @@
-// const EventEmitter = require('events')
+const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
     bot.chatAddPattern(/^\[StartKick\] Soll der Spieler (\S+) rausgeworfen werden\? \/ja \/nein$/, 'startkickStart')
