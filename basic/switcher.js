@@ -11,16 +11,6 @@ module.exports = function inject(bot, options) {
 
 	const mcData = require('minecraft-data')(bot.version)
 
-	const rankCaps = {
-		'Spieler': 0,
-		'Premium': 50,
-		'Ultra': 50,
-		'Legende': 50,
-		'Titan': 85,
-		'Griefer': 115,
-		'Supreme': 150
-	}
-
 	bot.switcher = {
 		targetServer: null,
 		serverJoinedAt: null,
@@ -30,28 +20,29 @@ module.exports = function inject(bot, options) {
 		events: new EventEmitter()
 	}
 
-	bot.switcher.getTravelRoute = (relativeEndBlock) => {
+	bot.switcher.getTravelRoute = (relativeGoal) => {
 		const route = null
-		const onXAxis = Math.abs(relativeEndBlock.x) === 16
-		const onPositiveAxis = (onXAxis ? relativeEndBlock.x : relativeEndBlock.z) > 0
+		const onXAxis = Math.abs(relativeGoal.x) === 16
+		const onPositiveAxis = (onXAxis ? relativeGoal.x : relativeGoal.z) > 0
 		if (onXAxis) {
 			route = [
 				v(onPositiveAxis ? 12 : -12, -1, 0),
-				v(onPositiveAxis ? 12 : -12, -1, relativeEndBlock.z)
+				v(onPositiveAxis ? 12 : -12, -1, relativeGoal.z)
 			]
 		} else {
 			route = [
 				v(0, -1, onPositiveAxis ? 36 : -36),
-				v(relativeEndBlock.x, -1, onPositiveAxis ? 36 : -36)
+				v(relativeGoal.x, -1, onPositiveAxis ? 36 : -36)
 			]
 		}
-		route.push(v(relativeEndBlock.x, 0, relativeEndBlock.z))
+		route.push(v(relativeGoal.x, relativeGoal.y, relativeGoal.z))
 		return route
 	}
 
 	bot.switcher.travelToPortal = async (relativePortalBlock) => {
 		for (const relativeStopVec of bot.switcher.getTravelRoute(relativePortalBlock)) {
 			const absoluteStopVec = v(switcherData.portalRoomSpawnBlock).offset(relativeStopVec).offset(0.5, 1, 0.5)
+			
 			bot.pathfinder.setGoal(new GoalBlock(absoluteStopVec.x, absoluteStopVec.y, absoluteStopVec.z))
 			await once(bot, 'goal_reached')
 		}
@@ -59,8 +50,8 @@ module.exports = function inject(bot, options) {
 
 	bot.switcher.isRankPermittedToJoin = (server, freeSlots, rank = bot.playerUtils.getRank()) => {
 		return (
-			(freeSlots > 0) ||
-			((freeSlots + rankCaps[rank]) > 0 && server !== 'cbevil')
+			freeSlots > 0 ||
+			((freeSlots + switcherData.rankCaps[rank]) > 0 && server !== 'cbevil')
 		)
 	}
 
@@ -101,6 +92,7 @@ module.exports = function inject(bot, options) {
 
 			const relativePortalBlock = v(switcherData.relativePortalLocations[targetServer])
 			const closestAbsoluteStableBlock = v(switcherData.portalRoomSpawnBlock).offset(relativePortalBlock).offset(0.5, 0, 0.5)
+
 			const isInPortal = bot.entity.position.xzDistanceTo(closestAbsoluteStableBlock) < 2
 			if (!isInPortal) {
 				await bot.switcher.travelToPortal(relativePortalBlock)
@@ -114,7 +106,7 @@ module.exports = function inject(bot, options) {
 				await bot.lookAt(closestPortalBlock.offset(0.5, 0.5, 0.5), true)
 			}
 
-			await bot.delay(12000 - (Date.now() - bot.switcher.serverJoinedAt))
+			await bot.delay(switcherData.joinDelay - (Date.now() - bot.switcher.serverJoinedAt))
 			while (!bot.switcher.getJoinableFromBotPosition()) await bot.delay(10)
 			bot.setControlState(isInPortal ? 'jump' : 'forward', true)
 		} else {
