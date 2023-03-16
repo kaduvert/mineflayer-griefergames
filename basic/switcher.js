@@ -116,10 +116,11 @@ module.exports = function inject(bot, options) {
 		}
 	}
 
-	bot.on('switchTimeout', async () => { // TODO: optimize for minimal waiting
+	bot.on('switchTimeout', async (date, time) => {
+		const parsedDate = Date.parse(`${date.split('.').reverse().join('-')}T${time}`)
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
-		await bot.delay(5 * 60 * 1000)
+		await bot.delay((parsedDate + 1500) - Date.now()) // 1500 added for buffer
 		bot.switcher.navigator()
 	})
 
