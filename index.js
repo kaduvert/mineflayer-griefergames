@@ -1,10 +1,11 @@
-const PLUGINS_PATH = './plugins/'
+const PLUGINS_PATH = './'
 
 function getPlugin (name) {
     return require(PLUGINS_PATH + name)
 }
 
 const plugins = [
+    getPlugin('griefergames-data'),
     getPlugin('basic'),
     getPlugin('advanced')
 ]
