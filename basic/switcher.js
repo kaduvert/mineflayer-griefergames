@@ -6,8 +6,8 @@ const EventEmitter = require('events')
 const { once } = require('events')
 
 module.exports = function inject(bot, options) {
-	const switcherData = bot.ggData.switcher
-	bot.loadChatPatterns(switcherData)
+	const switcher = bot.ggData.switcher
+	bot.loadChatPatterns(switcher)
 
 	const mcData = require('minecraft-data')(bot.version)
 
@@ -21,7 +21,7 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.switcher.getTravelRoute = (relativeGoal) => {
-		const route = null
+		let route = null
 		const onXAxis = Math.abs(relativeGoal.x) === 16
 		const onPositiveAxis = (onXAxis ? relativeGoal.x : relativeGoal.z) > 0
 		if (onXAxis) {
@@ -41,8 +41,8 @@ module.exports = function inject(bot, options) {
 
 	bot.switcher.travelToPortal = async (relativePortalBlock) => {
 		for (const relativeStopVec of bot.switcher.getTravelRoute(relativePortalBlock)) {
-			const absoluteStopVec = v(switcherData.portalRoomSpawnBlock).offset(relativeStopVec).offset(0.5, 1, 0.5)
-			
+			const absoluteStopVec = v(switcher.portalRoomSpawnBlock).plus(relativeStopVec).offset(0.5, 1, 0.5)
+
 			bot.pathfinder.setGoal(new GoalBlock(absoluteStopVec.x, absoluteStopVec.y, absoluteStopVec.z))
 			await once(bot, 'goal_reached')
 		}
@@ -51,7 +51,7 @@ module.exports = function inject(bot, options) {
 	bot.switcher.isRankPermittedToJoin = (server, freeSlots, rank = bot.playerUtils.getRank()) => {
 		return (
 			freeSlots > 0 ||
-			((freeSlots + switcherData.rankCaps[rank]) > 0 && server !== 'cbevil')
+			((freeSlots + switcher.rankCaps[rank]) > 0 && server !== 'cbevil')
 		)
 	}
 
@@ -90,8 +90,8 @@ module.exports = function inject(bot, options) {
 			bot.clearControlStates()
 			await bot.waitForChunksToLoad()
 
-			const relativePortalBlock = v(switcherData.relativePortalLocations[targetServer])
-			const closestAbsoluteStableBlock = v(switcherData.portalRoomSpawnBlock).offset(relativePortalBlock).offset(0.5, 0, 0.5)
+			const relativePortalBlock = v(switcher.relativePortalLocations[targetServer])
+			const closestAbsoluteStableBlock = v(switcher.portalRoomSpawnBlock).plus(relativePortalBlock).offset(0.5, 0, 0.5)
 
 			const isInPortal = bot.entity.position.xzDistanceTo(closestAbsoluteStableBlock) < 2
 			if (!isInPortal) {
@@ -106,7 +106,7 @@ module.exports = function inject(bot, options) {
 				await bot.lookAt(closestPortalBlock.offset(0.5, 0.5, 0.5), true)
 			}
 
-			await bot.delay(switcherData.joinDelay - (Date.now() - bot.switcher.serverJoinedAt))
+			await bot.delay(switcher.joinDelay - (Date.now() - bot.switcher.serverJoinedAt))
 			while (!bot.switcher.getJoinableFromBotPosition()) await bot.delay(10)
 			bot.setControlState(isInPortal ? 'jump' : 'forward', true)
 		} else {

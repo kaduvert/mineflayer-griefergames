@@ -4,9 +4,8 @@ const EventEmitter = require('events')
 const { once } = require('events')
 
 module.exports = function inject(bot, options) {
-	const chatData = bot.ggData.chat
-	bot.loadChatPatterns(chatData)
-	const CMD_BATCH_DELAY = chatData.CMD_BATCH_DELAY
+	const chat = bot.ggData.chat
+	bot.loadChatPatterns(chat)
 
 	bot.chatNative = bot.chat
 	bot.chat = {
@@ -24,7 +23,7 @@ module.exports = function inject(bot, options) {
 	bot.chat.sendCommand = async (msg, priority = 3) => {
 		if (bot.chat.cmdSpamLock) await once(bot.chat.events, 'cmdSpamLockReleased')
 		bot.chat.cmdQueue[priority - 1].push(msg)
-		while ((Date.now() - bot.chat.cmdBatchStart) < CMD_BATCH_DELAY && bot.chat.cmdBatchCount >= 3) await bot.delay(CMD_BATCH_DELAY - (Date.now() - bot.chat.cmdBatchStart))
+		while ((Date.now() - bot.chat.cmdBatchStart) < chat.cmdBatchDelay && bot.chat.cmdBatchCount >= 3) await bot.delay(chat.cmdBatchDelay - (Date.now() - bot.chat.cmdBatchStart))
 
 		let msgToSend
 		for (let i = 0; i < 3; i++) {
@@ -38,7 +37,7 @@ module.exports = function inject(bot, options) {
 		bot.chatNative(msgToSend)
 
 		const now = Date.now()
-		if (now - bot.chat.cmdBatchStart >= CMD_BATCH_DELAY) {
+		if (now - bot.chat.cmdBatchStart >= chat.cmdBatchDelay) {
 			bot.chat.cmdBatchStart = now
 			bot.chat.cmdBatchCount = 0
 		}
@@ -106,7 +105,7 @@ module.exports = function inject(bot, options) {
 	})
 
 	bot.on('spamWarning', async (recommendedWaitDuration) => {
-		const waitDelay = (recommendedWaitDuration * 1000) || 3500
+		const waitDelay = (recommendedWaitDuration * 1000) || chat.cmdBatchDelay
 		bot.chat.cmdSpamLock = true
 		await bot.delay(waitDelay)
 		bot.chat.events.emit('cmdSpamLockReleased')

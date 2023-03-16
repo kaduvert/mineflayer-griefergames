@@ -1,6 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
+    const mobRemover = bot.ggData.mobRemover
     bot.loadChatPatterns(bot.ggData.mobRemover)
 
     bot.mobRemover = {
@@ -14,7 +15,7 @@ module.exports = function inject(bot, options) {
     })
 
     bot.on('mobRemover', (removedMobs) => {
-        bot.mobRemover.nextAt = Date.now() + (20 * 60 * 1000)
+        bot.mobRemover.nextAt = Date.now() + (mobRemover.cycleTime)
         bot.mobRemover.events.emit('mobRemover', removedMobs)
     })
 }
