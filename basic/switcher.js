@@ -7,7 +7,7 @@ const { once } = require('events')
 
 module.exports = function inject(bot, options) {
 	const switcherData = bot.ggData.switcher
-    bot.loadChatPatterns(switcherData)
+	bot.loadChatPatterns(switcherData)
 
 	const mcData = require('minecraft-data')(bot.version)
 
@@ -30,37 +30,31 @@ module.exports = function inject(bot, options) {
 		events: new EventEmitter()
 	}
 
-	bot.switcher.getTravelRoute = (endBlock) => {
-		if (endBlock.x === 309.5) {
-			return [new GoalBlock(313.5, 65 + 1, 280.5),
-			new GoalBlock(313.5, 65 + 1, endBlock.z),
-			new GoalBlock(endBlock.x, 66 + 1, endBlock.z)
+	bot.switcher.getTravelRoute = (relativeEndBlock) => {
+		const route = null
+		const onXAxis = Math.abs(relativeEndBlock.x) === 16
+		const onPositiveAxis = (onXAxis ? relativeEndBlock.x : relativeEndBlock.z) > 0
+		if (onXAxis) {
+			route = [
+				v(onPositiveAxis ? 12 : -12, -1, 0),
+				v(onPositiveAxis ? 12 : -12, -1, relativeEndBlock.z)
 			]
-		} else if (endBlock.x === 341.5) {
-			return [new GoalBlock(337.5, 65 + 1, 280.5),
-			new GoalBlock(337.5, 65 + 1, endBlock.z),
-			new GoalBlock(endBlock.x, 66 + 1, endBlock.z)
-			]
-		} else if (endBlock.z === 240.5) {
-			return [new GoalBlock(325.5, 65 + 1, 244.5),
-			new GoalBlock(endBlock.x, 65 + 1, 244.5),
-			new GoalBlock(endBlock.x, 66 + 1, endBlock.z)
-			]
-		} else if (endBlock.z === 320.5) {
-			return [new GoalBlock(325.5, 65 + 1, 316.5),
-			new GoalBlock(endBlock.x, 65 + 1, 316.5),
-			new GoalBlock(endBlock.x, 66 + 1, endBlock.z)
+		} else {
+			route = [
+				v(0, -1, onPositiveAxis ? 36 : -36),
+				v(relativeEndBlock.x, -1, onPositiveAxis ? 36 : -36)
 			]
 		}
-		console.log(endBlock)
+		route.push(v(relativeEndBlock.x, 0, relativeEndBlock.z))
+		return route
 	}
 
-	bot.switcher.travelToPortal = async (closestStableBlock) => {
-		for (const stop of bot.switcher.getTravelRoute(closestStableBlock)) {
-			bot.pathfinder.setGoal(stop)
+	bot.switcher.travelToPortal = async (relativePortalBlock) => {
+		for (const relativeStopVec of bot.switcher.getTravelRoute(relativePortalBlock)) {
+			const absoluteStopVec = v(switcherData.portalRoomSpawnBlock).offset(relativeStopVec).offset(0.5, 1, 0.5)
+			bot.pathfinder.setGoal(new GoalBlock(absoluteStopVec.x, absoluteStopVec.y, absoluteStopVec.z))
 			await once(bot, 'goal_reached')
 		}
-		bot.pathfinder.stop()
 	}
 
 	bot.switcher.isRankPermittedToJoin = (server, freeSlots, rank = bot.playerUtils.getRank()) => {
@@ -105,13 +99,14 @@ module.exports = function inject(bot, options) {
 			bot.clearControlStates()
 			await bot.waitForChunksToLoad()
 
-			const closestStableBlock = v(switcherData.portalBlocks[targetServer]).offset(0.5, 0, 0.5)
-			const isInPortal = bot.entity.position.xzDistanceTo(closestStableBlock) < 2
+			const relativePortalBlock = v(switcherData.relativePortalLocations[targetServer])
+			const closestAbsoluteStableBlock = v(switcherData.portalRoomSpawnBlock).offset(relativePortalBlock).offset(0.5, 0, 0.5)
+			const isInPortal = bot.entity.position.xzDistanceTo(closestAbsoluteStableBlock) < 2
 			if (!isInPortal) {
-				await bot.switcher.travelToPortal(closestStableBlock)
-	
+				await bot.switcher.travelToPortal(relativePortalBlock)
+
 				const closestPortalBlock = bot.findBlocks({
-					point: closestStableBlock.offset(0, 1 + bot.entity.height, 0),
+					point: closestAbsoluteStableBlock.offset(0, 1 + bot.entity.height, 0),
 					matching: [mcData.blocksByName['end_portal'].id, mcData.blocksByName['portal'].id],
 					maxDistance: 5,
 					count: 9
