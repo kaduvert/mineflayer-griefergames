@@ -1,11 +1,12 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.money)
+    const money = bot.ggData.money
+    bot.loadChatPatterns(money)
 
 	bot.money = {}
 
     bot.money.transfer = (username, amount) => {
-        return bot.chat.getChatActionResult(`/pay ${username} ${amount}`, 'moneyTransferred', ['moneyInsufficientError', 'moneyPlayerOfflineError'], 16000)
+        return bot.chat.getChatActionResult(money.transfer(username, amount), 'moneyTransferred', ['moneyInsufficientError', 'moneyPlayerOfflineError'], 16000)
     }
 }

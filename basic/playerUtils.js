@@ -1,7 +1,8 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.playerUtils)
+    const playerUtils = bot.ggData.playerUtils
+    bot.loadChatPatterns(playerUtils)
     
     const ChatMessage = require('prismarine-chat')(bot.version)
     
@@ -18,7 +19,7 @@ module.exports = function inject(bot, options) {
     }
 
     bot.playerUtils.resolveNickname = (nickname) => {
-		if (!nickname.startsWith('~') || bot.players[nickname]) return nickname
+		if (!nickname.startsWith(playerUtils.nicknamePrefix) || bot.players[nickname]) return nickname
 
         for (const player of Object.values(bot.players)) {
             const splitDisplayName = player.displayName.toString().split(' ')
@@ -29,15 +30,15 @@ module.exports = function inject(bot, options) {
 	}
 
     bot.playerUtils.getInventory = (username) => {
-        return bot.chat.getChatActionResult(`/invsee ${username}`, 'inventoryOpened', ['playerNotFoundError'], 5000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(playerUtils.commands.getInventory(username), 'inventoryOpened', ['playerNotFoundError'], 5000, bot.playerUtils.events)
     }
 
     bot.playerUtils.getEnderChest = (username) => {
-        return bot.chat.getChatActionResult(`/ec ${username}`, 'enderChestOpened', ['playerNotFoundError'], 5000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(playerUtils.commands.getEnderChest(username), 'enderChestOpened', ['playerNotFoundError'], 5000, bot.playerUtils.events)
     }
 
     bot.playerUtils.getMiscView = (username) => {
-        return bot.chat.getChatActionResult(`/view ${username}`, 'miscViewOpened', ['playerNotFoundError'], 6000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(playerUtils.commands.getMiscView(username), 'miscViewOpened', ['playerNotFoundError'], 6000, bot.playerUtils.events)
     }
 
     bot.on('windowOpen', window => {

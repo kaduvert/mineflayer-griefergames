@@ -1,14 +1,11 @@
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.privateChat)
+	const privateChat = bot.ggData.privateChat
+    bot.loadChatPatterns(privateChat)
 
 	bot.privateChat = {}
 
-	bot.on('privateChatReceivedMessage', function respond(username, msg) {
-		if (bot.owners.includes(username)) bot.chat.send(msg, 1)
-	})
-
 	bot.privateChat.send = (username, msg) => {
-		const prefix = `/msg ${username} `
+		const prefix = privateChat.commands.send(username)
 		const charLimit = 100 - prefix.length
 		while (msg.length > charLimit) {
 			const splitIndex = msg.substring(0, charLimit).lastIndexOf(' ') + 1 || charLimit

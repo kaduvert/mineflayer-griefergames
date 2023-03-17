@@ -1,12 +1,13 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.spawn)
+    const spawn = bot.ggData.spawn
+    bot.loadChatPatterns(spawn)
 
     // tpSpamWarning
 
     bot.spawn.teleport = () => {
-        return bot.chat.getChatActionResult('/spawn', 'forcedMove', ['tpSpamWarning'], 5000)
+        return bot.chat.getChatActionResult(spawn.commands.teleport, 'forcedMove', ['tpSpamWarning'], 5000)
     }
 }
 

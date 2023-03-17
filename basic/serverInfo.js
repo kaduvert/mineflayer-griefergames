@@ -1,6 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
+    const serverInfo = bot.ggData.serverInfo
     bot.serverInfo = {
         events: new EventEmitter()
     }
@@ -15,21 +16,21 @@ module.exports = function inject(bot, options) {
 
     bot.serverInfo.getTranslatedServer = () => {
         const scoreboardServer = bot.serverInfo.getCurrentServer()
-        if (/^CB\d+/.test(scoreboardServer) || ['lobby', 'portal', 'extreme', 'nature'].includes(scoreboardServer.toLowerCase())) {
+        if (serverInfo.scoreboardCitybuildRegex.test(scoreboardServer) || (serverInfo.nonCitybuildServer.includes(scoreboardServer.toLowerCase()) || serverInfo.abnormallyNamedCitybuildServer.includes(scoreboardServer.toLowerCase()))) {
             return scoreboardServer.toLowerCase()
         }
 
-        if (scoreboardServer === 'Event') return 'eventserver'
-        if (scoreboardServer === 'CBE') return 'cbevil'
-        if (scoreboardServer === 'Wasser') return 'farm1'
-        if (scoreboardServer === 'Lava') return 'nether1'
+        const switcherName = serverInfo.scoreboardToSwitcherMap[scoreboardServer]
+        if (switcherName) {
+            return switcherName
+        }
     }
 
-    bot.serverInfo.isOnCitybuild = () => !['lobby', 'portal'].includes(bot.serverInfo.getTranslatedServer())
+    bot.serverInfo.isOnCitybuild = () => !serverInfo.nonCitybuildServer.includes(bot.serverInfo.getTranslatedServer())
 
-    bot.serverInfo.isHub = () => bot.serverInfo.getTranslatedServer() === 'lobby'
+    bot.serverInfo.isHub = () => bot.serverInfo.getTranslatedServer() === serverInfo.hubIdentifier
 
-    bot.serverInfo.isPortal = () => bot.serverInfo.getTranslatedServer() === 'portal'
+    bot.serverInfo.isPortal = () => bot.serverInfo.getTranslatedServer() === serverInfo.portalIdentifier
 
     bot.on('scoreUpdated', (_, scoreboardItem) => {
         if (scoreboardItem.value === 14) {

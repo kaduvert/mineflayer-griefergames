@@ -1,17 +1,18 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.warp)
+    const warp = bot.ggData.warp
+    bot.loadChatPatterns(warp)
 
     // tpSpamWarning
 
     bot.warp = {}
 
     bot.warp.getList = () => {
-        return bot.chat.getChatActionResult('/warps', 'warpList', [], 5000)
+        return bot.chat.getChatActionResult(warp.commands.getList(), 'warpList', [], 5000)
     }
 
-    bot.warp.teleportTo = (warpPoint) => {
-        return bot.chat.getChatActionResult(`/warp ${warpPoint}`, 'forcedMove', ['tpSpamWarning'], 5000)
+    bot.warp.to = (point) => {
+        return bot.chat.getChatActionResult(warp.commands.to(point), 'forcedMove', ['tpSpamWarning'], 5000)
     }
 }

@@ -1,20 +1,20 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.near)
+    const near = bot.ggData.near
+    bot.loadChatPatterns(near)
 
 	bot.near = {}
 
     bot.near.getRawPlayers = (distance = 200) => {
-        return bot.chat.getChatActionResult(`/near ${distance}`, 'nearPlayersList', [], 5000)
+        return bot.chat.getChatActionResult(near.commands.getPlayers(distance), 'nearPlayersList', [], 5000)
     }
 
     bot.near.parsePlayers = (str) => {
-        console.log(str)
         const nearPlayers = []
         if (str === 'keine') return nearPlayers
-        str.split(', ').forEach(e => {
-            const [_, username, distance] = e.match(/^\S+ ┃ (\S+)\((\d+)m\)$/)
+        str.split(near.playerListSeparator).forEach(e => {
+            const [_, username, distance] = e.match(near.playerListRegex)
             nearPlayers.push({
                 username,
                 distance: +distance
