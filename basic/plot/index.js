@@ -9,9 +9,9 @@ module.exports = function inject(bot, options) {
         currentInfo: [],
         events: new EventEmitter()
     }
-    
+
     bot.plot.parseMPP = (str) => { // MultiplePlayerProperty
-        return str === 'Keine' ? [] : str.split(plot.flagsSeperator)
+        return str === plot.infoNoPlayersIndicator ? [] : str.split(plot.flagsSeperator)
     }
 
     bot.plot.parseFlagValue = (str, type) => {
@@ -29,13 +29,12 @@ module.exports = function inject(bot, options) {
     }
 
     bot.plot.getNextSeperatorIndex = (str, index) => {
-        const flagType = plot.flagTypes[str.substring(0, str.indexOf(':', index))] || 'Boolean'
+        const flagType = plot.flagTypes[str.substring(0, str.indexOf(plot.flagKeyValueSeparator, index))] || 'Boolean'
         let nextIndex = str.indexOf(plot.flagsSeperator, index)
         if (flagType === 'Array') {
-            nextIndex = str.indexOf(']' + plot.flagsSeperator, index) + 1
+            nextIndex = str.indexOf(plot.arrayEndIndicator + plot.flagsSeperator, index) + 1
         } else if (flagType === 'Text') {
-            console.log('debug1')
-            nextIndex = str.substring(index, str.length).match(/, [a-z\_\-]:.+/).index + index
+            nextIndex = str.substring(index, str.length).match(plot.textFlagEndRegex).index + index
         }
         return nextIndex === -1 ? index === str.length ? -1 : str.length : nextIndex
     }
@@ -46,7 +45,7 @@ module.exports = function inject(bot, options) {
         let currentFlag = ''
         let nextSeperatorIndex = bot.plot.getNextSeperatorIndex(flagsStr, currentIndex)
         while (currentFlag = flagsStr.substring(currentIndex, nextSeperatorIndex)) {
-            const [flagKey, flagValue] = currentFlag.split(':')
+            const [flagKey, flagValue] = currentFlag.split(plot.flagKeyValueSeparator)
             const flagType = plot.flagTypes[flagKey] || 'Boolean'
             const typedFlagValue = bot.plot.parseFlagValue(flagValue, flagType)
 
@@ -63,7 +62,7 @@ module.exports = function inject(bot, options) {
         if (!plotInfo) return null
         const [_, id, alias, owners, biome, helpers, trusted, denied, flags] = plotInfo
         return {
-            id: id.split(';').map(e => +e),
+            id: id.split(plot.IdSeparator).map(e => +e),
             alias,
             owners: bot.plot.parseMPP(owners),
             biome,
@@ -75,7 +74,7 @@ module.exports = function inject(bot, options) {
     }
 
     bot.plot.getRawInfo = (targetId = []) => {
-        return bot.chat.getChatActionResult(`/p i ${targetId.join(';')}`, 'plotInfo', ['plotUnclaimedError'], 5000, bot.plot.events)
+        return bot.chat.getChatActionResult(plot.commands.getInfo(targetId.join(plot.IdSeparator)), 'plotInfo', ['plotUnclaimedError'], 5000, bot.plot.events)
     }
 
     bot.on('message', (msg, pos) => {

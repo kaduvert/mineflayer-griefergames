@@ -1,9 +1,10 @@
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.vote)
+    const vote = bot.ggData.vote
+    bot.loadChatPatterns(vote)
 
     bot.vote = {}
 
     bot.vote.collectPresent = () => {
-        return bot.chat.getChatActionResult('/geschenk', 'votePresentCollected', ['noVotePresents'], 5000)
+        return bot.chat.getChatActionResult(vote.commands.collectPresent(), 'votePresentCollected', ['noVotePresents'], 5000)
     }
 }

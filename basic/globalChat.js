@@ -9,11 +9,11 @@ module.exports = function inject(bot, options) {
     }
 
     bot.globalChat.login = () => {
-        return bot.chat.getChatActionResult(globalChat.commands.login, 'globalChatActivated', ['globalChatAlreadyActivated'], 5000)
+        return bot.chat.getChatActionResult(globalChat.commands.login(), 'globalChatActivated', ['globalChatAlreadyActivated'], 5000)
     }
 
     bot.globalChat.logout = () => {
-        return bot.chat.getChatActionResult(globalChat.commands.logout, 'globalChatDeativated', ['globalChatAlreadyDeativated'], 5000)
+        return bot.chat.getChatActionResult(globalChat.commands.logout(), 'globalChatDeativated', ['globalChatAlreadyDeativated'], 5000)
     }
 
     bot.globalChat.send = (message) => {

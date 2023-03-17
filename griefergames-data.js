@@ -11,10 +11,10 @@ module.exports = function inject(bot, options) {
                     if (commandArgMatches) {
                         for (commandArgMatch of commandArgMatches) {
                             const commandIndex = +commandArgMatch.substring(1)
-                            returnCommand = returnCommand.replace(new RegExp('\\$' + commandIndex, 'g'), commandArgs[commandIndex - 1])
+                            returnCommand = returnCommand.replace(new RegExp('\\$' + commandIndex, 'g'), (commandArgs[commandIndex - 1] ?? ''))
                         }
                     }
-                    return returnCommand
+                    return returnCommand.trim()
                 }
             })
         }

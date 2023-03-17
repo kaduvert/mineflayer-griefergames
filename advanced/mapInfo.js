@@ -1,9 +1,8 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.mapInfo)
-
-	const mapInfoReg = /^Minecraft Server ID: (.*)\nDynamische ID: (\d+)\nServer: (.+)\nWorld: (\S+)\nErsteller: (\S+)\nErstellt: (.+)\nBreite: (\d+)px\nHöhe: (\d+)px\nSkalierung: (\d+)\nUrsprüngliche ID: (.+)\nData Size: (\d+)bytes\nFirst (\d+) bytes: \[([A-Fa-f\d]+)\]$/s
+    const mapInfo = bot.ggData.mapInfo
+    bot.loadChatPatterns(mapInfo)
 
 	bot.mapInfo = {
         listening: false,
@@ -12,7 +11,7 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.mapInfo.parse = (raw) => {
-        const mapInfo = raw.join('\n').match(mapInfoReg)
+        const mapInfo = raw.join('\n').match(mapInfo.multiLineRegex)
         if (!mapInfo) return null
         const [_, serverId, dynamicId, server, world, creator, width, height, scale, originalId, dataSize, firstBytesCount, firstBytes] = plotInfo
         return {
@@ -32,7 +31,7 @@ module.exports = function inject(bot, options) {
     }
 
     bot.mapInfo.getRaw = () => {
-        return bot.chat.getChatActionResult('/mapinfo', 'mapInfo', ['mapInfoNoDataError'], 5000)
+        return bot.chat.getChatActionResult(mapInfo.commands.get(), 'mapInfo', ['mapInfoNoDataError'], 5000)
     }
 
 	bot.on('message', (msg, pos) => {

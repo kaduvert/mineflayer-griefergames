@@ -1,9 +1,8 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.loadChatPatterns(bot.ggData.startkick)
-
-    const startkickReg = /^\[StartKick\] Ersteller: (\S+)\n\[StartKick\] Dauer: (\S+) Sekunden\n\[StartKick\] Begründung: (.*)\n\[StartKick\] Stimme für oder gegen den Rauswurf von (\S+) ab:$/s
+    const startkick = bot.ggData.startkick
+    bot.loadChatPatterns(startkick)
 
 	bot.startkick = {
         listening: false,
@@ -12,7 +11,7 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.startkick.parse = (raw) => {
-        const startkickInfo = raw.join('\n').match(startkickReg)
+        const startkickInfo = raw.join('\n').match(startkick.multiLineRegex)
         if (!startkickInfo) return null
         const [_, creator, duration, reasoning, target] = startkickInfo
         return {
