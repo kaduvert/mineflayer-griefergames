@@ -29,7 +29,14 @@ const plugins = [
 module.exports = function inject(bot, options) {
     bot.loadChatPatterns = (ggDataObj) => {
         const chatPatterns = ggDataObj.chatPatterns
-        Object.keys(chatPatterns).forEach(chatPatternName => bot.chatAddPattern(chatPatterns[chatPatternName], chatPatternName))
+        Object.keys(chatPatterns).forEach(chatPatternName => {
+            const chatPattern = chatPatterns[chatPatternName]
+            if (chatPattern instanceof RegExp) {
+                bot.addChatPattern(chatPatternName, chatPattern, { repeat: true, parse: true })
+            } else if (chatPattern instanceof Array) {
+                bot.addChatPatternSet(chatPatternName, chatPattern, { repeat: true, parse: true })
+            }
+        })
     }
     bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
     bot.timeStamp = () => '[' + (new Date()).toLocaleTimeString() + ']'

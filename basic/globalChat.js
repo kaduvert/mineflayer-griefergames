@@ -20,7 +20,7 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult(globalChat.commands.send(message), 'globalChatSentMessage', ['globalChatDeactivatedError'], 5000, bot.globalChat.events)
     }
 
-    bot.on('globalChatMessage', (cb, rank, username, message) => {
+    bot.on('chat:globalChatMessage', (cb, rank, username, message) => {
         if (username === bot.username) {
             bot.globalChat.events.emit('globalChatSentMessage', cb, rank, username, message)
         }

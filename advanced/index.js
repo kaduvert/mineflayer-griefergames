@@ -22,7 +22,7 @@ const plugins = [
     // getPlugin('profile'),
     // getPlugin('spawner'),
     // getPlugin('specialPotions'),
-    getPlugin('startkick'),
+    getPlugin('punishment'),
     getPlugin('status'),
     // getPlugin('trails'),
     getPlugin('vote')

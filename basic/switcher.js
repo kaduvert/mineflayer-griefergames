@@ -116,7 +116,7 @@ module.exports = function inject(bot, options) {
 		}
 	}
 
-	bot.on('switchTimeout', async (date, time) => {
+	bot.on('chat:switchTimeout', async (date, time) => {
 		const parsedDate = Date.parse(`${date.split('.').reverse().join('-')}T${time}`)
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
@@ -124,19 +124,19 @@ module.exports = function inject(bot, options) {
 		bot.switcher.navigator()
 	})
 
-	bot.on('switchFailed', () => {
+	bot.on('chat:switchFailed', () => {
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
 		bot.switcher.navigator()
 	})
 
-	bot.on('serverFull', () => {
+	bot.on('chat:serverFull', () => {
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
 		bot.switcher.navigator()
 	})
 
-	bot.on('switchSucceeded', () => {
+	bot.on('chat:switchSucceeded', () => {
 		bot.currentlySwitching = false
 	})
 

@@ -20,7 +20,7 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult(disguise.commands.getStatus(), ['disguiseStatus', 'disguiseNotFound'], [], 5000)
     }
 
-    bot.on('disguised', (disguiseIdentifier) => {
+    bot.on('chat:disguised', (disguiseIdentifier) => {
         bot.disguise.current = disguiseIdentifier
     })
 }

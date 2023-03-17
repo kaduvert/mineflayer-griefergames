@@ -83,7 +83,7 @@ module.exports = function inject(bot, options) {
             }
 			const sendToChat = () => {
 				bot.chat.send(msg)
-				bot.once('spamWarning', sendToChat)
+				bot.once('chat:spamWarning', sendToChat)
 				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
 					bot.once(commandErrorEvent, onCommandError)
 				})
@@ -104,7 +104,7 @@ module.exports = function inject(bot, options) {
 		console.log(chalk.red(bot.timeStamp()), chalk.yellowBright(`Kicked: ${chalk.red(reason)}`))
 	})
 
-	bot.on('spamWarning', async (recommendedWaitDuration) => {
+	bot.on('chat:spamWarning', async (recommendedWaitDuration) => {
 		const waitDelay = (recommendedWaitDuration * 1000) || chat.cmdBatchDelay
 		bot.chat.cmdSpamLock = true
 		await bot.delay(waitDelay)
@@ -113,9 +113,9 @@ module.exports = function inject(bot, options) {
 	})
 
 	bot.on('message', bot.chat.log)
-	bot.on('blacklistError', bot.chat.onBlacklistError)
+	bot.on('chat:blacklistError', bot.chat.onBlacklistError)
 
-	bot.on('chatreset', () => (bot.chat.slow = false))
-	bot.on('slowchat', () => (bot.chat.slow = true))
-	bot.on('slowchatWarn', () => (bot.chat.slow = true))
+	bot.on('chat:chatreset', () => (bot.chat.slow = false))
+	bot.on('chat:slowchat', () => (bot.chat.slow = true))
+	bot.on('chat:slowchatWarn', () => (bot.chat.slow = true))
 }

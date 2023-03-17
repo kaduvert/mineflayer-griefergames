@@ -3,5 +3,5 @@
 module.exports = function inject(bot, options) {
     bot.loadChatPatterns(bot.ggData.ggauth)
 
-    bot.on('ggauthVerificationError', bot.quit)
+    // bot.on('chat:ggauthVerificationError', bot.quit)
 }
