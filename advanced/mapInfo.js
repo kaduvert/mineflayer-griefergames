@@ -24,6 +24,6 @@ module.exports = function inject(bot, options) {
     }
 
     bot.mapInfo.getRaw = () => {
-        return bot.chat.getChatActionResult(mapInfo.commands.get(), 'mapInfo', ['mapInfoNoDataError'], 5000)
+        return bot.chat.getChatActionResult(mapInfo.commands.get(), 'chat:mapInfo', ['chat:mapInfoNoDataError'], 5000)
     }
 }

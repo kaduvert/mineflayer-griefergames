@@ -7,6 +7,7 @@ module.exports = function inject(bot, options) {
 	bot.money = {}
 
     bot.money.transfer = (username, amount) => {
-        return bot.chat.getChatActionResult(money.transfer(username, amount), 'moneyTransferred', ['moneyInsufficientError', 'moneyPlayerOfflineError'], 16000)
+        return bot.chat.getChatActionResult(money.transfer(username, amount), 'chat:moneyTransferred',
+        ['chat:moneyInsufficientError', 'chat:moneyPlayerOfflineError'], 16000)
     }
 }

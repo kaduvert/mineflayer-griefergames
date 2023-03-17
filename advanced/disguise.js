@@ -9,15 +9,16 @@ module.exports = function inject(bot, options) {
     }
 
     bot.disguise.as = (disguiseIdentifier) => {
-        return bot.chat.getChatActionResult(disguise.commands.as(disguiseIdentifier), 'disguised', ['disguiseUnknownArgumentsError', 'disguiseInsufficientPermissionsError', 'disguisePluginForbidsActionError'], 5000)
+        return bot.chat.getChatActionResult(disguise.commands.as(disguiseIdentifier),'chat:disguised',
+        ['chat:disguiseUnknownArgumentsError', 'chat:disguiseInsufficientPermissionsError', 'chat:disguisePluginForbidsActionError'], 5000)
     }
 
     bot.disguise.remove = () => {
-        return bot.chat.getChatActionResult(disguise.commands.remove(), 'disguiseRemoved', ['disguiseNotFound'], 5000)
+        return bot.chat.getChatActionResult(disguise.commands.remove(), 'chat:disguiseRemoved', ['chat:disguiseNotFound'], 5000)
     }
 
     bot.disguise.getStatus = () => {
-        return bot.chat.getChatActionResult(disguise.commands.getStatus(), ['disguiseStatus', 'disguiseNotFound'], [], 5000)
+        return bot.chat.getChatActionResult(disguise.commands.getStatus(), ['chat:disguiseStatus', 'chat:disguiseNotFound'], [], 5000)
     }
 
     bot.on('chat:disguised', (disguiseIdentifier) => {

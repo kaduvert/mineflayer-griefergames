@@ -7,7 +7,7 @@ module.exports = function inject(bot, options) {
     // tpSpamWarning
 
     bot.spawn.teleport = () => {
-        return bot.chat.getChatActionResult(spawn.commands.teleport(), 'forcedMove', ['tpSpamWarning'], 5000)
+        return bot.chat.getChatActionResult(spawn.commands.teleport(), 'forcedMove', ['chat:tpSpamWarning'], 5000)
     }
 }
 

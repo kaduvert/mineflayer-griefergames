@@ -30,15 +30,15 @@ module.exports = function inject(bot, options) {
 	}
 
     bot.playerUtils.getInventory = (username) => {
-        return bot.chat.getChatActionResult(playerUtils.commands.getInventory(username), 'inventoryOpened', ['playerNotFoundError'], 5000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(playerUtils.commands.getInventory(username), 'inventoryOpened', ['chat:playerNotFoundError'], 5000, bot.playerUtils.events)
     }
 
     bot.playerUtils.getEnderChest = (username) => {
-        return bot.chat.getChatActionResult(playerUtils.commands.getEnderChest(username), 'enderChestOpened', ['playerNotFoundError'], 5000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(playerUtils.commands.getEnderChest(username), 'enderChestOpened', ['chat:playerNotFoundError'], 5000, bot.playerUtils.events)
     }
 
     bot.playerUtils.getMiscView = (username) => {
-        return bot.chat.getChatActionResult(playerUtils.commands.getMiscView(username), 'miscViewOpened', ['playerNotFoundError'], 6000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(playerUtils.commands.getMiscView(username), 'miscViewOpened', ['chat:playerNotFoundError'], 6000, bot.playerUtils.events)
     }
 
     bot.on('windowOpen', window => {

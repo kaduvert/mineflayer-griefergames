@@ -9,15 +9,15 @@ module.exports = function inject(bot, options) {
     }
 
     bot.bank.getBalance = () => {
-        return bot.chat.getChatActionResult(bank.getBalance(), 'bankBalance', [], 5000)
+        return bot.chat.getChatActionResult(bank.getBalance(), 'chat:bankBalance', [], 5000)
     }
     
     bot.bank.deposit = (amount) => {
-        return bot.chat.getChatActionResult(bank.deposit(amount), 'bankDeposit', ['bankInvalidNumberError', 'bankInsufficientAmountError'], 5000)
+        return bot.chat.getChatActionResult(bank.deposit(amount), 'chat:bankDeposit', ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'], 5000)
     }
 
     bot.bank.withdraw = (amount) => {
-        return bot.chat.getChatActionResult(bank.withdraw(amount), 'bankWithdrawl', ['bankInvalidNumberError', 'bankInsufficientAmountError'], 5000)
+        return bot.chat.getChatActionResult(bank.withdraw(amount), 'chat:bankWithdrawl', ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'], 5000)
     }
 
     bot.on('chat:bankBalance', (balance) => {

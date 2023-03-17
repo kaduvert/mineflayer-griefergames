@@ -9,15 +9,15 @@ module.exports = function inject(bot, options) {
     }
 
     bot.globalChat.login = () => {
-        return bot.chat.getChatActionResult(globalChat.commands.login(), 'globalChatActivated', ['globalChatAlreadyActivated'], 5000)
+        return bot.chat.getChatActionResult(globalChat.commands.login(), 'chat:globalChatActivated', ['chat:globalChatAlreadyActivated'], 5000)
     }
 
     bot.globalChat.logout = () => {
-        return bot.chat.getChatActionResult(globalChat.commands.logout(), 'globalChatDeativated', ['globalChatAlreadyDeativated'], 5000)
+        return bot.chat.getChatActionResult(globalChat.commands.logout(), 'chat:globalChatDeativated', ['chat:globalChatAlreadyDeativated'], 5000)
     }
 
     bot.globalChat.send = (message) => {
-        return bot.chat.getChatActionResult(globalChat.commands.send(message), 'globalChatSentMessage', ['globalChatDeactivatedError'], 5000, bot.globalChat.events)
+        return bot.chat.getChatActionResult(globalChat.commands.send(message), 'globalChatSentMessage', ['chat:globalChatDeactivatedError'], 5000, bot.globalChat.events)
     }
 
     bot.on('chat:globalChatMessage', (cb, rank, username, message) => {

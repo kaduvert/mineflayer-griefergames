@@ -7,7 +7,7 @@ module.exports = function inject(bot, options) {
 	bot.near = {}
 
     bot.near.getRawPlayers = (distance = 200) => {
-        return bot.chat.getChatActionResult(near.commands.getPlayers(distance), 'nearPlayersList', [], 5000)
+        return bot.chat.getChatActionResult(near.commands.getPlayers(distance), 'chat:nearPlayersList', [], 5000)
     }
 
     bot.near.parsePlayers = (str) => {

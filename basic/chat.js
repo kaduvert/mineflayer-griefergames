@@ -16,7 +16,7 @@ module.exports = function inject(bot, options) {
 		lastCommand: null,
 		sentMsgLately: false,
 		slow: false,
-		commandErrorEvents: ['blacklistError', 'unknownCommandError', 'insufficientPermissionsError'],
+		commandErrorEvents: ['chat:blacklistError', 'chat:unknownCommandError', 'chat:insufficientPermissionsError'],
 		events: new EventEmitter()
 	}
 
@@ -92,7 +92,7 @@ module.exports = function inject(bot, options) {
 				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
 					bot.off(commandErrorEvent, onCommandError)
 				})
-				bot.removeListener('spamWarning', sendToChat)
+				bot.removeListener('chat:spamWarning', sendToChat)
 				res(actionResult)
 			})
 			sendToChat()

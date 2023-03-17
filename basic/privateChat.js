@@ -10,10 +10,10 @@ module.exports = function inject(bot, options) {
 		while (msg.length > charLimit) {
 			const splitIndex = msg.substring(0, charLimit).lastIndexOf(' ') + 1 || charLimit
 			bot.chat.send(prefix + msg.substring(0, splitIndex))
-			bot.chat.getChatActionResult(prefix + msg.substring(0, splitIndex), 'privateChatSentMessage', ['playerNotFoundError'], 5000)
+			bot.chat.getChatActionResult(prefix + msg.substring(0, splitIndex), 'chat:privateChatSentMessage', ['playerNotFoundError'], 5000)
 			msg = msg.substring(splitIndex)
 		}
-		bot.chat.getChatActionResult(prefix + msg, 'privateChatSentMessage', ['playerNotFoundError'], 5000)
+		bot.chat.getChatActionResult(prefix + msg, 'chat:privateChatSentMessage', ['playerNotFoundError'], 5000)
 	}
 }
 

@@ -14,10 +14,10 @@ module.exports = function inject(bot, options) {
     }
 
     bot.antiCopy.addProtection = () => {
-        return bot.chat.getChatActionResult(antiCopy.commands.toggleProtection(), 'mapAntiCopyProtectionAdded', ['mapAntiCopyNotOwnerError', 'mapAntiCopyProtectionRemoved'], 7500)
+        return bot.chat.getChatActionResult(antiCopy.commands.toggleProtection(), 'chat:mapAntiCopyProtectionAdded', ['chat:mapAntiCopyNotOwnerError', 'chat:mapAntiCopyProtectionRemoved'], 7500)
     }
 
     bot.antiCopy.removeProtection = () => {
-        return bot.chat.getChatActionResult(antiCopy.commands.toggleProtection(), 'mapAntiCopyProtectionRemoved', ['mapAntiCopyProtectionAdded', 'mapAntiCopyNotOwnerError'], 7500)
+        return bot.chat.getChatActionResult(antiCopy.commands.toggleProtection(), 'chat:mapAntiCopyProtectionRemoved', ['chat:mapAntiCopyProtectionAdded', 'chat:mapAntiCopyNotOwnerError'], 7500)
     }
 }

@@ -5,6 +5,6 @@ module.exports = function inject(bot, options) {
     bot.vote = {}
 
     bot.vote.collectPresent = () => {
-        return bot.chat.getChatActionResult(vote.commands.collectPresent(), 'votePresentCollected', ['noVotePresents'], 5000)
+        return bot.chat.getChatActionResult(vote.commands.collectPresent(), 'chat:votePresentCollected', ['chat:noVotePresents'], 5000)
     }
 }
