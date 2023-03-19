@@ -1,6 +1,6 @@
 const PLUGINS_PATH = './'
 
-function getPlugin (name) {
+function getPlugin(name) {
     return require(PLUGINS_PATH + name)
 }
 
@@ -27,6 +27,10 @@ const plugins = [
 ]
 
 module.exports = function inject(bot, options) {
+    bot.windowPatterns = {}
+
+    const ChatMessage = require('prismarine-chat')(bot.version)
+
     bot.loadChatPatterns = (ggDataObj) => {
         const chatPatterns = ggDataObj.chatPatterns
         Object.keys(chatPatterns).forEach(chatPatternName => {
@@ -36,6 +40,12 @@ module.exports = function inject(bot, options) {
             } else if (chatPattern instanceof Array) {
                 bot.addChatPatternSet(chatPatternName, chatPattern, { repeat: true, parse: true })
             }
+        })
+    }
+    bot.loadWindowPatterns = (ggDataObj) => {
+        const windowPatterns = ggDataObj.windowPatterns
+        Object.keys(windowPatterns).forEach(windowPatternName => {
+            bot.windowPatterns[windowPatternName] = windowPatterns[windowPatternName]
         })
     }
     bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
@@ -90,18 +100,18 @@ module.exports = function inject(bot, options) {
         }
         return returnCommand.trim()
     }
-    
+
     bot.getActionResult = async (successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
         if (typeof successEvents === 'string') {
-            successEvents = [ successEvents ]
+            successEvents = [successEvents]
         }
-		return new Promise((res, rej) => {
+        return new Promise((res, rej) => {
             bot.delay(timeoutLimit).then(() => {
                 res({
                     status: bot.actionResultStatus.TIMEOUT
                 })
             })
-            
+
             const onSuccess = (successEvent, ...eventArgs) => {
                 res({
                     status: bot.actionResultStatus.SUCCESS,
@@ -137,7 +147,21 @@ module.exports = function inject(bot, options) {
                     failureEventEmitter.off(failureEvent, onFailureWrapper)
                 })
             })
-		})
-	}
+        })
+    }
+
+    bot.on('windowOpen', (window) => {
+        const title = ChatMessage.fromNotch(window.title).toString()
+        const windowPatterns = bot.windowPatterns
+        Object.keys(windowPatterns).forEach(windowPatternName => {
+            const windowPattern = windowPatterns[windowPatternName]
+
+            const windowTitleMatch = title.match(windowPattern)
+            if (windowTitleMatch) {
+                bot.emit('windowOpen:' + windowPatternName, window, windowTitleMatch.splice(1))
+            }
+        })
+    })
+
     bot.loadPlugins(plugins)
 }
