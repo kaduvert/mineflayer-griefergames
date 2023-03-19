@@ -48,6 +48,37 @@ module.exports = function inject(bot, options) {
         TIMEOUT: 2
     }
 
+    bot.matchesItemPattern = (stack, { titleRegex, loreRegex }) => {
+        const stackName = stack.customName
+        const stackLore = stack.customLore
+        let isMatching = true
+        if (stackName) {
+            isMatching = titleRegex.test(stackName.replace(/§./g, ''))
+        }
+        if (stackLore) {
+            for (let i = 0; i < stackLore.length; i++) {
+                isMatching = loreRegex[i] ? loreRegex[i].test(stackLore.replace(/§./g, '')) : true
+            }
+        }
+        return isMatching
+    }
+
+    bot.getItemPatternMatches = (stack, { titleRegex, loreRegex }) => {
+        const matches = {
+            titleMatch: null,
+            loreMatches: null
+        }
+        if (titleRegex) {
+            matches.titleMatch = stack.customName.replace(/§./g, '').match(titleRegex).splice(1)
+        }
+        if (loreRegex) {
+            for (let i = 0; i < loreRegex.length; i++) {
+                matches.loreMatches[i] = stack.customLore.replace(/§./g, '').match(loreRegex[i]).splice(1)
+            }
+        }
+        return matches
+    }
+
     bot.buildCommand = (blueprint, ...commandArgs) => {
         let returnCommand = blueprint
         const commandArgMatches = returnCommand.match(/\$[1-9]+/g)
