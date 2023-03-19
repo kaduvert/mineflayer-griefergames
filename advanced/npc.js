@@ -3,8 +3,6 @@ const { GoalNear } = require('mineflayer-pathfinder').goals
 const v = require('vec3')
 
 module.exports = function inject(bot, options) {
-    const ChatMessage = require('prismarine-chat')(bot.version)
-
     bot.npc = {
         events: new EventEmitter()
     }
@@ -27,18 +25,8 @@ module.exports = function inject(bot, options) {
 
     bot.npc.getWindow = (npc, npcEntity) => {
         bot.activateEntity(npcEntity)
-        return new Promise((res) => {
-            bot.npc.events.once(`${npc.name}WindowOpened`, res)
+        return new Promise(res => {
+            bot.once(npc.onInteract, res)
         })
     }
-
-	bot.on('windowOpen', (window) => {
-        title = ChatMessage.fromNotch(window.title).toString()
-        Object.values(bot.ggData.npc).forEach(npc => {
-            if (npc.onInteract === 'windowOpen' && title.match(npc.titleRegex)) {
-				console.log(`${npc.name}WindowOpened`)
-                bot.npc.events.emit(npc.name + 'WindowOpened', window)
-            }
-        })
-    })
 }

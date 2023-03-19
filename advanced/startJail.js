@@ -24,6 +24,12 @@ module.exports = function inject(bot, options) {
         )
     }
 
+    bot.startJail.getTokenBalance = (window) => {
+        const jailTokensIndicatorStack = bot.window.getMatchingItem(window, startJail.itemPatterns.tokenBalance)
+        const jailTokenStackMatches = bot.window.getItemPatternMatches(jailTokensIndicatorStack, startJail.itemPatterns.tokenBalance)
+        return jailTokenStackMatches.loreMatches[0][0]
+    }
+
     bot.startJail.startTokenPurchase = (window) => {
         return bot.window.getClickActionResult(
             window,

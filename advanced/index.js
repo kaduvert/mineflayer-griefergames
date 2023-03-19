@@ -5,7 +5,8 @@ function getPlugin(name) {
 }
 
 const plugins = [
-    getPlugin('npc'),
+    // getPlugin('adventure'),
+    // getPlugin('orbs'),
     // getPlugin('perks'),
     getPlugin('antiCopy'),
     getPlugin('bank'),
@@ -14,10 +15,13 @@ const plugins = [
     // getPlugin('clan'),
     // getPlugin('deleteparticle'),
     getPlugin('disguise'),
+    // getPlugin('edgeConfigurator'),
     // getPlugin('friends'),
     // getPlugin('hopper'),
     // getPlugin('jail'),
+    // getPlugin('lottery'),
     getPlugin('mapInfo'),
+    getPlugin('npc'),
     // getPlugin('prefix'),
     // getPlugin('profile'),
     getPlugin('punishment'),
