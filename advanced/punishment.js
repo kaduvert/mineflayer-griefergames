@@ -34,13 +34,13 @@ module.exports = function inject(bot, options) {
     }
 
     bot.on('chat:startKick', (regexMatches) => {
-        const startKickData = bot.punishment.parse(matches)
+        const startKickData = bot.punishment.parse(regexMatches)
         bot.punishment.events.emit('startKick', startKickData)
         bot.punishment.events.emit('startKick:' + startKickData.target, startKickData)
     })
 
     bot.on('chat:startJail', (regexMatches) => {
-        const startJailData = bot.punishment.parse(matches)
+        const startJailData = bot.punishment.parse(regexMatches)
         bot.punishment.events.emit('startJail', startJailData)
         bot.punishment.events.emit('startJail:' + startJailData.target, startJailData)
     })
