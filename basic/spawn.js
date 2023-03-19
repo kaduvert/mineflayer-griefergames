@@ -2,7 +2,7 @@
 
 module.exports = function inject(bot, options) {
     const spawn = bot.ggData.spawn
-    bot.loadChatPatterns(spawn)
+    bot.chat.loadPatterns(spawn)
 
     // tpSpamWarning
 

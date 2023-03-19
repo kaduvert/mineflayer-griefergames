@@ -2,9 +2,9 @@
 
 module.exports = function inject(bot, options) {
     const mysteryMod = bot.ggData.mysteryMod
-    bot.loadChatPatterns(bot.ggData.mysteryMod)
-    
-	bot.mysteryMod = {
+    bot.chat.loadPatterns(bot.ggData.mysteryMod)
+
+    bot.mysteryMod = {
         // events: new EventEmitter()
     }
 

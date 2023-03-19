@@ -1,6 +1,6 @@
 module.exports = function inject(bot, options) {
     const vote = bot.ggData.vote
-    bot.loadChatPatterns(vote)
+    bot.chat.loadPatterns(vote)
 
     bot.vote = {}
 

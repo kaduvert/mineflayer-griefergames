@@ -2,7 +2,7 @@
 
 module.exports = function inject(bot, options) {
     const warp = bot.ggData.warp
-    bot.loadChatPatterns(warp)
+    bot.chat.loadPatterns(warp)
 
     // tpSpamWarning
 
@@ -19,7 +19,7 @@ module.exports = function inject(bot, options) {
 
     bot.warp.to = (point) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(warp.commands.to, point),
+            bot.chat.buildCommand(warp.commands.to, point),
             'forcedMove',
             ['chat:tpSpamWarning'],
             5000

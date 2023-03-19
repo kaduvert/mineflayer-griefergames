@@ -5,7 +5,6 @@ const { once } = require('events')
 
 module.exports = function inject(bot, options) {
 	const chat = bot.ggData.chat
-	bot.loadChatPatterns(chat)
 
 	bot.chatNative = bot.chat
 	bot.chat = {
@@ -19,6 +18,19 @@ module.exports = function inject(bot, options) {
 		commandErrorEvents: ['chat:blacklistError', 'chat:unknownCommandError', 'chat:insufficientPermissionsError'],
 		events: new EventEmitter()
 	}
+
+	bot.chat.loadPatterns = (ggDataObj) => {
+		const chatPatterns = ggDataObj.chatPatterns
+		Object.keys(chatPatterns).forEach(chatPatternName => {
+			const chatPattern = chatPatterns[chatPatternName]
+			if (chatPattern instanceof RegExp) {
+				bot.addChatPattern(chatPatternName, chatPattern, { repeat: true, parse: true })
+			} else if (chatPattern instanceof Array) {
+				bot.addChatPatternSet(chatPatternName, chatPattern, { repeat: true, parse: true })
+			}
+		})
+	}
+	bot.chat.loadPatterns(chat)
 
 	bot.chat.sendCommand = async (msg, priority = 3) => {
 		if (bot.chat.cmdSpamLock) await once(bot.chat.events, 'cmdSpamLockReleased')
@@ -67,7 +79,7 @@ module.exports = function inject(bot, options) {
 		console.log(chalk.cyan(bot.timeStamp()), msg.toAnsi())
 	}
 
-	bot.chat.onBlacklistError = ([[ msg ]]) => {
+	bot.chat.onBlacklistError = ([[msg]]) => {
 		console.log(msg)
 		if (msg.startsWith('/')) bot.chat.cmdBatchCount--
 		else bot.chat.sentMsgLately = false
@@ -76,12 +88,12 @@ module.exports = function inject(bot, options) {
 	bot.chat.getChatActionResult = (msg, ...args) => {
 		return new Promise((res) => {
 			const onCommandError = (commandErrorEvent, ...eventArgs) => {
-                res({
-                    status: 1,
-                    triggeredEvent: commandErrorEvent,
-                    eventArgs: eventArgs
-                })
-            }
+				res({
+					status: 1,
+					triggeredEvent: commandErrorEvent,
+					eventArgs: eventArgs
+				})
+			}
 			const sendToChat = () => {
 				bot.chat.send(msg)
 				bot.once('chat:spamWarning', sendToChat)
@@ -100,12 +112,24 @@ module.exports = function inject(bot, options) {
 		})
 	}
 
+	bot.chat.buildCommand = (blueprint, ...commandArgs) => {
+		let returnCommand = blueprint
+		const commandArgMatches = returnCommand.match(/\$[1-9]+/g)
+		if (commandArgMatches) {
+			for (commandArgMatch of commandArgMatches) {
+				const commandIndex = +commandArgMatch.substring(1)
+				returnCommand = returnCommand.replace(new RegExp('\\$' + commandIndex, 'g'), (commandArgs[commandIndex - 1] ?? ''))
+			}
+		}
+		return returnCommand.trim()
+	}
+
 	bot.on('kicked', function logKick(reason) {
 		reason = JSON.parse(reason).text
 		console.log(chalk.red(bot.timeStamp()), chalk.yellowBright(`Kicked: ${chalk.red(reason)}`))
 	})
 
-	bot.on('chat:spamWarning', async ([[ recommendedWaitDuration ]]) => {
+	bot.on('chat:spamWarning', async ([[recommendedWaitDuration]]) => {
 		const waitDelay = (recommendedWaitDuration * 1000) || chat.cmdBatchDelay
 		bot.chat.cmdSpamLock = true
 		await bot.delay(waitDelay)

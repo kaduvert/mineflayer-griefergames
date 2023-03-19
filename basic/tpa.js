@@ -2,7 +2,7 @@
 
 module.exports = function inject(bot, options) {
     const tpa = bot.ggData.tpa
-    bot.loadChatPatterns(tpa)
+    bot.chat.loadPatterns(tpa)
 
     bot.tpa = {
         // events: new EventEmitter()
@@ -10,7 +10,7 @@ module.exports = function inject(bot, options) {
 
     bot.tpa.request = (username) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(tpa.commands.request, username),
+            bot.chat.buildCommand(tpa.commands.request, username),
             'chat:sentTpa',
             ['chat:tpaToggled', 'chat:tpaDisallowed'],
             7500
@@ -19,7 +19,7 @@ module.exports = function inject(bot, options) {
 
     bot.tpa.requestHere = (username) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(tpa.commands.requestHere, username),
+            bot.chat.buildCommand(tpa.commands.requestHere, username),
             'chat:sentTpa',
             ['chat:tpaToggled', 'chat:tpaDisallowed'],
             7500

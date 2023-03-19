@@ -2,13 +2,13 @@
 
 module.exports = function inject(bot, options) {
     const status = bot.ggData.status
-    bot.loadChatPatterns(status)
+    bot.chat.loadPatterns(status)
 
     bot.status = {}
 
     bot.status.set = (message) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(status.commands.set, message),
+            bot.chat.buildCommand(status.commands.set, message),
             'chat:statusMessageSet',
             ['chat:statusInsufficientPermissionsError'],
             5000

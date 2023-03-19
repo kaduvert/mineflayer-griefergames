@@ -2,7 +2,7 @@
 
 module.exports = function inject(bot, options) {
     const disguise = bot.ggData.disguise
-    bot.loadChatPatterns(disguise)
+    bot.chat.loadPatterns(disguise)
 
     bot.disguise = {
         current: null
@@ -10,7 +10,7 @@ module.exports = function inject(bot, options) {
 
     bot.disguise.as = (disguiseIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(disguise.commands.as, disguiseIdentifier),
+            bot.chat.buildCommand(disguise.commands.as, disguiseIdentifier),
             'chat:disguised',
             ['chat:disguiseUnknownArgumentsError', 'chat:disguiseInsufficientPermissionsError', 'chat:disguisePluginForbidsActionError'],
             5000

@@ -2,7 +2,7 @@
 
 module.exports = function inject(bot, options) {
     const home = bot.ggData.home
-    bot.loadChatPatterns(home)
+    bot.chat.loadPatterns(home)
     // tpFailure
     // tpSpamWarning
 
@@ -19,7 +19,7 @@ module.exports = function inject(bot, options) {
 
     bot.home.setHome = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(home.commands.setHome, homeIdentifier),
+            bot.chat.buildCommand(home.commands.setHome, homeIdentifier),
             'chat:homeSet',
             [],
             5000
@@ -28,7 +28,7 @@ module.exports = function inject(bot, options) {
 
     bot.home.deleteHome = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(home.commands.deleteHome, homeIdentifier),
+            bot.chat.buildCommand(home.commands.deleteHome, homeIdentifier),
             'chat:homeDeleted',
             ['chat:homeNotFoundError'],
             5000
@@ -37,7 +37,7 @@ module.exports = function inject(bot, options) {
 
     bot.home.teleportTo = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(home.commands.teleportTo, homeIdentifier),
+            bot.chat.buildCommand(home.commands.teleportTo, homeIdentifier),
             'forcedMove',
             ['chat:homeNotFoundError', 'chat:tpFailure', 'chat:tpSpamWarning'],
             5000

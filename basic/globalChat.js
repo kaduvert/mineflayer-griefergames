@@ -2,7 +2,7 @@ const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
     const globalChat = bot.ggData.globalChat
-    bot.loadChatPatterns(globalChat)
+    bot.chat.loadPatterns(globalChat)
 
     bot.globalChat = {
         events: new EventEmitter()
@@ -28,7 +28,7 @@ module.exports = function inject(bot, options) {
 
     bot.globalChat.send = (message) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(globalChat.commands.send, message),
+            bot.chat.buildCommand(globalChat.commands.send, message),
             'globalChatSentMessage',
             ['chat:globalChatDeactivatedError'],
             5000,

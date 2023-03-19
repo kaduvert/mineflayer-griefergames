@@ -1,6 +1,6 @@
 module.exports = function inject(bot, options) {
 	const mapInfo = bot.ggData.mapInfo
-	bot.loadChatPatterns(mapInfo)
+	bot.chat.loadPatterns(mapInfo)
 
 	bot.mapInfo = {}
 

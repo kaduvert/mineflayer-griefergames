@@ -2,7 +2,7 @@
 
 module.exports = function inject(bot, options) {
     const bank = bot.ggData.bank
-    bot.loadChatPatterns(bank)
+    bot.chat.loadPatterns(bank)
 
     bot.bank = {
         balance: null
@@ -19,7 +19,7 @@ module.exports = function inject(bot, options) {
 
     bot.bank.deposit = (amount) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(bank.commands.deposit, amount),
+            bot.chat.buildCommand(bank.commands.deposit, amount),
             'chat:bankDeposit',
             ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'],
             5000
@@ -28,7 +28,7 @@ module.exports = function inject(bot, options) {
 
     bot.bank.withdraw = (amount) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(bank.commands.withdraw, amount),
+            bot.chat.buildCommand(bank.commands.withdraw, amount),
             'chat:bankWithdrawl',
             ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'],
             5000

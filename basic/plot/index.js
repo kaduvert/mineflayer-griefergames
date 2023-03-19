@@ -2,7 +2,7 @@ const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
     const plot = bot.ggData.plot
-    bot.loadChatPatterns(plot)
+    bot.chat.loadPatterns(plot)
 
     bot.plot = {
         listeningForInfo: false,

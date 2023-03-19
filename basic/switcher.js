@@ -7,7 +7,7 @@ const { once } = require('events')
 
 module.exports = function inject(bot, options) {
 	const switcher = bot.ggData.switcher
-	bot.loadChatPatterns(switcher)
+	bot.chat.loadPatterns(switcher)
 
 	const mcData = require('minecraft-data')(bot.version)
 
@@ -116,7 +116,7 @@ module.exports = function inject(bot, options) {
 		}
 	}
 
-	bot.on('chat:switchTimeout', async ([[ date, time ]]) => {
+	bot.on('chat:switchTimeout', async ([[date, time]]) => {
 		const parsedDate = bot.parseFormattedDate(date, time)
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()

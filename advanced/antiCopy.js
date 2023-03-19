@@ -2,7 +2,7 @@
 
 module.exports = function inject(bot, options) {
     const antiCopy = bot.ggData.antiCopy
-    bot.loadChatPatterns(bot.ggData.antiCopy)
+    bot.chat.loadPatterns(bot.ggData.antiCopy)
 
     bot.antiCopy = {}
 
