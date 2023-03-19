@@ -5,9 +5,11 @@ function getPlugin(name) {
 }
 
 const plugins = [
+    getPlugin('chat'),
+    getPlugin('window'),
+
     getPlugin('plot'),
     getPlugin('antiAfk'),
-    getPlugin('chat'),
     getPlugin('ggauth'),
     getPlugin('globalChat'),
     getPlugin('home'),
@@ -27,27 +29,6 @@ const plugins = [
 ]
 
 module.exports = function inject(bot, options) {
-    bot.windowPatterns = {}
-
-    const ChatMessage = require('prismarine-chat')(bot.version)
-
-    bot.loadChatPatterns = (ggDataObj) => {
-        const chatPatterns = ggDataObj.chatPatterns
-        Object.keys(chatPatterns).forEach(chatPatternName => {
-            const chatPattern = chatPatterns[chatPatternName]
-            if (chatPattern instanceof RegExp) {
-                bot.addChatPattern(chatPatternName, chatPattern, { repeat: true, parse: true })
-            } else if (chatPattern instanceof Array) {
-                bot.addChatPatternSet(chatPatternName, chatPattern, { repeat: true, parse: true })
-            }
-        })
-    }
-    bot.loadWindowPatterns = (ggDataObj) => {
-        const windowPatterns = ggDataObj.windowPatterns
-        Object.keys(windowPatterns).forEach(windowPatternName => {
-            bot.windowPatterns[windowPatternName] = windowPatterns[windowPatternName]
-        })
-    }
     bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
     bot.timeStamp = () => '[' + (new Date()).toLocaleTimeString() + ']'
     bot.parseFormattedDate = (date, time) => Date.parse(date.split('.').reverse().join('-') + 'T' + time)
@@ -56,49 +37,6 @@ module.exports = function inject(bot, options) {
         SUCCESS: 0,
         FAILURE: 1,
         TIMEOUT: 2
-    }
-
-    bot.matchesItemPattern = (stack, { titleRegex, loreRegex }) => {
-        const stackName = stack.customName
-        const stackLore = stack.customLore
-        let isMatching = true
-        if (stackName) {
-            isMatching = titleRegex.test(stackName.replace(/§./g, ''))
-        }
-        if (stackLore) {
-            for (let i = 0; i < stackLore.length; i++) {
-                isMatching = loreRegex[i] ? loreRegex[i].test(stackLore.replace(/§./g, '')) : true
-            }
-        }
-        return isMatching
-    }
-
-    bot.getItemPatternMatches = (stack, { titleRegex, loreRegex }) => {
-        const matches = {
-            titleMatch: null,
-            loreMatches: null
-        }
-        if (titleRegex) {
-            matches.titleMatch = stack.customName.replace(/§./g, '').match(titleRegex).splice(1)
-        }
-        if (loreRegex) {
-            for (let i = 0; i < loreRegex.length; i++) {
-                matches.loreMatches[i] = stack.customLore.replace(/§./g, '').match(loreRegex[i]).splice(1)
-            }
-        }
-        return matches
-    }
-
-    bot.buildCommand = (blueprint, ...commandArgs) => {
-        let returnCommand = blueprint
-        const commandArgMatches = returnCommand.match(/\$[1-9]+/g)
-        if (commandArgMatches) {
-            for (commandArgMatch of commandArgMatches) {
-                const commandIndex = +commandArgMatch.substring(1)
-                returnCommand = returnCommand.replace(new RegExp('\\$' + commandIndex, 'g'), (commandArgs[commandIndex - 1] ?? ''))
-            }
-        }
-        return returnCommand.trim()
     }
 
     bot.getActionResult = async (successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
@@ -149,19 +87,6 @@ module.exports = function inject(bot, options) {
             })
         })
     }
-
-    bot.on('windowOpen', (window) => {
-        const title = ChatMessage.fromNotch(window.title).toString()
-        const windowPatterns = bot.windowPatterns
-        Object.keys(windowPatterns).forEach(windowPatternName => {
-            const windowPattern = windowPatterns[windowPatternName]
-
-            const windowTitleMatch = title.match(windowPattern)
-            if (windowTitleMatch) {
-                bot.emit('windowOpen:' + windowPatternName, window, windowTitleMatch.splice(1))
-            }
-        })
-    })
 
     bot.loadPlugins(plugins)
 }
