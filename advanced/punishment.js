@@ -11,10 +11,10 @@ module.exports = function inject(bot, options) {
     bot.punishment.parse = (regexMatches) => {
         const [
             [],
-            [ target ],
-            [ creator ],
-            [ duration ],
-            [ reasoning ]
+            [target],
+            [creator],
+            [duration],
+            [reasoning]
         ] = regexMatches
         return {
             target,
@@ -22,6 +22,15 @@ module.exports = function inject(bot, options) {
             duration: +duration,
             reasoning
         }
+    }
+
+    bot.punishment.vote = (opinion) => {
+        return bot.chat.getChatActionResult(
+            opinion ? punishment.commands.voteYes : punishment.commands.voteNo,
+            'chat:punishmentVote',
+            ['chat:punishmentChangeOpinionError'],
+            5000
+        )
     }
 
     bot.on('chat:startKick', (regexMatches) => {
