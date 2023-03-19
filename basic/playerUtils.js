@@ -2,8 +2,8 @@ const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
     const playerUtils = bot.ggData.playerUtils
-    bot.loadChatPatterns(playerUtils)
-    bot.loadWindowPatterns(playerUtils)
+    bot.chat.loadPatterns(playerUtils)
+    bot.window.loadPatterns(playerUtils)
 
     bot.playerUtils = {
         events: new EventEmitter()
@@ -30,7 +30,7 @@ module.exports = function inject(bot, options) {
 
     bot.playerUtils.getInventory = (username) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(playerUtils.commands.getInventory, username),
+            bot.chat.buildCommand(playerUtils.commands.getInventory, username),
             'windowOpen:inventory',
             ['chat:playerNotFoundError'],
             5000,
@@ -40,7 +40,7 @@ module.exports = function inject(bot, options) {
 
     bot.playerUtils.getEnderChest = (username) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(playerUtils.commands.getEnderChest, username),
+            bot.chat.buildCommand(playerUtils.commands.getEnderChest, username),
             'windowOpen:enderChest',
             ['chat:playerNotFoundError'],
             5000,
@@ -50,7 +50,7 @@ module.exports = function inject(bot, options) {
 
     bot.playerUtils.getMiscView = (username) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(playerUtils.commands.getMiscView, username),
+            bot.chat.buildCommand(playerUtils.commands.getMiscView, username),
             'windowOpen:miscView',
             ['chat:playerNotFoundError'],
             6000,
