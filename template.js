@@ -1,3 +1,4 @@
+/*
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
@@ -8,3 +9,5 @@ module.exports = function inject(bot, options) {
 	return bot.chat.getChatActionResult(''``, '', [], 5000)
 
 }
+
+*/

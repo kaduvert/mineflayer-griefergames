@@ -1,3 +1,1 @@
-
-
-\[Kopf\] Du kannst erst am () wieder einen Kopf erhalten\.
+// \[Kopf\] Du kannst erst am () wieder einen Kopf erhalten\.
