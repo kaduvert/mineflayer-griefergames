@@ -5,6 +5,16 @@ module.exports = function inject(bot, options) {
 
     bot.startJail = {}
 
+    bot.startJail.target = (username, reason) => {
+        return bot.chat.getChatActionResult(
+            bot.chat.buildCommand(startJail.commands.target, username, reason),
+            'startJail:' + username,
+            ['chat:startJailHelp', 'chat:noTokensError'],
+            5000,
+            bot.punishment.events
+        )
+    }
+
     bot.startJail.openMenu = () => {
         return bot.chat.getChatActionResult(
             startJail.commands.openWindow,
