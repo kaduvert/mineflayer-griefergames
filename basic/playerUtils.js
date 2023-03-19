@@ -33,8 +33,7 @@ module.exports = function inject(bot, options) {
             bot.chat.buildCommand(playerUtils.commands.getInventory, username),
             'windowOpen:inventory',
             ['chat:playerNotFoundError'],
-            5000,
-            bot.playerUtils.events
+            5000
         )
     }
 
@@ -43,8 +42,7 @@ module.exports = function inject(bot, options) {
             bot.chat.buildCommand(playerUtils.commands.getEnderChest, username),
             'windowOpen:enderChest',
             ['chat:playerNotFoundError'],
-            5000,
-            bot.playerUtils.events
+            5000
         )
     }
 
@@ -53,8 +51,7 @@ module.exports = function inject(bot, options) {
             bot.chat.buildCommand(playerUtils.commands.getMiscView, username),
             'windowOpen:miscView',
             ['chat:playerNotFoundError'],
-            6000,
-            bot.playerUtils.events
+            6000
         )
     }
 }
