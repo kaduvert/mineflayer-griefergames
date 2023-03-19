@@ -48,7 +48,7 @@ module.exports = function inject(bot, options) {
         TIMEOUT: 2
     }
 
-    bot.makeCommand = (blueprint, ...commandArgs) => {
+    bot.buildCommand = (blueprint, ...commandArgs) => {
         let returnCommand = blueprint
         const commandArgMatches = returnCommand.match(/\$[1-9]+/g)
         if (commandArgMatches) {
