@@ -25,7 +25,7 @@ const plugins = [
     // getPlugin('prefix'),
     // getPlugin('profile'),
     getPlugin('punishment'),
-    // getPlugin('spawner'),
+    getPlugin('spawner'),
     // getPlugin('specialPotions'),
     getPlugin('startJail'),
     getPlugin('status'),
