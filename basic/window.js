@@ -50,16 +50,22 @@ module.exports = function inject(bot, options) {
     bot.window.matchesItemPattern = (stack, { title: titleRegex, lore: loreRegex }) => {
         const stackName = stack.customName
         const stackLore = stack.customLore
-        let isMatching = true
-        if (stackName) {
-            isMatching = titleRegex.test(stackName.replace(/§./g, ''))
+        let matchesName = true
+        if (titleRegex) {
+            matchesName = stackName ? titleRegex.test(stackName.replace(/§./g, '')) : false
         }
-        if (stackLore) {
-            for (let i = 0; i < stackLore.length; i++) {
-                isMatching = loreRegex[i] ? loreRegex[i].test(stackLore[i].replace(/§./g, '')) : true
+        let matchesLore = true
+        if (loreRegex?.length) {
+            if (stackLore?.length) {
+                for (let i = 0; i < loreRegex.length; i++) {
+                    matchesLore = stackLore[i] ? loreRegex[i].test(stackLore[i].replace(/§./g, '')) : false
+                    if (!matchesLore) break
+                }
+            } else {
+                matchesLore = false
             }
         }
-        return isMatching
+        return matchesName && matchesLore
     }
 
     bot.window.getItemPatternMatches = (stack, { title: titleRegex, lore: loreRegex }) => {
