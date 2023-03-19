@@ -4,10 +4,15 @@ module.exports = function inject(bot, options) {
     const near = bot.ggData.near
     bot.loadChatPatterns(near)
 
-	bot.near = {}
+    bot.near = {}
 
     bot.near.getRawPlayers = (distance = 200) => {
-        return bot.chat.getChatActionResult(near.commands.getPlayers(distance), 'chat:nearPlayersList', [], 5000)
+        return bot.chat.getChatActionResult(
+            bot.buildCommand(near.commands.getPlayers, distance),
+            'chat:nearPlayersList',
+            [],
+            5000
+        )
     }
 
     bot.near.parsePlayers = (str) => {

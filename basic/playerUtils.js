@@ -3,9 +3,9 @@ const EventEmitter = require('events')
 module.exports = function inject(bot, options) {
     const playerUtils = bot.ggData.playerUtils
     bot.loadChatPatterns(playerUtils)
-    
+
     const ChatMessage = require('prismarine-chat')(bot.version)
-    
+
     bot.playerUtils = {
         events: new EventEmitter()
     }
@@ -19,7 +19,7 @@ module.exports = function inject(bot, options) {
     }
 
     bot.playerUtils.resolveNickname = (nickname) => {
-		if (!nickname.startsWith(playerUtils.nicknamePrefix) || bot.players[nickname]) return nickname
+        if (!nickname.startsWith(playerUtils.nicknamePrefix) || bot.players[nickname]) return nickname
 
         for (const player of Object.values(bot.players)) {
             const splitDisplayName = player.displayName.toString().split(' ')
@@ -27,18 +27,36 @@ module.exports = function inject(bot, options) {
             if (splitDisplayName[2] === nickname) return player.username
         }
         return null
-	}
+    }
 
     bot.playerUtils.getInventory = (username) => {
-        return bot.chat.getChatActionResult(playerUtils.commands.getInventory(username), 'inventoryOpened', ['chat:playerNotFoundError'], 5000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(
+            bot.buildCommand(playerUtils.commands.getInventory, username),
+            'inventoryOpened',
+            ['chat:playerNotFoundError'],
+            5000,
+            bot.playerUtils.events
+        )
     }
 
     bot.playerUtils.getEnderChest = (username) => {
-        return bot.chat.getChatActionResult(playerUtils.commands.getEnderChest(username), 'enderChestOpened', ['chat:playerNotFoundError'], 5000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(
+            bot.buildCommand(playerUtils.commands.getEnderChest, username),
+            'enderChestOpened',
+            ['chat:playerNotFoundError'],
+            5000,
+            bot.playerUtils.events
+        )
     }
 
     bot.playerUtils.getMiscView = (username) => {
-        return bot.chat.getChatActionResult(playerUtils.commands.getMiscView(username), 'miscViewOpened', ['chat:playerNotFoundError'], 6000, bot.playerUtils.events)
+        return bot.chat.getChatActionResult(
+            bot.buildCommand(playerUtils.commands.getMiscView, username),
+            'miscViewOpened',
+            ['chat:playerNotFoundError'],
+            6000,
+            bot.playerUtils.events
+        )
     }
 
     bot.on('windowOpen', window => {

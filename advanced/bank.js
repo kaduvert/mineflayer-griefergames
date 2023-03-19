@@ -4,23 +4,38 @@ module.exports = function inject(bot, options) {
     const bank = bot.ggData.bank
     bot.loadChatPatterns(bank)
 
-	bot.bank = {
+    bot.bank = {
         balance: null
     }
 
     bot.bank.getBalance = () => {
-        return bot.chat.getChatActionResult(bank.getBalance(), 'chat:bankBalance', [], 5000)
+        return bot.chat.getChatActionResult(
+            bank.commands.getBalance,
+            'chat:bankBalance',
+            [],
+            5000
+        )
     }
-    
+
     bot.bank.deposit = (amount) => {
-        return bot.chat.getChatActionResult(bank.deposit(amount), 'chat:bankDeposit', ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'], 5000)
+        return bot.chat.getChatActionResult(
+            bot.buildCommand(bank.commands.deposit, amount),
+            'chat:bankDeposit',
+            ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'],
+            5000
+        )
     }
 
     bot.bank.withdraw = (amount) => {
-        return bot.chat.getChatActionResult(bank.withdraw(amount), 'chat:bankWithdrawl', ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'], 5000)
+        return bot.chat.getChatActionResult(
+            bot.buildCommand(bank.commands.withdraw, amount),
+            'chat:bankWithdrawl',
+            ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'],
+            5000
+        )
     }
 
-    bot.on('chat:bankBalance', ([[ balance ]]) => {
+    bot.on('chat:bankBalance', ([[balance]]) => {
         bot.bank.balance = +balance
     })
 
