@@ -20,9 +20,10 @@ const plugins = [
     getPlugin('mapInfo'),
     // getPlugin('prefix'),
     // getPlugin('profile'),
+    getPlugin('punishment'),
     // getPlugin('spawner'),
     // getPlugin('specialPotions'),
-    getPlugin('punishment'),
+    getPlugin('startJail'),
     getPlugin('status'),
     // getPlugin('trails'),
     getPlugin('vote')
