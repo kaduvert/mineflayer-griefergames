@@ -48,6 +48,18 @@ module.exports = function inject(bot, options) {
         TIMEOUT: 2
     }
 
+    bot.makeCommand = (blueprint, ...commandArgs) => {
+        let returnCommand = blueprint
+        const commandArgMatches = returnCommand.match(/\$[1-9]+/g)
+        if (commandArgMatches) {
+            for (commandArgMatch of commandArgMatches) {
+                const commandIndex = +commandArgMatch.substring(1)
+                returnCommand = returnCommand.replace(new RegExp('\\$' + commandIndex, 'g'), (commandArgs[commandIndex - 1] ?? ''))
+            }
+        }
+        return returnCommand.trim()
+    }
+    
     bot.getActionResult = async (successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
         if (typeof successEvents === 'string') {
             successEvents = [ successEvents ]
