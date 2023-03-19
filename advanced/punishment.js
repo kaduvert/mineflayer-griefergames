@@ -28,7 +28,7 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult(
             opinion ? punishment.commands.voteYes : punishment.commands.voteNo,
             'chat:punishmentVote',
-            ['chat:punishmentChangeOpinionError'],
+            ['chat:punishmentChangeOpinionError', 'chat:noPollError'],
             5000
         )
     }
