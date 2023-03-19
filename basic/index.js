@@ -28,7 +28,6 @@ const plugins = [
 
 module.exports = function inject(bot, options) {
     bot.loadChatPatterns = (ggDataObj) => {
-        console.log(ggDataObj)
         const chatPatterns = ggDataObj.chatPatterns
         Object.keys(chatPatterns).forEach(chatPatternName => {
             const chatPattern = chatPatterns[chatPatternName]

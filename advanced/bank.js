@@ -20,7 +20,7 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult(bank.withdraw(amount), 'chat:bankWithdrawl', ['chat:bankInvalidNumberError', 'chat:bankInsufficientAmountError'], 5000)
     }
 
-    bot.on('chat:bankBalance', (balance) => {
+    bot.on('chat:bankBalance', ([[ balance ]]) => {
         bot.bank.balance = +balance
     })
 

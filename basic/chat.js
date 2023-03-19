@@ -67,7 +67,8 @@ module.exports = function inject(bot, options) {
 		console.log(chalk.cyan(bot.timeStamp()), msg.toAnsi())
 	}
 
-	bot.chat.onBlacklistError = (msg) => {
+	bot.chat.onBlacklistError = ([[ msg ]]) => {
+		console.log(msg)
 		if (msg.startsWith('/')) bot.chat.cmdBatchCount--
 		else bot.chat.sentMsgLately = false
 	}
@@ -104,7 +105,7 @@ module.exports = function inject(bot, options) {
 		console.log(chalk.red(bot.timeStamp()), chalk.yellowBright(`Kicked: ${chalk.red(reason)}`))
 	})
 
-	bot.on('chat:spamWarning', async (recommendedWaitDuration) => {
+	bot.on('chat:spamWarning', async ([[ recommendedWaitDuration ]]) => {
 		const waitDelay = (recommendedWaitDuration * 1000) || chat.cmdBatchDelay
 		bot.chat.cmdSpamLock = true
 		await bot.delay(waitDelay)
