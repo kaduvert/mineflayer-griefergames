@@ -10,6 +10,15 @@ module.exports = function inject(bot, options) {
         events: new EventEmitter()
     }
 
+    bot.plot.goto = plotIdentifier => {
+        return bot.chat.getChatActionResult(
+            bot.chat.buildCommand(plot.commands.goto, plotIdentifier),
+            'forcedMove',
+            ['chat:plotDeniedError', 'chat:plotInvalidNumberError'],
+            5000
+        )
+    }
+
     bot.plot.parseMPP = (str) => { // MultiplePlayerProperty
         return str === plot.infoNoPlayersIndicator ? [] : str.split(plot.flagsSeperator)
     }
