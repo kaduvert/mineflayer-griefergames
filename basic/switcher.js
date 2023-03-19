@@ -117,7 +117,7 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.on('chat:switchTimeout', async ([[ date, time ]]) => {
-		const parsedDate = Date.parse(`${date.split('.').reverse().join('-')}T${time}`)
+		const parsedDate = bot.parseFormattedDate(date, time)
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
 		await bot.delay((parsedDate + 1500) - Date.now()) // 1500 added for buffer

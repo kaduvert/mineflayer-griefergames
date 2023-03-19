@@ -40,6 +40,7 @@ module.exports = function inject(bot, options) {
     }
     bot.delay = (ms => new Promise(res => setTimeout(res, ms)))
     bot.timeStamp = () => '[' + (new Date()).toLocaleTimeString() + ']'
+    bot.parseFormattedDate = (date, time) => Date.parse(date.split('.').reverse().join('-') + 'T' + time)
 
     bot.actionResultStatus = {
         SUCCESS: 0,
