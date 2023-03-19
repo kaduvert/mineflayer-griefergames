@@ -3,8 +3,7 @@ const EventEmitter = require('events')
 module.exports = function inject(bot, options) {
     const playerUtils = bot.ggData.playerUtils
     bot.loadChatPatterns(playerUtils)
-
-    const ChatMessage = require('prismarine-chat')(bot.version)
+    bot.loadWindowPatterns(playerUtils)
 
     bot.playerUtils = {
         events: new EventEmitter()
@@ -32,7 +31,7 @@ module.exports = function inject(bot, options) {
     bot.playerUtils.getInventory = (username) => {
         return bot.chat.getChatActionResult(
             bot.buildCommand(playerUtils.commands.getInventory, username),
-            'inventoryOpened',
+            'windowOpen:inventory',
             ['chat:playerNotFoundError'],
             5000,
             bot.playerUtils.events
@@ -42,7 +41,7 @@ module.exports = function inject(bot, options) {
     bot.playerUtils.getEnderChest = (username) => {
         return bot.chat.getChatActionResult(
             bot.buildCommand(playerUtils.commands.getEnderChest, username),
-            'enderChestOpened',
+            'windowOpen:enderChest',
             ['chat:playerNotFoundError'],
             5000,
             bot.playerUtils.events
@@ -52,21 +51,10 @@ module.exports = function inject(bot, options) {
     bot.playerUtils.getMiscView = (username) => {
         return bot.chat.getChatActionResult(
             bot.buildCommand(playerUtils.commands.getMiscView, username),
-            'miscViewOpened',
+            'windowOpen:miscView',
             ['chat:playerNotFoundError'],
             6000,
             bot.playerUtils.events
         )
     }
-
-    bot.on('windowOpen', window => {
-        const title = ChatMessage.fromNotch(window.title).toString()
-        if (title === 'Inventory') {
-            bot.playerUtils.events.emit('inventoryOpened', window)
-        } else if (title === 'Ender Chest') {
-            bot.playerUtils.events.emit('enderChestOpened', window)
-        } else if (title.startsWith('Ansicht - ')) {
-            bot.playerUtils.events.emit('miscViewOpened', window)
-        }
-    })
 }
