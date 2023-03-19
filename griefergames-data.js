@@ -1,4 +1,4 @@
 module.exports = function inject(bot, options) {
-    const ggData = require('../node-griefergames-data')
+    const ggData = require('griefergames-data')
     bot.ggData = ggData
 }

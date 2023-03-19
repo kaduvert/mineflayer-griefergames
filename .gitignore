@@ -105,4 +105,4 @@ dist
 
 # excluded because it just exists for testing
 test.js
-package*.json
+package-lock.json
