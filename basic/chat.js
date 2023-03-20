@@ -34,8 +34,9 @@ module.exports = function inject(bot, options) {
 
 	bot.chat.sendCommand = async (msg, priority = 3) => {
 		bot.chat.cmdQueue[priority - 1].push(msg)
+		if (Date.now() - bot.switcher.serverJoinedAt < chat.cmdBatchDelay) await bot.delay(chat.cmdBatchDelay - (Date.now() - bot.switcher.serverJoinedAt))
 		while ((Date.now() - bot.chat.cmdBatchStart) < chat.cmdBatchDelay && bot.chat.cmdBatchCount >= 3) await bot.delay(chat.cmdBatchDelay - (Date.now() - bot.chat.cmdBatchStart))
-		
+
 		const now = Date.now()
 		if (now - bot.chat.cmdBatchStart >= chat.cmdBatchDelay) {
 			bot.chat.cmdBatchStart = now
