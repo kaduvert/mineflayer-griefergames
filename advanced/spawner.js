@@ -1,13 +1,25 @@
-// const EventEmitter = require('events')
+const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
     const spawner = bot.ggData.spawner
-	bot.chat.loadPatterns(spawner)
-	bot.window.loadPatterns(spawner)
+    bot.chat.loadPatterns(spawner)
+    bot.window.loadPatterns(spawner)
 
-	bot.spawner = {}
+    bot.spawner = {
+        events: new EventEmitter()
+    }
 
     bot.spawner.tryToOpen = (spawnerBlock) => {
+        const stackAtQuickbarSlot = bot.inventory.slots[bot.inventory.hotbarStart + bot.quickBarSlot]
+        if (stackAtQuickbarSlot) {
+            return new Promise(res => {
+                res({
+                    status: bot.actionResultStatus.FAILURE,
+                    event: 'itemInHandError',
+                    eventArgs: [stackAtQuickbarSlot]
+                })
+            })
+        }
         bot.activateBlock(spawnerBlock)
         return bot.getActionResult(
             ['windowOpen:spawnerStorage', 'windowOpen:inactiveSpawnerMenu'],
@@ -26,14 +38,30 @@ module.exports = function inject(bot, options) {
     }
 
     bot.spawner.lootStack = (window, stack) => {
+        bot.spawner.listenForIncomingStack(window, stack)
         return bot.window.getClickActionResult(
             window,
             stack.slot,
             0,
-            'updateSlot:' + stack.slot,
-            [],
+            'stackReceived',
+            ['chat:noFreeInventorySpaceError'],
             1000,
-            window
+            bot.spawner.events
         )
+    }
+
+    bot.spawner.listenForIncomingStack = (window, stack) => {
+        const { type, metadata, count } = stack
+        const beginningCount = window.countRange(window.inventoryStart, window.inventoryEnd, type, metadata)
+        const onSlotUpdate = (slot) => {
+            const updatedCount = window.countRange(window.inventoryStart, window.inventoryEnd, type, metadata)
+            console.log(updatedCount - beginningCount, count)
+            if (updatedCount - beginningCount === count) {
+                bot.spawner.events.emit('stackReceived')
+                window.off('updateSlot', onSlotUpdate)
+            }
+        }
+        window.on('updateSlot', onSlotUpdate)
+        setTimeout(() => (window.off('updateSlot', onSlotUpdate)), 500)
     }
 }
