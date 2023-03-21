@@ -33,6 +33,14 @@ module.exports = function inject(bot, options) {
         })
     }
 
+    bot.window.loadPatterns = (ggDataObj, patternHead) => {
+        const windowPatterns = ggDataObj.windowPatterns
+        if (!windowPatterns) return
+        Object.keys(windowPatterns).forEach(windowPatternName => {
+            bot.window.patterns[patternHead + bot.ggData.patternHeadNameSeparator + windowPatternName] = windowPatterns[windowPatternName]
+        })
+    }
+
     bot.window.matchesItemPattern = (patternResolver, patternName, stack) => {
         const { title: titleRegex, lore: loreRegex } = bot.resolveItemPattern(patternResolver, patternName)
         const stackName = stack.customName

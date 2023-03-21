@@ -2,7 +2,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-	const pluginId = bot.ggData.loadPatternsAndGetData('data')
+	const pluginId = bot.loadPatternsAndGetData('data')
 	
 	// 
 

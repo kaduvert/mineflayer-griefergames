@@ -6,7 +6,7 @@ const EventEmitter = require('events')
 const { once } = require('events')
 
 module.exports = function inject(bot, options) {
-	const switcher = bot.ggData.loadPatternsAndGetData('switch')
+	const switcher = bot.loadPatternsAndGetData('switch')
 
 	const mcData = require('minecraft-data')(bot.version)
 
@@ -147,6 +147,6 @@ module.exports = function inject(bot, options) {
 	bot.switch.to = (cb) => {
 		bot.switch.targetServer = cb
 		bot.switch.navigate()
-		return once(bot.switch.events, 'joinedTargetServer')
+		return once(bot.switch.events, 'joinedTargetServer').then(() => once(bot, 'chat:switch->loadedData'))
 	}
 }

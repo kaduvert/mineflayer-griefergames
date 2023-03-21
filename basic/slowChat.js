@@ -1,5 +1,5 @@
 module.exports = function inject(bot, options) {
-    const slowChat = bot.ggData.loadPatternsAndGetData('slowChat')
+    const slowChat = bot.loadPatternsAndGetData('slowChat')
     // 
 
     bot.slowChat = {

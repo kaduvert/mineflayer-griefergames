@@ -1,5 +1,5 @@
 module.exports = function inject(bot, options) {
-	const mapInfo = bot.ggData.loadPatternsAndGetData('mapInfo')
+	const mapInfo = bot.loadPatternsAndGetData('mapInfo')
 
 	bot.mapInfo = {}
 

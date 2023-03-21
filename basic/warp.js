@@ -1,7 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const pluginId = bot.ggData.loadPatternsAndGetData('warp')
+    const pluginId = bot.loadPatternsAndGetData('warp')
 
     // tpSpamWarning
 

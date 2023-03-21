@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const money = bot.ggData.loadPatternsAndGetData('money')
+    const money = bot.loadPatternsAndGetData('money')
 
     bot.money = {}
 

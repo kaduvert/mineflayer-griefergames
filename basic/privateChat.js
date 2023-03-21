@@ -1,5 +1,5 @@
 module.exports = function inject(bot, options) {
-	const privateChat = bot.ggData.loadPatternsAndGetData('privateChat')
+	const privateChat = bot.loadPatternsAndGetData('privateChat')
 
 	bot.privateChat = {}
 

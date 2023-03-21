@@ -1,7 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const spawn = bot.ggData.loadPatternsAndGetData('spawn')
+    const spawn = bot.loadPatternsAndGetData('spawn')
     // tpSpamWarning
 
     bot.spawn.teleport = () => {

@@ -1,5 +1,5 @@
 module.exports = function inject(bot, options) {
-    const pluginId = bot.ggData.loadPatternsAndGetData('startJail')
+    const pluginId = bot.loadPatternsAndGetData('startJail')
 
     bot.startJail = {}
 

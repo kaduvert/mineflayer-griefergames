@@ -1,7 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const antiCopy = bot.ggData.loadPatternsAndGetData('antiCopy')
+    const antiCopy = bot.loadPatternsAndGetData('antiCopy')
 
     bot.antiCopy = {}
 

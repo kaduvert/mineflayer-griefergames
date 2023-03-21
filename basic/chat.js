@@ -64,7 +64,7 @@ module.exports = function inject(bot, options) {
 	}
 
 	bot.chat.getChatActionResult = (patternResolver, messageStruct, ...args) => {
-		const msg = messageStruct instanceof Array ? bot.buildCommand(bot.ggData[patternResolver].commands[messageStruct[0]], ...messageStruct.splice(1)) : messageStruct
+		const msg = messageStruct instanceof Array ? bot.chat.buildCommand(bot.ggData[patternResolver].commands[messageStruct[0]], ...messageStruct.splice(1)) : messageStruct
 		return new Promise((res) => {
 			const onCommandError = (commandErrorEvent, ...eventArgs) => {
 				res({

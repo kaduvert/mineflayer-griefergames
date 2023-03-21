@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const punishment = bot.ggData.loadPatternsAndGetData('punishment')
+    const punishment = bot.loadPatternsAndGetData('punishment')
 
     bot.punishment = {
         events: new EventEmitter()

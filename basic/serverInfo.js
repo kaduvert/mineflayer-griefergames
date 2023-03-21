@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const serverInfo = bot.ggData.loadPatternsAndGetData('serverInfo')
+    const serverInfo = bot.loadPatternsAndGetData('serverInfo')
     bot.serverInfo = {
         events: new EventEmitter()
     }

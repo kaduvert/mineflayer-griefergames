@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const spawner = bot.ggData.loadPatternsAndGetData('spawner')
+    const spawner = bot.loadPatternsAndGetData('spawner')
 
     bot.spawner = {
         events: new EventEmitter()
@@ -24,9 +24,9 @@ module.exports = function inject(bot, options) {
     bot.spawner.getLootableStacks = (window) => {
         return window.containerItems().filter(stack =>
             stack.name !== 'stained_glass_pane' &&
-            !bot.window.matchesItemPattern(stack, spawner.itemPatterns.availableExperience) &&
-            !bot.window.matchesItemPattern(stack, spawner.itemPatterns.nextUpdate) &&
-            !bot.window.matchesItemPattern(stack, spawner.itemPatterns.settings)
+            !bot.window.matchesItemPattern('spawner', 'availableExperience', stack) &&
+            !bot.window.matchesItemPattern('spawner', 'nextUpdate', stack) &&
+            !bot.window.matchesItemPattern('spawner', 'settings', stack)
         )
     }
 

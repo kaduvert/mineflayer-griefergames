@@ -1,8 +1,8 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    // const orb = bot.ggData.loadPatternsAndGetData('orb')
-    const orbTrader = bot.ggData.loadPatternsAndGetData('orbTrader')
+    // const orb = bot.loadPatternsAndGetData('orb')
+    const orbTrader = bot.loadPatternsAndGetData('orbTrader')
 
     bot.orb.trader = {
         // events: new EventEmitter()

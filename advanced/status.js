@@ -1,7 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const status = bot.ggData.loadPatternsAndGetData('status')
+    const status = bot.loadPatternsAndGetData('status')
 
     bot.status = {}
 

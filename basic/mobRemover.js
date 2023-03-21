@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const mobRemover = bot.ggData.loadPatternsAndGetData('mobRemover')
+    const mobRemover = bot.loadPatternsAndGetData('mobRemover')
 
     bot.mobRemover = {
         nextAt: null,

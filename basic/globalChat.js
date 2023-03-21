@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const globalChat = bot.ggData.loadPatternsAndGetData('globalChat')
+    const globalChat = bot.loadPatternsAndGetData('globalChat')
 
     bot.globalChat = {
         events: new EventEmitter()

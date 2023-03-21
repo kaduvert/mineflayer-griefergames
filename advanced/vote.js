@@ -1,5 +1,5 @@
 module.exports = function inject(bot, options) {
-    const vote = bot.ggData.loadPatternsAndGetData('vote')
+    const vote = bot.loadPatternsAndGetData('vote')
 
     bot.vote = {}
 

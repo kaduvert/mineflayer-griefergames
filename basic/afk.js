@@ -1,5 +1,7 @@
 module.exports = function inject(bot, options) {
-    const pluginId = bot.ggData.loadPatternsAndGetData('afk')
+    const afk = bot.loadPatternsAndGetData('afk')
+
+    bot.afk = {}
 
     bot.afk.pass = (window) => {
         return bot.window.getClickActionResult(

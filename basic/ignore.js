@@ -1,5 +1,5 @@
 module.exports = function inject(bot, options) {
-    const ignore = bot.ggData.loadPatternsAndGetData('ignore')
+    const ignore = bot.loadPatternsAndGetData('ignore')
 
     bot.ignore = {}
 

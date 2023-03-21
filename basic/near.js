@@ -1,7 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const near = bot.ggData.loadPatternsAndGetData('near')
+    const near = bot.loadPatternsAndGetData('near')
 
     bot.near = {}
 

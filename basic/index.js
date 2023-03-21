@@ -5,6 +5,9 @@ function getPlugin(name) {
 }
 
 const plugins = [
+    getPlugin('window'),
+    getPlugin('chat'),
+
     getPlugin('plot'),
     getPlugin('afk'),
     getPlugin('ggauth'),
@@ -47,7 +50,7 @@ module.exports = function inject(bot, options) {
         } else if (windowPatterns && Object.keys(windowPatterns).find(windowPatternName => windowPatternName === patternName)) {
             eventOrigin = 'windowOpen'
         }
-        return eventOrigin ? `${eventOrigin}:${patternResolver}${bot.patternHeadNameSeparator}${patternName}` : patternName
+        return eventOrigin ? `${eventOrigin}:${patternResolver}${bot.ggData.patternHeadNameSeparator}${patternName}` : patternName
     }
 
     bot.resolveItemPattern = (patternResolver, patternName) => bot.ggData[patternResolver].itemPatterns[patternName]
@@ -83,6 +86,7 @@ module.exports = function inject(bot, options) {
                 })
             }
 
+            console.log(successEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, successEventEmitter)))
             successEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, successEventEmitter)).forEach(successEvent => {
                 const onSuccessWrapper = (...args) => {
                     onSuccess(successEvent, args)
@@ -115,17 +119,10 @@ module.exports = function inject(bot, options) {
 		})
 	}
 
-    bot.loadWindowPatterns = (ggDataObj, patternHead) => {
-        const windowPatterns = ggDataObj.windowPatterns
-        if (!windowPatterns) return
-        Object.keys(windowPatterns).forEach(windowPatternName => {
-            bot.window.patterns[patternHead + bot.ggData.patternHeadNameSeparator + windowPatternName] = windowPatterns[windowPatternName]
-        })
-    }
 
     bot.loadPatterns = (ggDataObj, patternHead) => {
         bot.loadChatPatterns(ggDataObj, patternHead)
-        bot.loadWindowPatterns(ggDataObj, patternHead)
+        bot.window.loadPatterns(ggDataObj, patternHead)
     }
 
     bot.loadPatternsAndGetData = (ggDataObjName) => {

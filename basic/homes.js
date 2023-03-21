@@ -1,7 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const homes = bot.ggData.loadPatternsAndGetData('homes')
+    const homes = bot.loadPatternsAndGetData('homes')
     // tpFailure
     // tpSpamWarning
 
