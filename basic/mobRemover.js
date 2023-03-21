@@ -9,12 +9,12 @@ module.exports = function inject(bot, options) {
         events: new EventEmitter()
     }
 
-    bot.on('chat:mobRemoverIn', ([[mins]]) => {
+    bot.on('chat:mobRemover->nextIn', ([[mins]]) => {
         bot.mobRemover.nextAt = Date.now() + (+mins * 60 * 1000)
         bot.mobRemover.events.emit('mobRemoverIn:' + mins)
     })
 
-    bot.on('chat:mobRemover', ([[removedMobs]]) => {
+    bot.on('chat:mobRemover->removedMobs', ([[removedMobs]]) => {
         bot.mobRemover.nextAt = Date.now() + (mobRemover.cycleTime)
         bot.mobRemover.events.emit('mobRemover', removedMobs)
     })

@@ -27,19 +27,19 @@ module.exports = function inject(bot, options) {
     bot.punishment.vote = (opinion) => {
         return bot.chat.getChatActionResult(
             opinion ? punishment.commands.voteYes : punishment.commands.voteNo,
-            'chat:punishmentVote',
-            ['chat:punishmentChangeOpinionError', 'chat:noPollError'],
+            'vote',
+            ['changeOpinionError', 'noPollError'],
             5000
         )
     }
 
-    bot.on('chat:startKick', (regexMatches) => {
+    bot.on('chat:punishment->startKick', (regexMatches) => {
         const startKickData = bot.punishment.parse(regexMatches)
         bot.punishment.events.emit('startKick', startKickData)
         bot.punishment.events.emit('startKick:' + startKickData.target, startKickData)
     })
 
-    bot.on('chat:startJail', (regexMatches) => {
+    bot.on('chat:punishment->startJail', (regexMatches) => {
         const startJailData = bot.punishment.parse(regexMatches)
         bot.punishment.events.emit('startJail', startJailData)
         bot.punishment.events.emit('startJail:' + startJailData.target, startJailData)

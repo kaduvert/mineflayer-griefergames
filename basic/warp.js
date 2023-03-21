@@ -11,7 +11,7 @@ module.exports = function inject(bot, options) {
     bot.warp.getList = () => {
         return bot.chat.getChatActionResult(
             warp.commands.getList,
-            'chat:warpList',
+            'list',
             [],
             5000
         )

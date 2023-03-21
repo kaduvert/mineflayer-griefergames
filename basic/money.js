@@ -9,8 +9,8 @@ module.exports = function inject(bot, options) {
     bot.money.transfer = (username, amount) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(money.transfer, username, amount),
-            'chat:moneyTransferred',
-            ['chat:moneyInsufficientError', 'chat:moneyPlayerOfflineError'],
+            'transferred',
+            ['insufficientError', 'playerOfflineError'],
             16000
         )
     }

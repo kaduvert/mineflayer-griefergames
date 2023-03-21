@@ -14,7 +14,7 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(plot.commands.goto, plotIdentifier),
             'forcedMove',
-            ['chat:plotDeniedError', 'chat:plotInvalidNumberError'],
+            ['deniedError', 'invalidNumberError'],
             5000
         )
     }

@@ -19,7 +19,7 @@ module.exports = function inject(bot, options) {
             window,
             window.slots.items().find(item => item.name === itemName).slot,
             0,
-            'windowOpen:orbSellItem',
+            'windowOpen:orbTrader->sellItem',
             [],
             1000
         )
@@ -31,7 +31,7 @@ module.exports = function inject(bot, options) {
             window,
             sellOptions[quantityOption],
             0,
-            'chat:orbSaleSuccessful',
+            'chat:orbTrader->saleSuccessful',
             [],
             1000
         )

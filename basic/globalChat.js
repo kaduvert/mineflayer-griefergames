@@ -11,8 +11,8 @@ module.exports = function inject(bot, options) {
     bot.globalChat.login = () => {
         return bot.chat.getChatActionResult(
             globalChat.commands.login,
-            'chat:globalChatActivated',
-            ['chat:globalChatAlreadyActivated'],
+            'activated',
+            ['alreadyActivated'],
             5000
         )
     }
@@ -20,8 +20,8 @@ module.exports = function inject(bot, options) {
     bot.globalChat.logout = () => {
         return bot.chat.getChatActionResult(
             globalChat.commands.logout,
-            'chat:globalChatDeativated',
-            ['chat:globalChatAlreadyDeativated'],
+            'deativated',
+            ['alreadyDeativated'],
             5000
         )
     }
@@ -29,16 +29,16 @@ module.exports = function inject(bot, options) {
     bot.globalChat.send = (message) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(globalChat.commands.send, message),
-            'globalChatSentMessage',
-            ['chat:globalChatDeactivatedError'],
+            'sentMessage',
+            ['deactivatedError'],
             5000,
             bot.globalChat.events
         )
     }
 
-    bot.on('chat:globalChatMessage', ([[cb, rank, username, message]]) => {
+    bot.on('chat:globalChat->message', ([[cb, rank, username, message]]) => {
         if (username === bot.username) {
-            bot.globalChat.events.emit('globalChatSentMessage', cb, rank, username, message)
+            bot.globalChat.events.emit('sentMessage', cb, rank, username, message)
         }
     })
 }

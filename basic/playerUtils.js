@@ -31,8 +31,8 @@ module.exports = function inject(bot, options) {
     bot.playerUtils.getInventory = (username) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(playerUtils.commands.getInventory, username),
-            'windowOpen:inventory',
-            ['chat:playerNotFoundError'],
+            'windowOpen:playerUtils->inventory',
+            ['playerNotFoundError'],
             5000
         )
     }
@@ -40,8 +40,8 @@ module.exports = function inject(bot, options) {
     bot.playerUtils.getEnderChest = (username) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(playerUtils.commands.getEnderChest, username),
-            'windowOpen:enderChest',
-            ['chat:playerNotFoundError'],
+            'windowOpen:playerUtils->enderChest',
+            ['playerNotFoundError'],
             5000
         )
     }
@@ -49,8 +49,8 @@ module.exports = function inject(bot, options) {
     bot.playerUtils.getMiscView = (username) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(playerUtils.commands.getMiscView, username),
-            'windowOpen:miscView',
-            ['chat:playerNotFoundError'],
+            'windowOpen:playerUtils->miscView',
+            ['playerNotFoundError'],
             6000
         )
     }

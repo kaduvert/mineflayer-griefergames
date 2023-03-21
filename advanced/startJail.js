@@ -9,7 +9,7 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(startJail.commands.target, username, reason),
             'startJail:' + username,
-            ['chat:startJailHelp', 'chat:noTokensError'],
+            ['help', 'noTokensError'],
             5000,
             bot.punishment.events
         )
@@ -18,7 +18,7 @@ module.exports = function inject(bot, options) {
     bot.startJail.openMenu = () => {
         return bot.chat.getChatActionResult(
             startJail.commands.openWindow,
-            'windowOpen:startJailMenu',
+            'windowOpen:startJail->menu',
             [],
             5000
         )
@@ -35,7 +35,7 @@ module.exports = function inject(bot, options) {
             window,
             bot.window.getMatchingItem(window, startJail.itemPatterns.purchaseToken).slot,
             0,
-            'windowOpen:confirmPurchase',
+            'windowOpen:startJail->confirmPurchase',
             [],
             1000
         )
@@ -46,7 +46,7 @@ module.exports = function inject(bot, options) {
             window,
             bot.window.getMatchingItem(window, startJail.itemPatterns.confirmPurchase).slot,
             0,
-            'chat:purchaseSuccess',
+            'purchaseSuccess',
             ['insufficientBalanceError'],
             1000
         )
@@ -57,7 +57,7 @@ module.exports = function inject(bot, options) {
             window,
             bot.window.getMatchingItem(window, startJail.itemPatterns.cancelPurchase).slot,
             0,
-            'chat:purchaseCancelled',
+            'purchaseCancelled',
             [],
             1000
         )

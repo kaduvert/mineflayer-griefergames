@@ -9,13 +9,18 @@ module.exports = function inject(bot, options) {
     bot.status.set = (message) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(status.commands.set, message),
-            'chat:statusMessageSet',
-            ['chat:statusInsufficientPermissionsError'],
+            'set',
+            ['insufficientPermissionsError'],
             5000
         )
     }
 
     bot.status.toggle = () => {
-        return bot.chat.getChatActionResult(status.commands.toggle, ['chat:statusActivated', 'chat:statusDeactivated'], ['chat:statusInsufficientPermissionsError'], 5000)
+        return bot.chat.getChatActionResult(
+            status.commands.toggle,
+            ['activated', 'deactivated'],
+            ['insufficientPermissionsError'],
+            5000
+        )
     }
 }

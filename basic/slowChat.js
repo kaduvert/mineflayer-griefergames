@@ -7,11 +7,11 @@ module.exports = function inject(bot, options) {
         active: false
     }
 
-    bot.on('chat:slowChatActivated', () => {
+    bot.on('chat:slowChat->activated', () => {
         bot.slowChat.active = true
     })
 
-    bot.on('chat:slowChatDeactivated', () => {
+    bot.on('chat:slowChat->deactivated', () => {
         bot.slowChat.active = false
     })
 }

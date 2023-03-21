@@ -16,8 +16,8 @@ module.exports = function inject(bot, options) {
     bot.antiCopy.addProtection = () => {
         return bot.chat.getChatActionResult(
             antiCopy.commands.toggleProtection,
-            'chat:mapAntiCopyProtectionAdded',
-            ['chat:mapAntiCopyNotOwnerError', 'chat:mapAntiCopyProtectionRemoved'],
+            'protectionAdded',
+            ['notOwnerError', 'protectionRemoved'],
             7500
         )
     }
@@ -25,8 +25,8 @@ module.exports = function inject(bot, options) {
     bot.antiCopy.removeProtection = () => {
         return bot.chat.getChatActionResult(
             antiCopy.commands.toggleProtection,
-            'chat:mapAntiCopyProtectionRemoved',
-            ['chat:mapAntiCopyProtectionAdded', 'chat:mapAntiCopyNotOwnerError'],
+            'protectionRemoved',
+            ['protectionAdded', 'notOwnerError'],
             7500
         )
     }

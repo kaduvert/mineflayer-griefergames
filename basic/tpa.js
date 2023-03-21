@@ -11,8 +11,8 @@ module.exports = function inject(bot, options) {
     bot.tpa.request = (username) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(tpa.commands.request, username),
-            'chat:sentTpa',
-            ['chat:tpaToggled', 'chat:tpaDisallowed'],
+            'sent',
+            ['toggledError', 'disallowedError'],
             7500
         )
     }
@@ -20,8 +20,8 @@ module.exports = function inject(bot, options) {
     bot.tpa.requestHere = (username) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(tpa.commands.requestHere, username),
-            'chat:sentTpa',
-            ['chat:tpaToggled', 'chat:tpaDisallowed'],
+            'sent',
+            ['toggledError', 'disallowedError'],
             7500
         )
     }
@@ -29,8 +29,8 @@ module.exports = function inject(bot, options) {
     bot.tpa.accept = () => {
         return bot.chat.getChatActionResult(
             tpa.commands.accept,
-            'chat:tpaAccepted',
-            ['chat:tpaDisallowed', 'chat:tpaNotFound', 'chat:tpaExpired'],
+            'accepted',
+            ['disallowedError', 'notFoundError', 'expiredError'],
             7500
         )
     }
@@ -38,8 +38,8 @@ module.exports = function inject(bot, options) {
     bot.tpa.deny = () => {
         return bot.chat.getChatActionResult(
             tpa.commands.deny,
-            'chat:tpaDenied',
-            ['chat:tpaNotFound', 'chat:tpaNull'],
+            'denied',
+            ['notFoundError', 'nullError'],
             7500
         )
     }
@@ -47,8 +47,8 @@ module.exports = function inject(bot, options) {
     bot.tpa.toggle = () => {
         return bot.chat.getChatActionResult(
             tpa.commands.toggle,
-            ['chat:tpaActivated', 'chat:tpaDeactivated'],
-            ['tpaNotFound', 'tpaNull'],
+            ['activated', 'deactivated'],
+            ['notFoundError', 'nullError'],
             7500
         )
     }

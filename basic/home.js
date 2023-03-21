@@ -11,7 +11,7 @@ module.exports = function inject(bot, options) {
     bot.home.getRawList = () => {
         return bot.chat.getChatActionResult(
             home.commands.getHomes,
-            ['chat:homeList', 'chat:homesUnset'],
+            ['list', 'unset'],
             [],
             5000
         )
@@ -20,7 +20,7 @@ module.exports = function inject(bot, options) {
     bot.home.setHome = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(home.commands.setHome, homeIdentifier),
-            'chat:homeSet',
+            'set',
             [],
             5000
         )
@@ -29,8 +29,8 @@ module.exports = function inject(bot, options) {
     bot.home.deleteHome = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(home.commands.deleteHome, homeIdentifier),
-            'chat:homeDeleted',
-            ['chat:homeNotFoundError'],
+            'deleted',
+            ['notFoundError'],
             5000
         )
     }
@@ -39,7 +39,7 @@ module.exports = function inject(bot, options) {
         return bot.chat.getChatActionResult(
             bot.chat.buildCommand(home.commands.teleportTo, homeIdentifier),
             'forcedMove',
-            ['chat:homeNotFoundError', 'chat:tpFailure', 'chat:tpSpamWarning'],
+            ['notFoundError', 'chat:tpFailure', 'chat:tpSpamWarning'],
             5000
         )
     }

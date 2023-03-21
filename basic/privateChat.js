@@ -7,8 +7,8 @@ module.exports = function inject(bot, options) {
 	bot.privateChat.send = (username, msg) => {
 		return bot.chat.getChatActionResult(
 			bot.buildCommand(privateChat.commands.send, username, msg),
-			'chat:privateChatSentMessage',
-			['chat:receiverToggledMessagesError', 'chat:playerNotFoundError'],
+			'sentMessage',
+			['receiverToggledMessagesError', 'playerNotFoundError'],
 			5000
 		)
 	}
@@ -16,25 +16,7 @@ module.exports = function inject(bot, options) {
 	bot.privateChat.toggle = () => {
 		return bot.chat.getChatActionResult(
 			privateChat.commands.toggle,
-			['chat:privateChatActivated', 'chat:privateChatDeactivated'],
-			[],
-			5000
-		)
-	}
-
-	bot.privateChat.toggleIgnore = (username) => {
-		return bot.chat.getChatActionResult(
-			bot.buildCommand(privateChat.commands.ignore, username),
-			['chat:ignoreAdd', 'chat:ignoreRemove'],
-			[],
-			5000
-		)
-	}
-
-	bot.privateChat.getIgnoredList = () => {
-		return bot.chat.getChatActionResult(
-			privateChat.commands.ignoredList,
-			['chat:ignoreList', 'chat:ignoreListEmpty'],
+			['activated', 'deactivated'],
 			[],
 			5000
 		)

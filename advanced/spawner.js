@@ -16,8 +16,8 @@ module.exports = function inject(bot, options) {
         }
         bot.activateBlock(spawnerBlock)
         return bot.getActionResult(
-            ['windowOpen:spawnerStorage', 'windowOpen:inactiveSpawnerMenu'],
-            ['chat:spawnerAlreadyOpenedError', 'chat:noSpawnerOpenPermissionsError'],
+            ['windowOpen:spawner->storage', 'windowOpen:spawner->inactiveMenu'],
+            ['chat:spawner->alreadyOpenedError', 'chat:spawner->noOpenPermissionsError'],
             1000
         )
     }
@@ -38,7 +38,7 @@ module.exports = function inject(bot, options) {
             stack.slot,
             0,
             'stackReceived',
-            ['chat:noFreeInventorySpaceError'],
+            ['noFreeInventorySpaceError'],
             1000,
             bot.spawner.events
         )

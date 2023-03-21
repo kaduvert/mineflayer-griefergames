@@ -7,8 +7,8 @@ module.exports = function inject(bot, options) {
     bot.vote.collectPresent = () => {
         return bot.chat.getChatActionResult(
             vote.commands.collectPresent,
-            'chat:votePresentCollected',
-            ['chat:noVotePresents'],
+            'presentCollected',
+            ['noPresents'],
             5000
         )
     }
