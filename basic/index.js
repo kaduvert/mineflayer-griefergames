@@ -9,7 +9,7 @@ const plugins = [
     getPlugin('window'),
 
     getPlugin('plot'),
-    getPlugin('antiAfk'),
+    getPlugin('afk'),
     getPlugin('ggauth'),
     getPlugin('globalChat'),
     getPlugin('home'),
