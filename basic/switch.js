@@ -6,21 +6,20 @@ const EventEmitter = require('events')
 const { once } = require('events')
 
 module.exports = function inject(bot, options) {
-	const switcher = bot.ggData.switcher
+	const switcher = bot.ggData.switch
 	bot.chat.loadPatterns(switcher)
 
 	const mcData = require('minecraft-data')(bot.version)
 
-	bot.switcher = {
+	bot.switch = {
 		targetServer: null,
 		serverJoinedAt: null,
-		switchTimeout: null,
 		currentlySwitching: false,
 		cbStatusMap: {},
 		events: new EventEmitter()
 	}
 
-	bot.switcher.getTravelRoute = (relativeGoal) => {
+	bot.switch.getTravelRoute = (relativeGoal) => {
 		let route = null
 		const onXAxis = Math.abs(relativeGoal.x) === 16
 		const onPositiveAxis = (onXAxis ? relativeGoal.x : relativeGoal.z) > 0
@@ -39,8 +38,8 @@ module.exports = function inject(bot, options) {
 		return route
 	}
 
-	bot.switcher.travelToPortal = async (relativePortalBlock) => {
-		for (const relativeStopVec of bot.switcher.getTravelRoute(relativePortalBlock)) {
+	bot.switch.travelToPortal = async (relativePortalBlock) => {
+		for (const relativeStopVec of bot.switch.getTravelRoute(relativePortalBlock)) {
 			const absoluteStopVec = v(switcher.portalRoomSpawnBlock).plus(relativeStopVec).offset(0.5, 1, 0.5)
 
 			bot.pathfinder.setGoal(new GoalBlock(absoluteStopVec.x, absoluteStopVec.y, absoluteStopVec.z))
@@ -48,14 +47,14 @@ module.exports = function inject(bot, options) {
 		}
 	}
 
-	bot.switcher.isRankPermittedToJoin = (server, freeSlots, rank = bot.playerUtils.getRank()) => {
+	bot.switch.isRankPermittedToJoin = (server, freeSlots, rank = bot.playerUtils.getRank()) => {
 		return (
 			freeSlots > 0 ||
 			((freeSlots + switcher.rankCaps[rank]) > 0 && server !== 'cbevil')
 		)
 	}
 
-	bot.switcher.getJoinableFromBotPosition = () => {
+	bot.switch.getJoinableFromBotPosition = () => {
 		const armorStands = Object.values(bot.entities).filter(e => e.objectType === 'Armor Stand' && !!e.metadata?.[2] && (e.position.distanceTo(bot.entity.position) < 3)).reduce((acc, curr) => [...acc, { nameTag: curr.metadata[2], position: curr.position }], [])
 		let isJoinable = true
 		for (const stand of armorStands) {
@@ -63,7 +62,7 @@ module.exports = function inject(bot, options) {
 			if (/^\d+\/\d+$/.test(nameTag)) {
 				const [onlinePlayers, maxPlayers] = nameTag.split('/').map(e => +e)
 				const freeSlots = maxPlayers - onlinePlayers
-				if (!bot.switcher.isRankPermittedToJoin(bot.switcher.targetServer, freeSlots)) isJoinable = false
+				if (!bot.switch.isRankPermittedToJoin(bot.switch.targetServer, freeSlots)) isJoinable = false
 			} else if (/^[A-Z][a-z]+$/.test(nameTag)) {
 				if (nameTag !== 'Online') isJoinable = false
 			}
@@ -71,22 +70,22 @@ module.exports = function inject(bot, options) {
 		return isJoinable
 	}
 
-	bot.switcher.navigate = async () => {
-		const targetServer = bot.switcher.targetServer
+	bot.switch.navigate = async () => {
+		const targetServer = bot.switch.targetServer
 		if (!targetServer) return
 
 		if (bot.serverInfo.getTranslatedServer() === targetServer) {
-			bot.switcher.targetServer = null
+			bot.switch.targetServer = null
 			bot.pathfinder.setGoal(null)
 			bot.clearControlStates()
-			bot.switcher.events.emit('joinedTargetServer')
+			bot.switch.events.emit('joinedTargetServer')
 			return
 		}
 
 		if (bot.serverInfo.isHub()) {
 			bot.chat.send('/portal')
 		} else if (bot.serverInfo.isPortal()) {
-			if (bot.switcher.currentlySwitching) return
+			if (bot.switch.currentlySwitching) return
 			bot.clearControlStates()
 			await bot.waitForChunksToLoad()
 
@@ -95,7 +94,7 @@ module.exports = function inject(bot, options) {
 
 			const isInPortal = bot.entity.position.xzDistanceTo(closestAbsoluteStableBlock) < 2
 			if (!isInPortal) {
-				await bot.switcher.travelToPortal(relativePortalBlock)
+				await bot.switch.travelToPortal(relativePortalBlock)
 
 				const closestPortalBlock = bot.findBlocks({
 					point: closestAbsoluteStableBlock.offset(0, 1 + bot.entity.height, 0),
@@ -106,34 +105,34 @@ module.exports = function inject(bot, options) {
 				await bot.lookAt(closestPortalBlock.offset(0.5, 0.5, 0.5), true)
 			}
 
-			await bot.delay(switcher.joinDelay - (Date.now() - bot.switcher.serverJoinedAt))
-			while (!bot.switcher.getJoinableFromBotPosition()) await bot.delay(10)
+			await bot.delay(switcher.joinDelay - (Date.now() - bot.switch.serverJoinedAt))
+			while (!bot.switch.getJoinableFromBotPosition()) await bot.delay(10)
 			bot.setControlState(isInPortal ? 'jump' : 'forward', true)
 		} else {
-			await bot.delay(10000 - (Date.now() - bot.switcher.serverJoinedAt))
+			await bot.delay(10000 - (Date.now() - bot.switch.serverJoinedAt))
 			bot.chat.send('/switch ' + targetServer)
-			bot.switcher.currentlySwitching = true
+			bot.switch.currentlySwitching = true
 		}
 	}
 
 	bot.on('chat:switchTimeout', async ([[date, time]]) => {
 		const parsedDate = bot.parseFormattedDate(date, time)
-		bot.switcher.currentlySwitching = false
-		bot.switcher.serverJoinedAt = Date.now()
+		bot.switch.currentlySwitching = false
+		bot.switch.serverJoinedAt = Date.now()
 		await bot.delay((parsedDate + 1500) - Date.now()) // 1500 added for buffer
-		bot.switcher.navigate()
+		bot.switch.navigate()
 	})
 
 	bot.on('chat:switchFailed', () => {
-		bot.switcher.currentlySwitching = false
-		bot.switcher.serverJoinedAt = Date.now()
-		bot.switcher.navigate()
+		bot.switch.currentlySwitching = false
+		bot.switch.serverJoinedAt = Date.now()
+		bot.switch.navigate()
 	})
 
 	bot.on('chat:serverFull', () => {
-		bot.switcher.currentlySwitching = false
-		bot.switcher.serverJoinedAt = Date.now()
-		bot.switcher.navigate()
+		bot.switch.currentlySwitching = false
+		bot.switch.serverJoinedAt = Date.now()
+		bot.switch.navigate()
 	})
 
 	bot.on('chat:switchSucceeded', () => {
@@ -141,13 +140,13 @@ module.exports = function inject(bot, options) {
 	})
 
 	bot.serverInfo.events.on('join', () => {
-		bot.switcher.serverJoinedAt = Date.now()
+		bot.switch.serverJoinedAt = Date.now()
 	})
 
-	bot.serverInfo.events.on('join', bot.switcher.navigate)
+	bot.serverInfo.events.on('join', bot.switch.navigate)
 
-	bot.switcher.goto = (cb) => {
-		bot.switcher.targetServer = cb
-		bot.switcher.navigate()
+	bot.switch.to = (cb) => {
+		bot.switch.targetServer = cb
+		bot.switch.navigate()
 	}
 }
