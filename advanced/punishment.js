@@ -1,8 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const punishment = bot.ggData.punishment
-    bot.chat.loadPatterns(punishment)
+    const punishment = bot.ggData.loadPatternsAndGetData('punishment')
 
     bot.punishment = {
         events: new EventEmitter()
@@ -26,7 +25,8 @@ module.exports = function inject(bot, options) {
 
     bot.punishment.vote = (opinion) => {
         return bot.chat.getChatActionResult(
-            opinion ? punishment.commands.voteYes : punishment.commands.voteNo,
+            'punishment',
+            opinion ? 'voteYes' : 'voteNo',
             'vote',
             ['changeOpinionError', 'noPollError'],
             5000

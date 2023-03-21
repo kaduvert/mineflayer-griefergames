@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.chat.loadPatterns(bot.ggData.itemClear)
+    const itemClear = bot.ggData.loadPatternsAndGetData('itemClear')
 
     bot.itemClear = {
         nextAt: null,

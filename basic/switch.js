@@ -6,8 +6,7 @@ const EventEmitter = require('events')
 const { once } = require('events')
 
 module.exports = function inject(bot, options) {
-	const switcher = bot.ggData.switch
-	bot.chat.loadPatterns(switcher)
+	const switcher = bot.ggData.loadPatternsAndGetData('switch')
 
 	const mcData = require('minecraft-data')(bot.version)
 

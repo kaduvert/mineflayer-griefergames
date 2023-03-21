@@ -1,50 +1,53 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const home = bot.ggData.home
-    bot.chat.loadPatterns(home)
+    const homes = bot.ggData.loadPatternsAndGetData('homes')
     // tpFailure
     // tpSpamWarning
 
-    bot.home = {}
+    bot.homes = {}
 
-    bot.home.getRawList = () => {
+    bot.homes.getRawList = () => {
         return bot.chat.getChatActionResult(
-            home.commands.getHomes,
+            'homes',
+            'get',
             ['list', 'unset'],
             [],
             5000
         )
     }
 
-    bot.home.setHome = (homeIdentifier) => {
+    bot.homes.set = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(home.commands.setHome, homeIdentifier),
+            'homes',
+            ['set', homeIdentifier],
             'set',
             [],
             5000
         )
     }
 
-    bot.home.deleteHome = (homeIdentifier) => {
+    bot.homes.delete = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(home.commands.deleteHome, homeIdentifier),
+            'homes',
+            ['delete', homeIdentifier],
             'deleted',
             ['notFoundError'],
             5000
         )
     }
 
-    bot.home.teleportTo = (homeIdentifier) => {
+    bot.homes.teleportTo = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(home.commands.teleportTo, homeIdentifier),
+            'homes',
+            ['teleportTo', homeIdentifier],
             'forcedMove',
             ['notFoundError', 'chat:tpFailure', 'chat:tpSpamWarning'],
             5000
         )
     }
 
-    bot.home.parseList = (str) => {
+    bot.homes.parseList = (str) => {
         if (str === 'keine') return []
         return str.split(', ')
     }

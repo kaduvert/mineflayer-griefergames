@@ -1,14 +1,14 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const near = bot.ggData.near
-    bot.chat.loadPatterns(near)
+    const near = bot.ggData.loadPatternsAndGetData('near')
 
     bot.near = {}
 
     bot.near.getRawPlayers = (distance = 200) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(near.commands.getPlayers, distance),
+            'near',
+            ['getPlayers', distance],
             'playerList',
             [],
             5000

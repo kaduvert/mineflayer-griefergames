@@ -1,14 +1,14 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const status = bot.ggData.status
-    bot.chat.loadPatterns(status)
+    const status = bot.ggData.loadPatternsAndGetData('status')
 
     bot.status = {}
 
     bot.status.set = (message) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(status.commands.set, message),
+            'status',
+            ['set', message],
             'set',
             ['insufficientPermissionsError'],
             5000
@@ -17,7 +17,8 @@ module.exports = function inject(bot, options) {
 
     bot.status.toggle = () => {
         return bot.chat.getChatActionResult(
-            status.commands.toggle,
+            'status',
+            'toggle',
             ['activated', 'deactivated'],
             ['insufficientPermissionsError'],
             5000

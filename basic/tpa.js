@@ -1,8 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const tpa = bot.ggData.tpa
-    bot.chat.loadPatterns(tpa)
+    const tpa = bot.ggData.loadPatternsAndGetData('tpa')
 
     bot.tpa = {
         // events: new EventEmitter()
@@ -10,7 +9,8 @@ module.exports = function inject(bot, options) {
 
     bot.tpa.request = (username) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(tpa.commands.request, username),
+            'tpa',
+            ['request', username],
             'sent',
             ['toggledError', 'disallowedError'],
             7500
@@ -19,7 +19,8 @@ module.exports = function inject(bot, options) {
 
     bot.tpa.requestHere = (username) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(tpa.commands.requestHere, username),
+            'tpa',
+            ['requestHere', username],
             'sent',
             ['toggledError', 'disallowedError'],
             7500
@@ -28,7 +29,8 @@ module.exports = function inject(bot, options) {
 
     bot.tpa.accept = () => {
         return bot.chat.getChatActionResult(
-            tpa.commands.accept,
+            'tpa',
+            'accept',
             'accepted',
             ['disallowedError', 'notFoundError', 'expiredError'],
             7500
@@ -37,7 +39,8 @@ module.exports = function inject(bot, options) {
 
     bot.tpa.deny = () => {
         return bot.chat.getChatActionResult(
-            tpa.commands.deny,
+            'tpa',
+            'deny',
             'denied',
             ['notFoundError', 'nullError'],
             7500
@@ -46,7 +49,8 @@ module.exports = function inject(bot, options) {
 
     bot.tpa.toggle = () => {
         return bot.chat.getChatActionResult(
-            tpa.commands.toggle,
+            'tpa',
+            'toggle',
             ['activated', 'deactivated'],
             ['notFoundError', 'nullError'],
             7500

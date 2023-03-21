@@ -1,21 +1,21 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const antiCopy = bot.ggData.antiCopy
-    bot.chat.loadPatterns(bot.ggData.antiCopy)
+    const antiCopy = bot.ggData.loadPatternsAndGetData('antiCopy')
 
     bot.antiCopy = {}
 
     bot.antiCopy.getProtector = (stack) => {
-        if (stack.customLore && stack.customLore.length >= 1) {
-            return stack.customLore[0].replace(/§./g, '').match(antiCopy.loreRegex)?.[1]
+        if (bot.window.matchesItemPattern('antiCopy', 'protectedMap', stack)) {
+            return bot.window.getItemPatternMatches('antiCopy', 'protectedMap', stack)[0][0]
         }
         return null
     }
 
     bot.antiCopy.addProtection = () => {
         return bot.chat.getChatActionResult(
-            antiCopy.commands.toggleProtection,
+            'antiCopy',
+            'toggleProtection',
             'protectionAdded',
             ['notOwnerError', 'protectionRemoved'],
             7500
@@ -24,7 +24,8 @@ module.exports = function inject(bot, options) {
 
     bot.antiCopy.removeProtection = () => {
         return bot.chat.getChatActionResult(
-            antiCopy.commands.toggleProtection,
+            'antiCopy',
+            'toggleProtection',
             'protectionRemoved',
             ['protectionAdded', 'notOwnerError'],
             7500

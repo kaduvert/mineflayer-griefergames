@@ -1,9 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const spawner = bot.ggData.spawner
-    bot.chat.loadPatterns(spawner)
-    bot.window.loadPatterns(spawner)
+    const spawner = bot.ggData.loadPatternsAndGetData('spawner')
 
     bot.spawner = {
         events: new EventEmitter()
@@ -16,8 +14,9 @@ module.exports = function inject(bot, options) {
         }
         bot.activateBlock(spawnerBlock)
         return bot.getActionResult(
-            ['windowOpen:spawner->storage', 'windowOpen:spawner->inactiveMenu'],
-            ['chat:spawner->alreadyOpenedError', 'chat:spawner->noOpenPermissionsError'],
+            'spawner',
+            ['storage', 'inactive'],
+            ['alreadyOpenedError', 'noOpenPermissionsError'],
             1000
         )
     }
@@ -37,6 +36,7 @@ module.exports = function inject(bot, options) {
             window,
             stack.slot,
             0,
+            'spawner',
             'stackReceived',
             ['noFreeInventorySpaceError'],
             1000,

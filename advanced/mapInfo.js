@@ -1,6 +1,5 @@
 module.exports = function inject(bot, options) {
-	const mapInfo = bot.ggData.mapInfo
-	bot.chat.loadPatterns(mapInfo)
+	const mapInfo = bot.ggData.loadPatternsAndGetData('mapInfo')
 
 	bot.mapInfo = {}
 
@@ -25,7 +24,8 @@ module.exports = function inject(bot, options) {
 
 	bot.mapInfo.getRaw = () => {
 		return bot.chat.getChatActionResult(
-			mapInfo.commands.get,
+			'mapInfo',
+			'get',
 			'info',
 			['noDataError'],
 			5000

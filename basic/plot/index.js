@@ -1,8 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const plot = bot.ggData.plot
-    bot.chat.loadPatterns(plot)
+    const pluginId = bot.ggData.loadPatternsAndGetData('plot')
 
     bot.plot = {
         listeningForInfo: false,
@@ -12,7 +11,8 @@ module.exports = function inject(bot, options) {
 
     bot.plot.goto = plotIdentifier => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(plot.commands.goto, plotIdentifier),
+            'plot',
+            ['goto', plotIdentifier],
             'forcedMove',
             ['deniedError', 'invalidNumberError'],
             5000
@@ -91,12 +91,12 @@ module.exports = function inject(bot, options) {
         bot.plot.currentInfo.push(msg)
     })
 
-    bot.on('plotInfoStart', () => {
+    bot.on('chat:plot->infoStart', () => {
         bot.plot.listeningForInfo = true
         bot.plot.currentInfo = []
     })
 
-    bot.on('plotInfoEnd', () => {
+    bot.on('chat:plot->infoEnd', () => {
         bot.plot.listeningForInfo = false
         bot.plot.events.emit('plotInfo', [...bot.plot.currentInfo]) // clone it!
     })

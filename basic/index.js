@@ -5,14 +5,11 @@ function getPlugin(name) {
 }
 
 const plugins = [
-    getPlugin('chat'),
-    getPlugin('window'),
-
     getPlugin('plot'),
     getPlugin('afk'),
     getPlugin('ggauth'),
     getPlugin('globalChat'),
-    getPlugin('home'),
+    getPlugin('homes'),
     getPlugin('itemClear'),
     getPlugin('mobRemover'),
     getPlugin('money'),
@@ -23,7 +20,7 @@ const plugins = [
     getPlugin('privateChat'),
     getPlugin('serverInfo'),
     getPlugin('shutdown'),
-    getPlugin('switcher'),
+    getPlugin('switch'),
     getPlugin('tpa'),
     getPlugin('warp')
 ]
@@ -39,7 +36,23 @@ module.exports = function inject(bot, options) {
         TIMEOUT: 2
     }
 
-    bot.getActionResult = async (successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
+    bot.resolveEvent = (patternResolver, patternName, eventEmitter) => {
+        if (eventEmitter !== bot || !patternResolver) return patternName
+
+        const { chatPatterns, windowPatterns } = bot.ggData[patternResolver]
+
+        let eventOrigin = ''
+        if (chatPatterns && Object.keys(chatPatterns).find(chatPatternName => chatPatternName === patternName)) {
+            eventOrigin = 'chat'
+        } else if (windowPatterns && Object.keys(windowPatterns).find(windowPatternName => windowPatternName === patternName)) {
+            eventOrigin = 'windowOpen'
+        }
+        return eventOrigin ? `${eventOrigin}:${patternResolver}${bot.patternHeadNameSeparator}${patternName}` : patternName
+    }
+
+    bot.resolveItemPattern = (patternResolver, patternName) => bot.ggData[patternResolver].itemPatterns[patternName]
+
+    bot.getActionResult = async (patternResolver, successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
         if (typeof successEvents === 'string') {
             successEvents = [successEvents]
         }
@@ -62,7 +75,7 @@ module.exports = function inject(bot, options) {
 
             // important: add collection operator before eventArgs
             // if not using some wrapper
-            const onFailure = (failureEvent, eventArgs) => { 
+            const onFailure = (failureEvent, eventArgs) => {
                 res({
                     status: bot.actionResultStatus.FAILURE,
                     event: failureEvent,
@@ -70,7 +83,7 @@ module.exports = function inject(bot, options) {
                 })
             }
 
-            successEvents.forEach(successEvent => {
+            successEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, successEventEmitter)).forEach(successEvent => {
                 const onSuccessWrapper = (...args) => {
                     onSuccess(successEvent, args)
                 }
@@ -80,7 +93,7 @@ module.exports = function inject(bot, options) {
                 })
             })
 
-            failureEvents.forEach(failureEvent => {
+            failureEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, failureEventEmitter)).forEach(failureEvent => {
                 const onFailureWrapper = (...args) => {
                     onFailure(failureEvent, args)
                 }
@@ -92,8 +105,6 @@ module.exports = function inject(bot, options) {
         })
     }
 
-    bot.loadPlugins(plugins)
-
     bot.loadPatterns = (ggDataObj, patternHead) => {
         bot.chat.loadPatterns(ggDataObj, patternHead)
         bot.window.loadPatterns(ggDataObj, patternHead)
@@ -104,4 +115,6 @@ module.exports = function inject(bot, options) {
         bot.loadPatterns(ggDataObj, ggDataObjName)
         return ggDataObj
     }
+
+    bot.loadPlugins(plugins)
 }

@@ -1,13 +1,12 @@
 module.exports = function inject(bot, options) {
-    const startJail = bot.ggData.startJail
-    bot.chat.loadPatterns(startJail)
-    bot.window.loadPatterns(startJail)
+    const pluginId = bot.ggData.loadPatternsAndGetData('startJail')
 
     bot.startJail = {}
 
     bot.startJail.target = (username, reason) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(startJail.commands.target, username, reason),
+            'startJail',
+            ['target', username, reason],
             'startJail:' + username,
             ['help', 'noTokensError'],
             5000,
@@ -17,8 +16,8 @@ module.exports = function inject(bot, options) {
 
     bot.startJail.openMenu = () => {
         return bot.chat.getChatActionResult(
-            startJail.commands.openWindow,
-            'windowOpen:startJail->menu',
+            'startJail',
+            'menu',
             [],
             5000
         )
@@ -35,7 +34,8 @@ module.exports = function inject(bot, options) {
             window,
             bot.window.getMatchingItem(window, startJail.itemPatterns.purchaseToken).slot,
             0,
-            'windowOpen:startJail->confirmPurchase',
+            'startJail',
+            'confirmPurchase',
             [],
             1000
         )
@@ -46,6 +46,7 @@ module.exports = function inject(bot, options) {
             window,
             bot.window.getMatchingItem(window, startJail.itemPatterns.confirmPurchase).slot,
             0,
+            'startJail',
             'purchaseSuccess',
             ['insufficientBalanceError'],
             1000
@@ -57,6 +58,7 @@ module.exports = function inject(bot, options) {
             window,
             bot.window.getMatchingItem(window, startJail.itemPatterns.cancelPurchase).slot,
             0,
+            'startJail',
             'purchaseCancelled',
             [],
             1000

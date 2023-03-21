@@ -1,21 +1,22 @@
 module.exports = function inject(bot, options) {
-	const ignore = bot.ggData.ignore
-	bot.chat.loadPatterns(ignore)
+    const ignore = bot.ggData.loadPatternsAndGetData('ignore')
 
-	bot.ignore = {}
+    bot.ignore = {}
 
-	bot.privateChat.toggle = (username) => {
+    bot.privateChat.toggle = (username) => {
         return bot.chat.getChatActionResult(
-            bot.buildCommand(ignore.commands.target, username),
+            'ignore',
+            ['target', username],
             ['add', 'remove'],
             [],
             5000
         )
     }
-    
+
     bot.privateChat.getIgnoredList = () => {
         return bot.chat.getChatActionResult(
-            ignore.commands.list,
+            'ignore',
+            'list'
             ['list', 'listEmpty'],
             [],
             5000

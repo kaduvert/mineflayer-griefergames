@@ -4,20 +4,19 @@ module.exports = function inject(bot, options) {
     const ChatMessage = require('prismarine-chat')(bot.version)
     const Item = require('prismarine-item')(bot.version)
 
-    bot.chatAddPattern(/^$/, '')
-
     bot.window = {
         patterns: {}
     }
 
     bot.window.loadPatterns = (ggDataObj, patternHead) => {
         const windowPatterns = ggDataObj.windowPatterns
+        if (!windowPatterns) return
         Object.keys(windowPatterns).forEach(windowPatternName => {
             bot.window.patterns[patternHead + bot.ggData.patternHeadNameSeparator + windowPatternName] = windowPatterns[windowPatternName]
         })
     }
 
-    bot.window.getClickActionResult = (window, slot, mouseButton, ...args) => {
+    bot.window.getClickActionResult = (window, slot, mouseButton, patternResolver, ...args) => {
         return new Promise((res) => {
             if (bot.currentWindow !== window) {
                 throw new Error('the provided window is not the currentWindow, it has probably been closed prematurely')
@@ -35,14 +34,15 @@ module.exports = function inject(bot, options) {
             bot.on(updateSlotEvent, onSlotChange)
 
             bot.clickWindow(slot, mouseButton, 0)
-            bot.getActionResult(...args).then((actionResult) => {
+            bot.getActionResult(patternResolver, ...args).then((actionResult) => {
                 bot.off(updateSlotEvent, onSlotChange)
                 res(actionResult)
             })
         })
     }
 
-    bot.window.matchesItemPattern = (stack, { title: titleRegex, lore: loreRegex }) => {
+    bot.window.matchesItemPattern = (patternResolver, patternName, stack) => {
+        const { title: titleRegex, lore: loreRegex } = bot.resolveItemPattern(patternResolver, patternName)
         const stackName = stack.customName
         const stackLore = stack.customLore
         let matchesName = true
@@ -63,7 +63,8 @@ module.exports = function inject(bot, options) {
         return matchesName && matchesLore
     }
 
-    bot.window.getItemPatternMatches = (stack, { title: titleRegex, lore: loreRegex }) => {
+    bot.window.getItemPatternMatches = (patternResolver, patternName, stack) => {
+        const { title: titleRegex, lore: loreRegex } = bot.resolveItemPattern(patternResolver, patternName)
         const stackName = stack.customName
         const stackLore = stack.customLore
         const matches = {
@@ -84,16 +85,16 @@ module.exports = function inject(bot, options) {
 
     bot.window.getMatchingItem = (window, pattern) => window.slots.find(e => bot.window.matchesItemPattern(e, pattern)),
 
-    bot.on('windowOpen', (window) => {
-        const title = ChatMessage.fromNotch(window.title).toString()
-        const windowPatterns = bot.window.patterns
-        Object.keys(windowPatterns).forEach(windowPatternName => {
-            const windowPattern = windowPatterns[windowPatternName]
+        bot.on('windowOpen', (window) => {
+            const title = ChatMessage.fromNotch(window.title).toString()
+            const windowPatterns = bot.window.patterns
+            Object.keys(windowPatterns).forEach(windowPatternName => {
+                const windowPattern = windowPatterns[windowPatternName]
 
-            const windowTitleMatch = title.match(windowPattern)
-            if (windowTitleMatch) {
-                bot.emit('windowOpen:' + windowPatternName, window, windowTitleMatch.splice(1))
-            }
+                const windowTitleMatch = title.match(windowPattern)
+                if (windowTitleMatch) {
+                    bot.emit('windowOpen:' + windowPatternName, window, windowTitleMatch.splice(1))
+                }
+            })
         })
-    })
 }

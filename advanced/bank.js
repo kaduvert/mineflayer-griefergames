@@ -1,8 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const bank = bot.ggData.bank
-    bot.chat.loadPatterns(bank)
+    const bank = bot.ggData.loadPatternsAndGetData('bank')
 
     bot.bank = {
         balance: null
@@ -10,7 +9,8 @@ module.exports = function inject(bot, options) {
 
     bot.bank.getBalance = () => {
         return bot.chat.getChatActionResult(
-            bank.commands.getBalance,
+            'bank',
+            'getBalance',
             'balance',
             [],
             5000
@@ -19,8 +19,9 @@ module.exports = function inject(bot, options) {
 
     bot.bank.deposit = (amount) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(bank.commands.deposit, amount),
-            'deposit',
+            'bank',
+            ['deposit', amount],
+            'depositSuccess',
             ['invalidNumberError', 'insufficientAmountError'],
             5000
         )
@@ -28,8 +29,9 @@ module.exports = function inject(bot, options) {
 
     bot.bank.withdraw = (amount) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(bank.commands.withdraw, amount),
-            'withdrawl',
+            'bank',
+            ['withdraw', amount],
+            'withdrawSuccess',
             ['invalidNumberError', 'insufficientAmountError'],
             5000
         )

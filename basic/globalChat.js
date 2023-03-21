@@ -1,8 +1,7 @@
 const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const globalChat = bot.ggData.globalChat
-    bot.chat.loadPatterns(globalChat)
+    const globalChat = bot.ggData.loadPatternsAndGetData('globalChat')
 
     bot.globalChat = {
         events: new EventEmitter()
@@ -10,7 +9,8 @@ module.exports = function inject(bot, options) {
 
     bot.globalChat.login = () => {
         return bot.chat.getChatActionResult(
-            globalChat.commands.login,
+            'globalChat',
+            'login',
             'activated',
             ['alreadyActivated'],
             5000
@@ -19,7 +19,8 @@ module.exports = function inject(bot, options) {
 
     bot.globalChat.logout = () => {
         return bot.chat.getChatActionResult(
-            globalChat.commands.logout,
+            'globalChat',
+            'logout',
             'deativated',
             ['alreadyDeativated'],
             5000
@@ -28,7 +29,8 @@ module.exports = function inject(bot, options) {
 
     bot.globalChat.send = (message) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(globalChat.commands.send, message),
+            'globalChat',
+            ['send', message],
             'sentMessage',
             ['deactivatedError'],
             5000,

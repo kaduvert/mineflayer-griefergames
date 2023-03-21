@@ -1,8 +1,7 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const disguise = bot.ggData.disguise
-    bot.chat.loadPatterns(disguise)
+    const disguise = bot.ggData.loadPatternsAndGetData('disguise')
 
     bot.disguise = {
         current: null
@@ -10,8 +9,9 @@ module.exports = function inject(bot, options) {
 
     bot.disguise.as = (disguiseIdentifier) => {
         return bot.chat.getChatActionResult(
-            bot.chat.buildCommand(disguise.commands.as, disguiseIdentifier),
-            'as',
+            'disguise',
+            ['as', disguiseIdentifier],
+            'disguised',
             ['unknownArgumentsError', 'insufficientPermissionsError', 'pluginForbidsActionError'],
             5000
         )
@@ -19,7 +19,8 @@ module.exports = function inject(bot, options) {
 
     bot.disguise.remove = () => {
         return bot.chat.getChatActionResult(
-            disguise.commands.remove,
+            'disguise',
+            'remove',
             'removed',
             ['notFound'],
             5000
@@ -28,14 +29,15 @@ module.exports = function inject(bot, options) {
 
     bot.disguise.getStatus = () => {
         return bot.chat.getChatActionResult(
-            disguise.commands.getStatus,
+            'disguise',
+            'getStatus',
             ['status', 'notFound'],
             [],
             5000
         )
     }
 
-    bot.on('chat:disguise->as', ([[disguiseIdentifier]]) => {
+    bot.on('chat:disguise->disguised', ([[disguiseIdentifier]]) => {
         bot.disguise.current = disguiseIdentifier
     })
 }

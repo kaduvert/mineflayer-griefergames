@@ -1,10 +1,8 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    const orb = bot.ggData.orb
-    const orbTrader = bot.ggData.orbTrader
-    bot.chat.loadPatterns(orbTrader)
-    bot.window.loadPatterns(orbTrader)
+    // const orb = bot.ggData.loadPatternsAndGetData('orb')
+    const orbTrader = bot.ggData.loadPatternsAndGetData('orbTrader')
 
     bot.orb.trader = {
         // events: new EventEmitter()
@@ -19,7 +17,7 @@ module.exports = function inject(bot, options) {
             window,
             window.slots.items().find(item => item.name === itemName).slot,
             0,
-            'windowOpen:orbTrader->sellItem',
+            'sellItem',
             [],
             1000
         )
@@ -31,7 +29,7 @@ module.exports = function inject(bot, options) {
             window,
             sellOptions[quantityOption],
             0,
-            'chat:orbTrader->saleSuccessful',
+            'saleSuccessful',
             [],
             1000
         )

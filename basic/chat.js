@@ -4,8 +4,7 @@ const EventEmitter = require('events')
 const { once } = require('events')
 
 module.exports = function inject(bot, options) {
-	const chat = bot.ggData.chat
-
+	const chat = bot.loadPatternsAndGetData('chat')
 	bot.chatNative = bot.chat
 	bot.chat = {
 		commandBatchStart: Date.now(),
@@ -19,13 +18,14 @@ module.exports = function inject(bot, options) {
 
 	bot.chat.loadPatterns = (ggDataObj, patternHead = '') => {
 		const chatPatterns = ggDataObj.chatPatterns
+		if (!chatPatterns) return
 		Object.keys(chatPatterns).forEach(chatPatternName => {
 			let chatPattern = chatPatterns[chatPatternName]
-			if (!(chatPattern instanceof Array)) chatPattern = [ chatPattern ]
+			if (!(chatPattern instanceof Array)) chatPattern = [chatPattern]
 			bot.addChatPatternSet(patternHead + bot.ggData.patternHeadNameSeparator + chatPatternName, chatPattern, { repeat: true, parse: true })
 		})
 	}
-	bot.chat.loadPatterns(chat)
+
 
 	bot.chat.sendCommand = async (msg, priority = 3) => {
 		if (Date.now() - bot.switch.serverJoinedAt < chat.commandBatchDelay) await bot.delay(chat.commandBatchDelay - (Date.now() - bot.switch.serverJoinedAt))
@@ -73,7 +73,8 @@ module.exports = function inject(bot, options) {
 		else bot.chat.sentMsgLately = false
 	}
 
-	bot.chat.getChatActionResult = (msg, ...args) => {
+	bot.chat.getChatActionResult = (patternResolver, messageStruct, ...args) => {
+		const msg = messageStruct instanceof Array ? bot.buildCommand(bot.ggData[patternResolver].commands[messageStruct[0]], ...messageStruct.splice(1)) : messageStruct
 		return new Promise((res) => {
 			const onCommandError = (commandErrorEvent, ...eventArgs) => {
 				res({
@@ -84,16 +85,16 @@ module.exports = function inject(bot, options) {
 			}
 			const sendToChat = () => {
 				bot.chat.send(msg)
-				bot.once('chat:spamWarning', sendToChat)
+				bot.once('chat:chat->spamWarning', sendToChat)
 				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
 					bot.once(commandErrorEvent, onCommandError)
 				})
 			}
-			bot.getActionResult(...args).then((actionResult) => {
+			bot.getActionResult(patternResolver, ...args).then((actionResult) => {
 				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
 					bot.off(commandErrorEvent, onCommandError)
 				})
-				bot.removeListener('chat:spamWarning', sendToChat)
+				bot.removeListener('chat:chat->spamWarning', sendToChat)
 				res(actionResult)
 			})
 			sendToChat()
@@ -126,5 +127,5 @@ module.exports = function inject(bot, options) {
 	})
 
 	bot.on('message', bot.chat.log)
-	bot.on('chat:blacklistError', bot.chat.onBlacklistError)
+	bot.on('chat:chat->blacklistError', bot.chat.onBlacklistError)
 }

@@ -1,5 +1,5 @@
 // const EventEmitter = require('events')
 
 module.exports = function inject(bot, options) {
-    bot.chat.loadPatterns(bot.ggData.ggauth)
+	const ggauth = bot.ggData.loadPatternsAndGetData('ggauth')
 }
