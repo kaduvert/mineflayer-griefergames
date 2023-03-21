@@ -12,13 +12,7 @@ module.exports = function inject(bot, options) {
     bot.spawner.tryToOpen = (spawnerBlock) => {
         const stackAtQuickbarSlot = bot.inventory.slots[bot.inventory.hotbarStart + bot.quickBarSlot]
         if (stackAtQuickbarSlot) {
-            return new Promise(res => {
-                res({
-                    status: bot.actionResultStatus.FAILURE,
-                    event: 'itemInHandError',
-                    eventArgs: [stackAtQuickbarSlot]
-                })
-            })
+            throw new Error('holding a stack at the bots selected quickbarSlot will result in timeout. ensure, that the bots hand is empty')
         }
         bot.activateBlock(spawnerBlock)
         return bot.getActionResult(
@@ -55,7 +49,6 @@ module.exports = function inject(bot, options) {
         const beginningCount = window.countRange(window.inventoryStart, window.inventoryEnd, type, metadata)
         const onSlotUpdate = (slot) => {
             const updatedCount = window.countRange(window.inventoryStart, window.inventoryEnd, type, metadata)
-            console.log(updatedCount - beginningCount, count)
             if (updatedCount - beginningCount === count) {
                 bot.spawner.events.emit('stackReceived')
                 window.off('updateSlot', onSlotUpdate)

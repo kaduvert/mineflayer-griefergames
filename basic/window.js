@@ -20,12 +20,7 @@ module.exports = function inject(bot, options) {
     bot.window.getClickActionResult = (window, slot, mouseButton, ...args) => {
         return new Promise((res) => {
             if (bot.currentWindow !== window) {
-                res({
-                    status: bot.actionResultStatus.FAILURE,
-                    event: 'windowClose',
-                    eventArgs: window
-                })
-                return
+                throw new Error('the provided window is not the currentWindow, it has probably been closed prematurely')
             }
             const updateSlotEvent = 'updateSlot:' + slot
             const itemAtSlot = window.slots[slot]
@@ -69,16 +64,19 @@ module.exports = function inject(bot, options) {
     }
 
     bot.window.getItemPatternMatches = (stack, { title: titleRegex, lore: loreRegex }) => {
+        const stackName = stack.customName
+        const stackLore = stack.customLore
         const matches = {
             titleMatch: null,
             loreMatches: null
         }
-        if (titleRegex) {
-            matches.titleMatch = stack.customName.replace(/§./g, '').match(titleRegex).splice(1)
+        if (titleRegex && stackName) {
+            matches.titleMatch = stackName.replace(/§./g, '').match(titleRegex).splice(1)
         }
         if (loreRegex) {
+            matches.loreMatches = []
             for (let i = 0; i < loreRegex.length; i++) {
-                matches.loreMatches[i] = stack.customLore.replace(/§./g, '').match(loreRegex[i]).splice(1)
+                matches.loreMatches[i] = stackLore.replace(/§./g, '').match(loreRegex[i]).splice(1)
             }
         }
         return matches
