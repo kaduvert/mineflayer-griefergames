@@ -16,16 +16,6 @@ module.exports = function inject(bot, options) {
 		events: new EventEmitter()
 	}
 
-	bot.chat.loadPatterns = (ggDataObj, patternHead = '') => {
-		const chatPatterns = ggDataObj.chatPatterns
-		if (!chatPatterns) return
-		Object.keys(chatPatterns).forEach(chatPatternName => {
-			let chatPattern = chatPatterns[chatPatternName]
-			if (!(chatPattern instanceof Array)) chatPattern = [chatPattern]
-			bot.addChatPatternSet(patternHead + bot.ggData.patternHeadNameSeparator + chatPatternName, chatPattern, { repeat: true, parse: true })
-		})
-	}
-
 
 	bot.chat.sendCommand = async (msg, priority = 3) => {
 		if (Date.now() - bot.switch.serverJoinedAt < chat.commandBatchDelay) await bot.delay(chat.commandBatchDelay - (Date.now() - bot.switch.serverJoinedAt))

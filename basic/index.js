@@ -105,9 +105,27 @@ module.exports = function inject(bot, options) {
         })
     }
 
+    bot.loadChatPatterns = (ggDataObj, patternHead = '') => {
+		const chatPatterns = ggDataObj.chatPatterns
+		if (!chatPatterns) return
+		Object.keys(chatPatterns).forEach(chatPatternName => {
+			let chatPattern = chatPatterns[chatPatternName]
+			if (!(chatPattern instanceof Array)) chatPattern = [chatPattern]
+			bot.addChatPatternSet(patternHead + bot.ggData.patternHeadNameSeparator + chatPatternName, chatPattern, { repeat: true, parse: true })
+		})
+	}
+
+    bot.loadWindowPatterns = (ggDataObj, patternHead) => {
+        const windowPatterns = ggDataObj.windowPatterns
+        if (!windowPatterns) return
+        Object.keys(windowPatterns).forEach(windowPatternName => {
+            bot.window.patterns[patternHead + bot.ggData.patternHeadNameSeparator + windowPatternName] = windowPatterns[windowPatternName]
+        })
+    }
+
     bot.loadPatterns = (ggDataObj, patternHead) => {
-        bot.chat.loadPatterns(ggDataObj, patternHead)
-        bot.window.loadPatterns(ggDataObj, patternHead)
+        bot.loadChatPatterns(ggDataObj, patternHead)
+        bot.loadWindowPatterns(ggDataObj, patternHead)
     }
 
     bot.loadPatternsAndGetData = (ggDataObjName) => {

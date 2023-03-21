@@ -8,14 +8,6 @@ module.exports = function inject(bot, options) {
         patterns: {}
     }
 
-    bot.window.loadPatterns = (ggDataObj, patternHead) => {
-        const windowPatterns = ggDataObj.windowPatterns
-        if (!windowPatterns) return
-        Object.keys(windowPatterns).forEach(windowPatternName => {
-            bot.window.patterns[patternHead + bot.ggData.patternHeadNameSeparator + windowPatternName] = windowPatterns[windowPatternName]
-        })
-    }
-
     bot.window.getClickActionResult = (window, slot, mouseButton, patternResolver, ...args) => {
         return new Promise((res) => {
             if (bot.currentWindow !== window) {
