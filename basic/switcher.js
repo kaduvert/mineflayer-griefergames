@@ -71,7 +71,7 @@ module.exports = function inject(bot, options) {
 		return isJoinable
 	}
 
-	bot.switcher.navigator = async () => {
+	bot.switcher.navigate = async () => {
 		const targetServer = bot.switcher.targetServer
 		if (!targetServer) return
 
@@ -121,19 +121,19 @@ module.exports = function inject(bot, options) {
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
 		await bot.delay((parsedDate + 1500) - Date.now()) // 1500 added for buffer
-		bot.switcher.navigator()
+		bot.switcher.navigate()
 	})
 
 	bot.on('chat:switchFailed', () => {
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
-		bot.switcher.navigator()
+		bot.switcher.navigate()
 	})
 
 	bot.on('chat:serverFull', () => {
 		bot.switcher.currentlySwitching = false
 		bot.switcher.serverJoinedAt = Date.now()
-		bot.switcher.navigator()
+		bot.switcher.navigate()
 	})
 
 	bot.on('chat:switchSucceeded', () => {
@@ -144,10 +144,10 @@ module.exports = function inject(bot, options) {
 		bot.switcher.serverJoinedAt = Date.now()
 	})
 
-	bot.serverInfo.events.on('join', bot.switcher.navigator)
+	bot.serverInfo.events.on('join', bot.switcher.navigate)
 
 	bot.switcher.goto = (cb) => {
 		bot.switcher.targetServer = cb
-		bot.switcher.navigator()
+		bot.switcher.navigate()
 	}
 }
