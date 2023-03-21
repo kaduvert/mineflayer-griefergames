@@ -148,8 +148,6 @@ module.exports = function inject(bot, options) {
 	bot.switch.to = (cb) => {
 		bot.switch.targetServer = cb
 		bot.switch.navigate()
-		return new Promise(res => {
-			bot.switch.events.once('joinedTargetServer', res)
-		})
+		return once(bot.switch.events, 'joinedTargetServer')
 	}
 }
