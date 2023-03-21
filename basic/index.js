@@ -93,4 +93,15 @@ module.exports = function inject(bot, options) {
     }
 
     bot.loadPlugins(plugins)
+
+    bot.loadPatterns = (ggDataObj, patternHead) => {
+        bot.chat.loadPatterns(ggDataObj, patternHead)
+        bot.window.loadPatterns(ggDataObj, patternHead)
+    }
+
+    bot.loadPatternsAndGetData = (ggDataObjName) => {
+        const ggDataObj = bot.ggData[ggDataObjName]
+        bot.loadPatterns(ggDataObj, ggDataObjName)
+        return ggDataObj
+    }
 }

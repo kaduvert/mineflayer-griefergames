@@ -17,15 +17,12 @@ module.exports = function inject(bot, options) {
 		events: new EventEmitter()
 	}
 
-	bot.chat.loadPatterns = (ggDataObj) => {
+	bot.chat.loadPatterns = (ggDataObj, patternHead = '') => {
 		const chatPatterns = ggDataObj.chatPatterns
 		Object.keys(chatPatterns).forEach(chatPatternName => {
-			const chatPattern = chatPatterns[chatPatternName]
-			if (chatPattern instanceof RegExp) {
-				bot.addChatPattern(chatPatternName, chatPattern, { repeat: true, parse: true })
-			} else if (chatPattern instanceof Array) {
-				bot.addChatPatternSet(chatPatternName, chatPattern, { repeat: true, parse: true })
-			}
+			let chatPattern = chatPatterns[chatPatternName]
+			if (!(chatPattern instanceof Array)) chatPattern = [ chatPattern ]
+			bot.addChatPatternSet(patternHead + bot.ggData.patternHeadNameSeparator + chatPatternName, chatPattern, { repeat: true, parse: true })
 		})
 	}
 	bot.chat.loadPatterns(chat)

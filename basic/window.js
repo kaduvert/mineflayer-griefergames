@@ -10,10 +10,10 @@ module.exports = function inject(bot, options) {
         patterns: {}
     }
 
-    bot.window.loadPatterns = (ggDataObj) => {
+    bot.window.loadPatterns = (ggDataObj, patternHead) => {
         const windowPatterns = ggDataObj.windowPatterns
         Object.keys(windowPatterns).forEach(windowPatternName => {
-            bot.window.patterns[windowPatternName] = windowPatterns[windowPatternName]
+            bot.window.patterns[patternHead + bot.ggData.patternHeadNameSeparator + windowPatternName] = windowPatterns[windowPatternName]
         })
     }
 
