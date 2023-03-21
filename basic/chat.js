@@ -13,7 +13,6 @@ module.exports = function inject(bot, options) {
 		cmdSpamLock: false,
 		lastCommand: null,
 		sentMsgLately: false,
-		slow: false,
 		commandErrorEvents: ['chat:blacklistError', 'chat:unknownCommandError', 'chat:insufficientPermissionsError'],
 		events: new EventEmitter()
 	}
@@ -54,7 +53,7 @@ module.exports = function inject(bot, options) {
 		bot.chatNative(msg)
 
 		bot.chat.sentMsgLately = true
-		await bot.delay([1, 10][+bot.chat.slow] * 1000)
+		await bot.delay([1, 10][+bot.slowChat.active] * 1000)
 		bot.chat.sentMsgLately = false
 		bot.chat.events.emit('messageCountdownExpired')
 	}
@@ -131,8 +130,4 @@ module.exports = function inject(bot, options) {
 
 	bot.on('message', bot.chat.log)
 	bot.on('chat:blacklistError', bot.chat.onBlacklistError)
-
-	bot.on('chat:chatreset', () => (bot.chat.slow = false))
-	bot.on('chat:slowchat', () => (bot.chat.slow = true))
-	bot.on('chat:slowchatWarn', () => (bot.chat.slow = true))
 }
