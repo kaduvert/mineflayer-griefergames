@@ -50,18 +50,22 @@ module.exports = function inject(bot, options) {
                 })
             })
 
-            const onSuccess = (successEvent, ...eventArgs) => {
+            // important: add collection operator before eventArgs
+            // if not using some wrapper
+            const onSuccess = (successEvent, eventArgs) => {
                 res({
                     status: bot.actionResultStatus.SUCCESS,
-                    triggeredEvent: successEvent,
+                    event: successEvent,
                     eventArgs: eventArgs
                 })
             }
 
-            const onFailure = (failureEvent, ...eventArgs) => {
+            // important: add collection operator before eventArgs
+            // if not using some wrapper
+            const onFailure = (failureEvent, eventArgs) => { 
                 res({
                     status: bot.actionResultStatus.FAILURE,
-                    triggeredEvent: failureEvent,
+                    event: failureEvent,
                     eventArgs: eventArgs
                 })
             }

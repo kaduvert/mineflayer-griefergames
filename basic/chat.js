@@ -92,7 +92,7 @@ module.exports = function inject(bot, options) {
 			const onCommandError = (commandErrorEvent, ...eventArgs) => {
 				res({
 					status: 1,
-					triggeredEvent: commandErrorEvent,
+					event: commandErrorEvent,
 					eventArgs: eventArgs
 				})
 			}
