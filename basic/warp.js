@@ -19,10 +19,10 @@ module.exports = function inject(bot, options) {
 
     bot.warp.to = (point) => {
         return bot.chat.getChatActionResult(
-            'warp',
+            ['warp', 'teleport'],
             ['to', point],
             'forcedMove',
-            ['chat:tpSpamWarning'],
+            ['spamWarning'],
             5000
         )
     }

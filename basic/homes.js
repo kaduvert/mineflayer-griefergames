@@ -39,10 +39,10 @@ module.exports = function inject(bot, options) {
 
     bot.homes.teleportTo = (homeIdentifier) => {
         return bot.chat.getChatActionResult(
-            'homes',
+            ['homes', 'teleport'],
             ['teleportTo', homeIdentifier],
             'forcedMove',
-            ['notFoundError', 'chat:tpFailure', 'chat:tpSpamWarning'],
+            ['notFoundError', 'failure', 'spamWarning'],
             5000
         )
     }

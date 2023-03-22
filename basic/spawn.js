@@ -6,10 +6,10 @@ module.exports = function inject(bot, options) {
 
     bot.spawn.teleport = () => {
         return bot.chat.getChatActionResult(
-            'spawn',
+            ['spawn', 'teleport'],
             'teleport',
             'forcedMove',
-            ['chat:tpSpamWarning'],
+            ['spamWarning'],
             5000
         )
     }

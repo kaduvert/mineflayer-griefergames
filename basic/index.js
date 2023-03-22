@@ -39,18 +39,26 @@ module.exports = function inject(bot, options) {
         TIMEOUT: 2
     }
 
-    bot.resolveEvent = (patternResolver, patternName, eventEmitter) => {
-        if (eventEmitter !== bot || !patternResolver) return patternName
-
-        const { chatPatterns, windowPatterns } = bot.ggData[patternResolver]
-
-        let eventOrigin = ''
-        if (chatPatterns && Object.keys(chatPatterns).find(chatPatternName => chatPatternName === patternName)) {
-            eventOrigin = 'chat'
-        } else if (windowPatterns && Object.keys(windowPatterns).find(windowPatternName => windowPatternName === patternName)) {
-            eventOrigin = 'windowOpen'
+    bot.resolveEvent = (patternResolvers, patternName, eventEmitter) => {
+        if (typeof patternResolvers === 'string') {
+            patternResolvers = [patternResolvers]
         }
-        return eventOrigin ? `${eventOrigin}:${patternResolver}${bot.ggData.patternHeadNameSeparator}${patternName}` : patternName
+        if (eventEmitter !== bot || !patternResolvers?.length) return patternName
+
+        for (const patternResolver of patternResolvers) {
+            const { chatPatterns, windowPatterns } = bot.ggData[patternResolver]
+            
+            let eventOrigin = ''
+            if (chatPatterns && Object.keys(chatPatterns).find(chatPatternName => chatPatternName === patternName)) {
+                eventOrigin = 'chat'
+            } else if (windowPatterns && Object.keys(windowPatterns).find(windowPatternName => windowPatternName === patternName)) {
+                eventOrigin = 'windowOpen'
+            }
+            if (eventOrigin) {
+                return `${eventOrigin}:${patternResolver}${bot.ggData.patternHeadNameSeparator}${patternName}`
+            }
+        }
+        return patternName
     }
 
     bot.resolveItemPattern = (patternResolver, patternName) => bot.ggData[patternResolver].itemPatterns[patternName]
@@ -86,7 +94,6 @@ module.exports = function inject(bot, options) {
                 })
             }
 
-            console.log(successEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, successEventEmitter)))
             successEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, successEventEmitter)).forEach(successEvent => {
                 const onSuccessWrapper = (...args) => {
                     onSuccess(successEvent, args)
