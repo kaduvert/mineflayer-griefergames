@@ -20,7 +20,7 @@ module.exports = function inject(bot, options) {
 	bot.chat.sendCommand = async (msg, priority = 3) => {
 		if (Date.now() - bot.switch.serverJoinedAt < chat.commandBatchDelay) await bot.delay(chat.commandBatchDelay - (Date.now() - bot.switch.serverJoinedAt))
 		while ((Date.now() - bot.chat.commandBatchStart) < chat.commandBatchDelay && bot.chat.commandBatchCount >= 3) await bot.delay(chat.commandBatchDelay - (Date.now() - bot.chat.commandBatchStart))
-
+		
 		const now = Date.now()
 		if (now - bot.chat.commandBatchStart >= chat.commandBatchDelay) {
 			bot.chat.commandBatchStart = now
@@ -74,11 +74,11 @@ module.exports = function inject(bot, options) {
 				})
 			}
 			const sendToChat = () => {
-				bot.chat.send(msg)
 				bot.once('chat:chat->spamWarning', sendToChat)
 				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
 					bot.once(commandErrorEvent, onCommandError)
 				})
+				bot.chat.send(msg)
 			}
 			bot.getActionResult(patternResolver, ...args).then((actionResult) => {
 				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {

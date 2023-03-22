@@ -1,5 +1,5 @@
 {
-  "name": "gg-basic-modules",
+  "name": "mineflayer-griefergames",
   "version": "0.1.0",
   "description": "rich, high-level API for creating bots for GrieferGames (griefergames.net)",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KadaverBrutalo10/gg-basic-modules.git"
+    "url": "git+https://github.com/KadaverBrutalo10/mineflayer-griefergames.git"
   },
   "keywords": [
     "griefergames",
@@ -24,7 +24,7 @@
   "author": "kaduvert",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/KadaverBrutalo10/gg-basic-modules/issues"
+    "url": "https://github.com/KadaverBrutalo10/mineflayer-griefergames/issues"
   },
-  "homepage": "https://github.com/KadaverBrutalo10/gg-basic-modules#readme"
+  "homepage": "https://github.com/KadaverBrutalo10/mineflayer-griefergames#readme"
 }
