@@ -63,7 +63,7 @@ module.exports = function inject(bot, options) {
 
     bot.resolveItemPattern = (patternResolver, patternName) => bot.ggData[patternResolver].itemPatterns[patternName]
 
-    bot.getActionResult = async (patternResolver, successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
+    bot.getActionResult = async (patternResolvers, successEvents, failureEvents = [], timeoutLimit = 20000, successEventEmitter = bot, failureEventEmitter = bot) => {
         if (typeof successEvents === 'string') {
             successEvents = [successEvents]
         }
@@ -94,7 +94,7 @@ module.exports = function inject(bot, options) {
                 })
             }
 
-            successEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, successEventEmitter)).forEach(successEvent => {
+            successEvents.map((eventName) => bot.resolveEvent(patternResolvers, eventName, successEventEmitter)).forEach(successEvent => {
                 const onSuccessWrapper = (...args) => {
                     onSuccess(successEvent, args)
                 }
@@ -104,7 +104,7 @@ module.exports = function inject(bot, options) {
                 })
             })
 
-            failureEvents.map((eventName) => bot.resolveEvent(patternResolver, eventName, failureEventEmitter)).forEach(failureEvent => {
+            failureEvents.map((eventName) => bot.resolveEvent(patternResolvers, eventName, failureEventEmitter)).forEach(failureEvent => {
                 const onFailureWrapper = (...args) => {
                     onFailure(failureEvent, args)
                 }

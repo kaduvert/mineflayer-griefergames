@@ -8,7 +8,7 @@ module.exports = function inject(bot, options) {
         patterns: {}
     }
 
-    bot.window.getClickActionResult = (window, slot, mouseButton, patternResolver, ...args) => {
+    bot.window.getClickActionResult = (window, slot, mouseButton, patternResolvers, ...args) => {
         return new Promise((res) => {
             if (bot.currentWindow !== window) {
                 throw new Error('the provided window is not the currentWindow, it has probably been closed prematurely')
@@ -26,7 +26,7 @@ module.exports = function inject(bot, options) {
             bot.on(updateSlotEvent, onSlotChange)
 
             bot.clickWindow(slot, mouseButton, 0)
-            bot.getActionResult(patternResolver, ...args).then((actionResult) => {
+            bot.getActionResult(patternResolvers, ...args).then((actionResult) => {
                 bot.off(updateSlotEvent, onSlotChange)
                 res(actionResult)
             })

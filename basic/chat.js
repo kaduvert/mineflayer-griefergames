@@ -63,19 +63,19 @@ module.exports = function inject(bot, options) {
 		else bot.chat.sentMsgLately = false
 	}
 
-	bot.chat.resolveCommand = (patternResolver, patternName) => {
-		if (typeof patternResolver === 'string') {
-			patternResolver = [patternResolver]
+	bot.chat.resolveCommand = (patternResolvers, patternName) => {
+		if (typeof patternResolvers === 'string') {
+			patternResolvers = [patternResolvers]
 		}
-		for (const resolver of patternResolver) {
+		for (const resolver of patternResolvers) {
 			const command = bot.ggData[resolver]?.commands?.[patternName]
 			if (command) return command
 		}
 		return patternName
 	}
 
-	bot.chat.getChatActionResult = (patternResolver, messageStruct, ...args) => {
-		const msg = messageStruct instanceof Array ? bot.chat.buildCommand(bot.chat.resolveCommand(patternResolver, messageStruct[0]), ...messageStruct.splice(1)) : messageStruct
+	bot.chat.getChatActionResult = (patternResolvers, messageStruct, ...args) => {
+		const msg = messageStruct instanceof Array ? bot.chat.buildCommand(bot.chat.resolveCommand(patternResolvers, messageStruct[0]), ...messageStruct.splice(1)) : messageStruct
 		return new Promise((res) => {
 			const onCommandError = (commandErrorEvent, ...eventArgs) => {
 				res({
@@ -91,7 +91,7 @@ module.exports = function inject(bot, options) {
 				})
 				bot.chat.send(msg)
 			}
-			bot.getActionResult(patternResolver, ...args).then((actionResult) => {
+			bot.getActionResult(patternResolvers, ...args).then((actionResult) => {
 				bot.chat.commandErrorEvents.forEach(commandErrorEvent => {
 					bot.off(commandErrorEvent, onCommandError)
 				})
