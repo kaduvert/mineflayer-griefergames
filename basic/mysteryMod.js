@@ -8,8 +8,13 @@ module.exports = function inject(bot, options) {
     }
 
     bot.mysteryMod.events.on('redstone', (data) => {
-        if (+data.status === 0) return
-        console.log(`DEBUG: event mysteryMod.events->redstone triggered with unusual data:\n${data}`)
+        /**
+         * data.status definitions:
+         * -1 = unknown
+         * 0 = enabled
+         * 1 = restricted
+         * not 1 = disabled
+         */
     })
 
     bot.mysteryMod.events.on('bank', (data) => {
