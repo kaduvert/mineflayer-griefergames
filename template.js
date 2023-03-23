@@ -12,7 +12,7 @@ module.exports = function inject(bot, options) {
 	return bot.chat.getChatActionResult(''``, '', [], 5000)
 	return bot.window.getClickActionResult(
 		window,
-		bot.window.getMatchingItem(window, data.itemPatterns.purchaseToken).slot,
+		bot.window.getMatchingItem('', '', window).slot,
 		0,
 		'windowOpen:',
 		[],

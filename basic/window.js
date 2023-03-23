@@ -83,18 +83,21 @@ module.exports = function inject(bot, options) {
         return matches
     }
 
-    bot.window.getMatchingItem = (window, pattern) => window.slots.find(e => bot.window.matchesItemPattern(e, pattern)),
+    bot.window.getMatchingItem = (patternResolver, patternName, window) => {
+        const pattern = bot.resolveItemPattern(patternResolver, patternName)
+        return window.slots.find(e => bot.window.matchesItemPattern(e, pattern))
+    }
 
-        bot.on('windowOpen', (window) => {
-            const title = ChatMessage.fromNotch(window.title).toString()
-            const windowPatterns = bot.window.patterns
-            Object.keys(windowPatterns).forEach(windowPatternName => {
-                const windowPattern = windowPatterns[windowPatternName]
+    bot.on('windowOpen', (window) => {
+        const title = ChatMessage.fromNotch(window.title).toString()
+        const windowPatterns = bot.window.patterns
+        Object.keys(windowPatterns).forEach(windowPatternName => {
+            const windowPattern = windowPatterns[windowPatternName]
 
-                const windowTitleMatch = title.match(windowPattern)
-                if (windowTitleMatch) {
-                    bot.emit('windowOpen:' + windowPatternName, window, windowTitleMatch.splice(1))
-                }
-            })
+            const windowTitleMatch = title.match(windowPattern)
+            if (windowTitleMatch) {
+                bot.emit('windowOpen:' + windowPatternName, window, windowTitleMatch.splice(1))
+            }
         })
+    })
 }

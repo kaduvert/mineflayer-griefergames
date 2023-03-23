@@ -24,15 +24,15 @@ module.exports = function inject(bot, options) {
     }
 
     bot.startJail.getTokenBalance = (window) => {
-        const jailTokensIndicatorStack = bot.window.getMatchingItem(window, startJail.itemPatterns.tokenBalance)
-        const jailTokenStackMatches = bot.window.getItemPatternMatches(jailTokensIndicatorStack, startJail.itemPatterns.tokenBalance)
+        const jailTokensIndicatorStack = bot.window.getMatchingItem('startJail', 'tokenBalance', window)
+        const jailTokenStackMatches = bot.window.getItemPatternMatches('startJail', 'tokenBalance', jailTokensIndicatorStack)
         return jailTokenStackMatches.loreMatches[0][0]
     }
 
     bot.startJail.startTokenPurchase = (window) => {
         return bot.window.getClickActionResult(
             window,
-            bot.window.getMatchingItem(window, startJail.itemPatterns.purchaseToken).slot,
+            bot.window.getMatchingItem('startJail', 'purchaseToken', window).slot,
             0,
             'startJail',
             'confirmPurchase',
@@ -44,7 +44,7 @@ module.exports = function inject(bot, options) {
     bot.startJail.confirmTokenPurchase = (window) => {
         return bot.window.getClickActionResult(
             window,
-            bot.window.getMatchingItem(window, startJail.itemPatterns.confirmPurchase).slot,
+            bot.window.getMatchingItem('startJail', 'confirmPurchase', window).slot,
             0,
             'startJail',
             'purchaseSuccess',
@@ -56,7 +56,7 @@ module.exports = function inject(bot, options) {
     bot.startJail.cancelTokenPurchase = (window) => {
         return bot.window.getClickActionResult(
             window,
-            bot.window.getMatchingItem(window, startJail.itemPatterns.cancelPurchase).slot,
+            bot.window.getMatchingItem('startJail', 'cancelPurchase', window).slot,
             0,
             'startJail',
             'purchaseCancelled',

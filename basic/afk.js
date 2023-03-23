@@ -6,7 +6,7 @@ module.exports = function inject(bot, options) {
     bot.afk.pass = (window) => {
         return bot.window.getClickActionResult(
             window,
-            bot.window.getMatchingItem(window, afk.itemPatterns.notAfk).slot,
+            bot.window.getMatchingItem('afk', 'notAfk', window).slot,
             0,
             'afk',
             'windowClose',

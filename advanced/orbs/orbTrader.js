@@ -9,7 +9,7 @@ module.exports = function inject(bot, options) {
     }
 
     bot.orb.trader.getBalance = (window) => {
-        return bot.window.getMatchingItem(window, orb.itemPatterns.orbBalance)
+        return bot.window.getMatchingItem('orb', 'orbBalance', window)
     }
 
     bot.orb.trader.getItemSellWindow = (window, itemName) => {
@@ -24,7 +24,7 @@ module.exports = function inject(bot, options) {
     }
 
     bot.orb.trader.sellItem = (window, quantityOption = 2) => {
-        const sellOptions = bot.window.getMatchingItem(window, orbTrader.itemPatterns.sellOption)
+        const sellOptions = bot.window.getMatchingItem('orbTrader', 'sellOption', window)
         return bot.window.getClickActionResult(
             window,
             sellOptions[quantityOption],
