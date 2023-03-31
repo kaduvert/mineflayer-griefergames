@@ -9,8 +9,8 @@ module.exports = function inject(bot, options) {
 	bot. = {}
 
 
-	return bot.chat.getChatActionResult(''``, '', [], 5000)
-	return bot.window.getClickActionResult(
+	return bot.chat.sendFallibe(''``, '', [], 5000)
+	return bot.window.click(
 		window,
 		bot.window.getMatchingItem('', '', window).slot,
 		0,
