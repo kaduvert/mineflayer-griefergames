@@ -106,3 +106,4 @@ dist
 # excluded because it just exists for testing
 test.js
 package-lock.json
+.vscode/launch.json
