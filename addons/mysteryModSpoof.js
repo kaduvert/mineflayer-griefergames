@@ -1,3 +1,3 @@
 module.exports = function inject(bot, options) {
-    bot.mysteryMod.events.on('mysterymod_user_check', bot.mysteryMod.sendPayload)
+    bot.on('misc:mysteryMod->mysterymod_user_check', bot.mysteryMod.sendPayload)
 }
