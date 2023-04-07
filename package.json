@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "chalk": "^4.1.0",
-    "mineflayer": "github:KadaverBrutalo10/mineflayer",
+    "mineflayer": "github:kaduvert/mineflayer",
     "mineflayer-extra-patterns": "file:../mineflayer-extra-patterns",
     "mineflayer-griefergames-data": "file:../mineflayer-griefergames-data",
     "mineflayer-pathfinder": "^2.4.2"
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KadaverBrutalo10/mineflayer-griefergames.git"
+    "url": "git+https://github.com/kaduvert/mineflayer-griefergames.git"
   },
   "keywords": [
     "griefergames",
@@ -24,7 +24,7 @@
   "author": "kaduvert",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/KadaverBrutalo10/mineflayer-griefergames/issues"
+    "url": "https://github.com/kaduvert/mineflayer-griefergames/issues"
   },
-  "homepage": "https://github.com/KadaverBrutalo10/mineflayer-griefergames#readme"
+  "homepage": "https://github.com/kaduvert/mineflayer-griefergames#readme"
 }
