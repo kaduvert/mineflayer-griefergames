@@ -1,3 +1,4 @@
+const repl = require('node:repl')
 const getTimestamp = () => `[${(new Date()).toLocaleTimeString()}]`
 
 module.exports = function inject(bot, options) {
@@ -12,5 +13,10 @@ module.exports = function inject(bot, options) {
 	bot.on('kicked', (reason) => {
 		reason = JSON.parse(reason).text
 		console.log(chalk.red(getTimestamp()), chalk.yellowBright(`Kicked: ${chalk.red(reason)}`))
+	})
+
+	repl.start({
+		prompt: '',
+		eval: bot.chat.send
 	})
 }
