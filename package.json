@@ -8,7 +8,7 @@
     "mineflayer": "github:kaduvert/mineflayer",
     "mineflayer-extra-patterns": "file:../mineflayer-extra-patterns",
     "mineflayer-griefergames-data": "file:../mineflayer-griefergames-data",
-    "mineflayer-pathfinder": "^2.4.2"
+    "mineflayer-pathfinder": "^2.4.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
