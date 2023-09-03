@@ -6,8 +6,8 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "mineflayer": "github:kaduvert/mineflayer",
-    "mineflayer-extra-patterns": "file:../mineflayer-extra-patterns",
-    "mineflayer-griefergames-data": "file:../mineflayer-griefergames-data",
+    "mineflayer-extra-patterns": "git+https://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:x-oauth-basic@github.com/kaduvert/mineflayer-extra-patterns.git",
+    "mineflayer-griefergames-data": "git+https://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:x-oauth-basic@github.com/kaduvert/mineflayer-griefergames-data.git",
     "mineflayer-pathfinder": "^2.4.4"
   },
   "scripts": {
