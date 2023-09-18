@@ -1,5 +1,3 @@
-const readline = require('node:readline');
-const { stdin: input, stdout: output } = require('node:process')
 const getTimestamp = () => `[${(new Date()).toLocaleTimeString()}]`
 
 module.exports = function inject(bot, options) {
@@ -15,7 +13,4 @@ module.exports = function inject(bot, options) {
 		reason = JSON.parse(reason).text
 		console.log(chalk.red(getTimestamp()), chalk.yellowBright(`Kicked: ${chalk.red(reason)}`))
 	})
-
-	const rl = readline.createInterface({ input, output })
-	rl.on('line', bot.chat.send)
 }
