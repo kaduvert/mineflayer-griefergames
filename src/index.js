@@ -123,6 +123,17 @@ module.exports = function inject (bot, options) {
         })
     }
 
+    ns.getPlayerInfo = (username) => {
+        const player = bot.players[username]
+
+        return {
+            uuid: player.uuid,
+            username: player.username,
+            rank: ns.playerUtils.getRank(player.username),
+            prefix: ns.prefix.get(player.username)
+        }
+    }
+
     plugins.forEach(plugin => {
         plugin(bot, ns)
     })
