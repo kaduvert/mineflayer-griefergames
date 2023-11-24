@@ -1,8 +1,8 @@
 const getTimestamp = () => `[${(new Date()).toLocaleTimeString()}]`
 
-module.exports = function inject(bot, options) {
-    const chalk = require('chalk')
-    bot.on('message', (msg, pos) => {
+module.exports = function load(bot, ns) {
+	const chalk = require('chalk')
+	bot.on('message', (msg, pos) => {
 		if (bot.noLog && !msg.toString().toLowerCase().includes('parrot')) return
 		const str = msg.toString()
 		if (pos === 'game_info' || str === '»' || str === '') return

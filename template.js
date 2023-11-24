@@ -1,7 +1,7 @@
 /*
 // const EventEmitter = require('events')
 
-module.exports = function inject(bot, options) {
+module.exports = function load(bot, ns) {
 
 
 }
