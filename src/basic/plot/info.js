@@ -1,6 +1,7 @@
 module.exports = function load(bot, ns) {
     const plot = ns.data['plot']
 
+    ns.plot.info = {}
     Object.assign(ns.plot.info, {
         listening: false,
         current: []
