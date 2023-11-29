@@ -7,11 +7,11 @@ module.exports = function load(bot, ns) {
 
 	const mcData = require('minecraft-data')(bot.version)
 
-	ns.switch = {
+	Object.assign(ns.switch, {
 		targetServer: null,
 		serverJoinedAt: null,
 		currentlySwitching: false
-	}
+	})
 
 	ns.switch.getTravelRoute = (relativeGoal) => {
 		let route = null

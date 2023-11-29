@@ -3,14 +3,14 @@ const { once } = require('events')
 module.exports = function load(bot, ns) {
 	const chat = ns.data['chat']
 
-	ns.chat = {
+	Object.assign(ns.chat, {
 		commandBatchStart: Date.now(),
 		commandBatchCount: 0,
 		commandSpamLock: false,
 		lastCommand: null,
 		sentMsgLately: false,
 		commandErrorEvents: ['chat:chat->blacklistError', 'chat:chat->unknownCommandError', 'chat:chat->insufficientPermissionsError']
-	}
+	})
 
 	ns.chat.sendCommand = async (msg) => {
 		if (Date.now() - ns.switch.serverJoinedAt < chat.commandBatchDelay) await bot.delay(chat.commandBatchDelay - (Date.now() - ns.switch.serverJoinedAt))

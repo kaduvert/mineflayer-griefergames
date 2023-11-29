@@ -18,11 +18,10 @@ const plugins = [
     'privateChat',
     'serverInfo',
     'slowChat',
-    'spawn',
     'switch',
     'tpa'
 ]
 
 module.exports = function load(bot, ns) {
-    bot.loadPlugins(plugins.map(getPlugin))
+    plugins.forEach(plugin => getPlugin(plugin)(bot, ns))
 }

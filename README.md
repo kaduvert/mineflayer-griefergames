@@ -11,5 +11,5 @@ let bot = mineflayer.createBot({
 	port: 25565,
 	version: '1.8.9'
 })
-bot.loadPlugin(require('./gg-basics'))
+bot.loadPlugin(require('mineflayer-griefergames'))
 ```
