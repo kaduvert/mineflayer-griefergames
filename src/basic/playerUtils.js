@@ -9,17 +9,13 @@ module.exports = function load(bot, ns) {
         return null
     }
 
-    ns.playerUtils.compareRank = (compareFn, compareRank, rank) => {
-        const rankIndex = playerUtils.ranks.indexOf(rank)
-        const compareRankIndex = playerUtils.ranks.indexOf(compareRank)
-        if (compareRankIndex === -1) {
-            throw new Error('compareRank not indexed')
-        }
-        return compareFn(
-            rankIndex === -1 ? Infinity : rankIndex,
-            compareRankIndex
+    ns.playerUtils.compareRank = (compareFn, ...ranks) => (
+        compareFn(
+            ranks
+                .map(rank => playerUtils.ranks.indexOf(rank))
+                .map(rankIndex => (rankIndex === -1 ? Infinity : rankIndex))
         )
-    }
+    )
 
     ns.playerUtils.resolveNickname = (nickname) => {
         if (!nickname.startsWith(playerUtils.nicknamePrefix) || bot.players[nickname]) return nickname
