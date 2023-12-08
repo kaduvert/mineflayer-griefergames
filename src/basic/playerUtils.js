@@ -11,9 +11,9 @@ module.exports = function load(bot, ns) {
 
     ns.playerUtils.compareRank = (compareFn, ...ranks) => (
         compareFn(
-            ranks
+            ...(ranks
                 .map(rank => playerUtils.ranks.indexOf(rank))
-                .map(rankIndex => (rankIndex === -1 ? Infinity : rankIndex))
+                .map(rankIndex => (rankIndex === -1 ? Infinity : rankIndex)))
         )
     )
 
