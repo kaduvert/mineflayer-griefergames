@@ -4,9 +4,6 @@ module.exports = function load(bot, ns) {
     ns.money.prev = 0
     ns.money.log = []
 
-    const oldTransfer = ns.money.transfer
-    ns.money.transfer = (username, amount) => oldTransfer(username, (amount === 0 ? 0.001 : amount))
-
     ns.money.toNumberChat = (balStr) => +balStr.replace(/,/g, '')
     ns.money.toNumberScoreboard = (balStr) => +(balStr.substring(0, balStr.length - 1).replace(/\./g, '').replace(/,/g, '.'))
 
@@ -19,7 +16,7 @@ module.exports = function load(bot, ns) {
             if (moneyInt !== ns.money.prev) {
                 ns.money.log.push({
                     time: Date.now(),
-                    difference: moneyInt - bot.money.prev,
+                    difference: moneyInt - ns.money.prev,
                     used: false
                 })
 

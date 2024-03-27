@@ -16,4 +16,3 @@ module.exports = function load(bot, ns) {
         return nearPlayers
     }
 }
-
