@@ -6,8 +6,8 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "mineflayer": "^4.14.0",
-    "mineflayer-extra-patterns": "git+https://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:x-oauth-basic@github.com/kaduvert/mineflayer-extra-patterns.git",
-    "mineflayer-griefergames-data": "git+https://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:x-oauth-basic@github.com/kaduvert/mineflayer-griefergames-data.git",
+    "mineflayer-extra-patterns": "^0.1.0",
+    "mineflayer-griefergames-data": "^0.1.0",
     "mineflayer-pathfinder": "^2.4.4"
   },
   "scripts": {
@@ -22,7 +22,7 @@
     "minecraft"
   ],
   "author": "kaduvert",
-  "license": "UNLICENSED",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/kaduvert/mineflayer-griefergames/issues"
   },
