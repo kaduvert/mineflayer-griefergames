@@ -4,8 +4,7 @@ griefergames chat, window, hologram and npc interactions abstracted to a simple 
 ##### Usage:
 ```js
 let bot = mineflayer.createBot({
-	username: loginMail,
-	password: loginPW,
+	username: '-',
 	auth: 'microsoft',
 	host: 'griefergames.net',
 	port: 25565,
@@ -19,19 +18,23 @@ bot.gg.switch.to('cb22')
 bot.gg.chat.send('hallo, ich bins!')
 
 // read plot info from plot the bot currently stands on
-console.log(bot.gg.plot.fromPositionVarying().getInfo())
+console.log(await bot.gg.plot.fromPositionVarying().getInfo())
 
-// list your homes in arrax format
-const homes = bot.gg.homes.getList()
+// list your homes in array format
+const homes = await bot.gg.homes.getList()
 
 // travel to a home
 bot.gg.homes.teleportTo(homes[0])
 
-// get next item clear as a JS date
+// get next item clear as unix milliseconds
 bot.gg.itemClear.nextAt
 
 // pay money
 bot.gg.money.transfer('AbgegrieftHD', 100)
 
-// and much more...!
+// for more documentation please just read the code
+
+// please note: commands and window actions are auto-generated
+// from the data alone, which means this repo creates only
+// higher level functions which can not be auto-generated
 ```
