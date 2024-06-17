@@ -12,7 +12,7 @@ let bot = mineflayer.createBot({
 })
 bot.loadPlugin(require('mineflayer-griefergames'))
 
-bot.once('misc:serverInfo:join', async () => {
+bot.once('misc:serverInfo->join', async () => {
     await bot.gg.switch.to('cb22')
 
     // chat sending api conforming to spam limits
