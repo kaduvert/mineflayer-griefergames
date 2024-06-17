@@ -5,4 +5,6 @@ module.exports = function load(bot, ns) {
         if (str === 'keine') return []
         return str.split(', ')
     }
+
+    ns.homes.get = async () => (ns.homes.parseList(await ns.homes.getList()))
 }
