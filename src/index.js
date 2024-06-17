@@ -49,7 +49,7 @@ module.exports = function inject (bot, options) {
         }
 
         getWindow = () => this.event.startsWith('windowOpen') ? this.eventArgs[0] : null
-        getChatPatternMatches = () => his.event.startsWith('chat:') ? this.eventArgs : null
+        getChatPatternMatches = () => this.event.startsWith('chat:') ? this.eventArgs : null
 
         hasSucceeded = () => this.status === 0
         hasFailed = () => this.status === 1
