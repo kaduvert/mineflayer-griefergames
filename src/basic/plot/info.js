@@ -107,11 +107,11 @@ module.exports = function load(bot, ns) {
         bot.emit('misc:plot->info', [...ns.plot.info.current]) // clone it!
     })
 
-    bot.on('chat:plot->playerEntered', (stringId, username) => {
+    bot.on('chat:plot->playerEntered', ([[stringId, username]]) => {
         bot.emit('misc:plot->playerEntered', ns.plot.info.parseId(stringId), username)
     })
 
-    bot.on('chat:plot->playerLeft', (stringId, username) => {
+    bot.on('chat:plot->playerLeft', ([[stringId, username]]) => {
         bot.emit('misc:plot->playerLeft', ns.plot.info.parseId(stringId), username)
     })
 }
