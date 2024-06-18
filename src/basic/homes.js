@@ -6,5 +6,5 @@ module.exports = function load(bot, ns) {
         return str.split(', ')
     }
 
-    ns.homes.get = async () => (ns.homes.parseList(await ns.homes.getList()))
+    ns.homes.get = async () => (ns.homes.parseList((await ns.homes.getList()).eventArgs[0][0]))
 }
