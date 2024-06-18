@@ -29,7 +29,7 @@ module.exports = function load(bot, ns) {
 	bot.on('misc:mysteryMod->countdown_create', (data) => {
 		if (data.name === 'ClearLag') {
 			if (data.unit === 'SECONDS') {
-				ns.itemClear.nextAt = Date.now() + (data.until * 1000)
+				ns.itemClear.nextAt = new Date(Date.now() + (data.until * 1000))
 			}
 		} else {
 			console.log(`DEBUG: event mysteryMod.events->countdown_create triggered with unusual data:\n${data}`)
