@@ -26,6 +26,7 @@ module.exports = function load(bot, ns) {
     bot.pattern.prefix.matchFormattedString = (str, pattern) => {
         pattern = clearDoubleCodes(pattern)
         let codes = clearDoubleCodes(extractNonBoldColorCodes(str))
+        if (!codes.length) return (pattern === codes)
         codes = codes.repeat(Math.ceil(pattern.length / codes.length))
 
         for (let i = 0; i < codes.length; i++) {
