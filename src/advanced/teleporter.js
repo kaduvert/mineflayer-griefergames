@@ -31,4 +31,36 @@ module.exports = function load(bot, ns) {
                 .map(stack => bot.pattern.clearColorCodes(stack.customName))
         }
     })
+
+    bot.on('windowOpen:teleporter->settings', (window) => {
+        window.assertPublic = async function (destination) {
+            const publicItem = window.containerItems().find(stack => bot.pattern.item.match(stack, teleporter.itemPatterns.public))
+            let result
+            do {
+                result = await bot.window.clickFallible({
+                    window,
+                    slotToClick: publicItem.slot,
+                    patternHead: 'teleporter',
+                    failureEvent: '',
+                    currentWindowPatternName: 'settings',
+                    timeout: 1000
+                })
+            } while (!result.eventArgs[1].enchants?.length)
+        }
+
+        window.assertPrivate = async function (destination) {
+            const privateItem = window.containerItems().find(stack => bot.pattern.item.match(stack, teleporter.itemPatterns.private))
+            let result
+            do {
+                result = await bot.window.clickFallible({
+                    window,
+                    slotToClick: privateItem.slot,
+                    patternHead: 'teleporter',
+                    failureEvent: '',
+                    currentWindowPatternName: 'settings',
+                    timeout: 1000
+                })
+            } while (!result.eventArgs[1].enchants?.length)
+        }
+    })
 }
