@@ -1,6 +1,23 @@
 module.exports = function load(bot, ns) {
     const teleporter = ns.data['teleporter']
 
+    ns.teleporter.assert = async (block, private, forceLook = false) => {
+        let selectorWindow = null
+        while (!selectorWindow) {
+            await bot.lookAt(block.position.offset(0.5, 0.5, 0.5), forceLook)
+            await bot.activateBlock(block)
+            selectorWindow = (await bot.getActionResult({
+                patternHead: 'teleporter',
+                successEvent: 'windowOpen:selectDestination'
+            })).getWindow()
+        }
+
+        const settingsWindow = await selectorWindow.getSettings()
+        await settingsWindow[private ? 'assertPrivate' : 'assertPublic']()
+
+        bot.closeWindow(settingsWindow)
+    }
+
     bot.on('windowOpen:teleporter->selectDestination', (window) => {
         window.teleportTo = function (destination) {
             const destinationItem = window.containerItems().find(stack => bot.pattern.item.match(stack, {
@@ -33,7 +50,7 @@ module.exports = function load(bot, ns) {
     })
 
     bot.on('windowOpen:teleporter->settings', (window) => {
-        window.assertPublic = async function (destination) {
+        window.assertPublic = async function () {
             const publicItem = window.containerItems().find(stack => bot.pattern.item.match(stack, teleporter.itemPatterns.public))
             let result
             do {
@@ -48,7 +65,7 @@ module.exports = function load(bot, ns) {
             } while (!result.eventArgs[1].enchants?.length)
         }
 
-        window.assertPrivate = async function (destination) {
+        window.assertPrivate = async function () {
             const privateItem = window.containerItems().find(stack => bot.pattern.item.match(stack, teleporter.itemPatterns.private))
             let result
             do {
