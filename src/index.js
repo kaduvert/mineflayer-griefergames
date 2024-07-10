@@ -69,7 +69,6 @@ module.exports = function inject (bot, options) {
             patternHead,
             successEvent,
             failureEvent,
-            emitter = bot,
             timeout = 5 * 1000
         } = options
         if (patternHead !== undefined) patternHeads.push(patternHead)
@@ -93,23 +92,23 @@ module.exports = function inject (bot, options) {
                 res(new bot.ActionResult(bot.actionResultStatus.FAILURE, failureEvent, eventArgs))
             }
 
-            successEvents.map((eventName) => (emitter === bot ? bot.getMultiHeadEventIdentifier(patternHeads, eventName) : successEvents)).forEach(successEvent => {
+            successEvents.map((eventName) => bot.getMultiHeadEventIdentifier(patternHeads, eventName)).forEach(successEvent => {
                 const onSuccessWrapper = (...args) => {
                     onSuccess(successEvent, args)
                 }
-                emitter.once(successEvent, onSuccessWrapper)
+                bot.once(successEvent, onSuccessWrapper)
                 bot.delay(timeout).then(() => {
-                    emitter.off(successEvent, onSuccessWrapper)
+                    bot.off(successEvent, onSuccessWrapper)
                 })
             })
 
-            failureEvents.map((eventName) => (emitter === bot ? bot.getMultiHeadEventIdentifier(patternHeads, eventName) : successEvents)).forEach(failureEvent => {
+            failureEvents.map((eventName) => bot.getMultiHeadEventIdentifier(patternHeads, eventName)).forEach(failureEvent => {
                 const onFailureWrapper = (...args) => {
                     onFailure(failureEvent, args)
                 }
-                emitter.once(failureEvent, onFailureWrapper)
+                bot.once(failureEvent, onFailureWrapper)
                 bot.delay(timeout).then(() => {
-                    emitter.off(failureEvent, onFailureWrapper)
+                    bot.off(failureEvent, onFailureWrapper)
                 })
             })
         })

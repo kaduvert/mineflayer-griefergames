@@ -10,21 +10,27 @@ module.exports = function load(bot, ns) {
             window = bot.currentWindow,
             slotToClick,
             mouseButton = 0,
+            successEvent,
+            successEvents
         } = options
 
         return new Promise((res) => {
             const updateSlotEvent = 'updateSlot:' + slotToClick
             const itemAtSlot = window.slots[slotToClick]
-            const onSlotChange = (oldItem, newItem) => {
+            const onSlotChange = (...args) => {
+                const { oldItem, newItem } = args
+                if (!successEvents?.length && !successEvent) {
+                    res(new bot.ActionResult(bot.actionResultStatus.SUCCESS, 'slotUpdate', args))
+                }
                 if (oldItem === null && Item.equal(itemAtSlot, newItem)) {
                     res(new bot.ActionResult(bot.actionResultStatus.FAILURE, 'clickRejection', slotToClick)) // TODO: beautify
                 }
             }
-            bot.on(updateSlotEvent, onSlotChange)
+            window.on(updateSlotEvent, onSlotChange)
 
             bot.clickWindow(slotToClick, mouseButton, 0)
             bot.getActionResult(options).then((actionResult) => {
-                bot.off(updateSlotEvent, onSlotChange)
+                window.off(updateSlotEvent, onSlotChange)
                 res(actionResult)
             })
         })
