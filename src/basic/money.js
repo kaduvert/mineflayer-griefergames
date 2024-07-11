@@ -16,7 +16,7 @@ module.exports = function load(bot, ns) {
             if (moneyInt !== ns.money.prev) {
                 ns.money.log.push({
                     time: Date.now(),
-                    difference: moneyInt - ns.money.prev,
+                    difference: +((moneyInt - ns.money.prev).toFixed(2)),
                     used: false
                 })
 
