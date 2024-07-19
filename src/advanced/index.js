@@ -1,27 +1,21 @@
-const PLUGINS_PATH = './'
-
-function getPlugin(name) {
-    return require(PLUGINS_PATH + name)
-}
-
 const plugins = [
-    'adventure',
-    'orbs',
-    'perks',
-    'antiCopy',
-    'bank',
-    'disguise',
-    'itemSign',
-    'lift',
-    'mapInfo',
-    'npc',
-    'prefix',
-    'punishment',
-    'spawner',
-    'startJail',
-    'teleporter'
+    require('./adventure'),
+    require('./orbs'),
+    require('./perks'),
+    require('./antiCopy'),
+    require('./bank'),
+    require('./disguise'),
+    require('./itemSign'),
+    require('./lift'),
+    require('./mapInfo'),
+    require('./npc'),
+    require('./prefix'),
+    require('./punishment'),
+    require('./spawner'),
+    require('./startJail'),
+    require('./teleporter')
 ]
 
 module.exports = function load(bot, ns) {
-    plugins.forEach(plugin => getPlugin(plugin)(bot, ns))
+    plugins.forEach(plugin => plugin(bot, ns))
 }

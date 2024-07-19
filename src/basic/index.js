@@ -1,27 +1,21 @@
-const PLUGINS_PATH = './'
-
-function getPlugin(name) {
-    return require(PLUGINS_PATH + name)
-}
-
 const plugins = [
-    'plot',
-    'globalChat',
-    'homes',
-    'itemClear',
-    'mobRemover',
-    'mysteryMod',
-    'money',
-    'near',
-    'pathfinder',
-    'playerUtils',
-    'privateChat',
-    'serverInfo',
-    'slowChat',
-    'switch',
-    'tpa'
+    require('./plot'),
+    require('./globalChat'),
+    require('./homes'),
+    require('./itemClear'),
+    require('./mobRemover'),
+    require('./mysteryMod'),
+    require('./money'),
+    require('./near'),
+    require('./pathfinder'),
+    require('./playerUtils'),
+    require('./privateChat'),
+    require('./serverInfo'),
+    require('./slowChat'),
+    require('./switch'),
+    require('./tpa')
 ]
 
 module.exports = function load(bot, ns) {
-    plugins.forEach(plugin => getPlugin(plugin)(bot, ns))
+    plugins.forEach(plugin => plugin(bot, ns))
 }

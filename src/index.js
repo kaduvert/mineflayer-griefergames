@@ -1,17 +1,11 @@
-const PLUGINS_PATH = './'
-
-function getPlugin (name) {
-    return require(PLUGINS_PATH + name)
-}
-
 const plugins = [
     require('mineflayer-extra-patterns'),
-    getPlugin('patternShortcuts'),
-    getPlugin('chat'),
-    getPlugin('window'),
-    getPlugin('griefergames-data'),
-    getPlugin('basic'),
-    getPlugin('advanced'),
+    require('./patternShortcuts'),
+    require('./chat'),
+    require('./window'),
+    require('./griefergames-data'),
+    require('./basic'),
+    require('./advanced'),
 ]
 
 module.exports = function inject (bot, options) {
