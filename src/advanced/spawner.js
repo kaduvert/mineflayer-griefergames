@@ -4,15 +4,14 @@ module.exports = function load(bot, ns) {
     ns.spawner.tryToOpen = (spawnerBlock) => {
         const stackAtQuickbarSlot = bot.inventory.slots[bot.inventory.hotbarStart + bot.quickBarSlot]
         if (stackAtQuickbarSlot) {
-            throw new Error('holding a stack at the bots selected quickbarSlot will result in timeout. ensure, that the bots hand is empty')
+            return new Error('holding a stack at the bots selected quickbarSlot will result in timeout. ensure, that the bots hand is empty')
         }
         bot.activateBlock(spawnerBlock)
-        return bot.getActionResult(
-            'spawner',
-            ['storage', 'inactive'],
-            ['alreadyOpenedError', 'noOpenPermissionsError'],
-            1000
-        )
+        return bot.getActionResult({
+            patternHead: 'spawner',
+            successEvents: ['windowOpen:storage', 'windowOpen:inactive'],
+            failureEvents: ['alreadyOpenedError', 'noOpenPermissionsError']
+        })
     }
 
     ns.spawner.getLootableStacks = (window) => {
@@ -28,12 +27,10 @@ module.exports = function load(bot, ns) {
         ns.spawner.listenForIncomingStack(window, stack)
         return bot.window.clickFallible({
             window,
-            slot: stack.slot,
+            slotToClick: stack.slot,
             patternHead: 'spawner',
             successEvent: 'misc:stackReceived',
-            failureEvent: 'noFreeInventorySpaceError',
-            currentWindowPatternName: 'storage',
-            timeout: 1000
+            failureEvent: 'noFreeInventorySpaceError'
         })
     }
 
