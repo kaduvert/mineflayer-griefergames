@@ -17,24 +17,13 @@ module.exports = function load(bot, ns) {
     ns.spawner.getLootableStacks = (window) => {
         return window.containerItems().filter(stack =>
             stack.name !== 'stained_glass_pane' &&
-            !bot.pattern.item.match(spawner.itemPatterns.availableExperience, stack) &&
-            !bot.pattern.item.match(spawner.itemPatterns.nextUpdate, stack) &&
-            !bot.pattern.item.match(spawner.itemPatterns.settings, stack)
+            !bot.pattern.item.match(stack, spawner.itemPatterns.availableExperience) &&
+            !bot.pattern.item.match(stack, spawner.itemPatterns.nextUpdate) &&
+            !bot.pattern.item.match(stack, spawner.itemPatterns.settings)
         )
     }
 
     ns.spawner.lootStack = (window, stack) => {
-        ns.spawner.listenForIncomingStack(window, stack)
-        return bot.window.clickFallible({
-            window,
-            slotToClick: stack.slot,
-            patternHead: 'spawner',
-            successEvent: 'misc:stackReceived',
-            failureEvent: 'noFreeInventorySpaceError'
-        })
-    }
-
-    ns.spawner.listenForIncomingStack = (window, stack) => {
         const { type, metadata, count } = stack
         const beginningCount = window.countRange(window.inventoryStart, window.inventoryEnd, type, metadata)
         const onSlotUpdate = (slot) => {
@@ -45,6 +34,13 @@ module.exports = function load(bot, ns) {
             }
         }
         window.on('updateSlot', onSlotUpdate)
-        setTimeout(() => (window.off('updateSlot', onSlotUpdate)), 500)
+        setTimeout(() => (window.off('updateSlot', onSlotUpdate)), 5000)
+        return bot.window.clickFallible({
+            window,
+            slotToClick: stack.slot,
+            patternHead: 'spawner',
+            successEvent: 'misc:spawner->stackReceived',
+            failureEvent: 'noFreeInventorySpaceError'
+        })
     }
 }
