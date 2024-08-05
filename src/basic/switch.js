@@ -119,7 +119,7 @@ module.exports = function load(bot, ns) {
 			}
 
 			await bot.delay(switcher.joinDelay - (Date.now() - ns.switch.serverJoinedAt))
-			while (!ns.switch.canJoin(targetServer)) await bot.delay(10)
+			while (!ns.switch.canJoin(targetServer) && ((switcher.portalroomTimeout - 5000) < (Date.now() - ns.switch.serverJoinedAt))) await bot.delay(10)
 			bot.setControlState(isInPortal ? 'jump' : 'forward', true)
 		} else {
 			await bot.delay(10000 - (Date.now() - ns.switch.serverJoinedAt))
