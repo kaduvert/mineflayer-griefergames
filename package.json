@@ -1,6 +1,6 @@
 {
   "name": "mineflayer-griefergames",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "rich, high-level API for creating bots for GrieferGames (griefergames.net)",
   "main": "src/index.js",
   "dependencies": {
