@@ -26,6 +26,6 @@ module.exports = function load(bot, ns) {
             return splitDisplayName[2] === nickname
         })
 
-        return nicknamedPlayer.username ?? null
+        return nicknamedPlayer?.username ?? null
     }
 }
