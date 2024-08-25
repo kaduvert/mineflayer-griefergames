@@ -74,7 +74,7 @@ module.exports = function load(bot, ns) {
 			const freeSlots = totalSlots - occupiedSlots
 			if (
 				freeSlots > 0 ||
-				((freeSlots + switcher.rankCaps[rank]) > 0 && server !== 'cbevil')
+				(((freeSlots + switcher.rankCaps[rank]) >= 0) && server !== 'cbevil')
 			) {
 				canJoin = true
 			}
