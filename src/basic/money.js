@@ -56,4 +56,6 @@ module.exports = function load(bot, ns) {
             bot.emit('misc:money->received:' + name, amount)
         }
     })
+
+    ns.money.get = () => (ns.serverInfo.getNumericBalance())
 }
