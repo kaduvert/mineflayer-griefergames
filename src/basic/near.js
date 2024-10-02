@@ -15,4 +15,6 @@ module.exports = function load(bot, ns) {
         })
         return nearPlayers
     }
+
+    ns.near.get = () => (bot.gg.near.parsePlayers((await bot.gg.near.getPlayers()).eventArgs[0][0][0]))
 }
