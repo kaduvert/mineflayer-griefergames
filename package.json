@@ -6,8 +6,8 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "mineflayer": "^4.14.0",
-    "mineflayer-extra-patterns": "^0.1.0",
-    "mineflayer-griefergames-data": "^0.1.8",
+    "mineflayer-extra-patterns": "^0.1.2",
+    "mineflayer-griefergames-data": "^0.1.10",
     "mineflayer-pathfinder": "^2.4.4"
   },
   "scripts": {

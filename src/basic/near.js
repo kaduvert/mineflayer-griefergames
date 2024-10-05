@@ -16,5 +16,5 @@ module.exports = function load(bot, ns) {
         return nearPlayers
     }
 
-    ns.near.get = () => (ns.near.parsePlayers((await ns.near.getPlayers()).eventArgs[0][0][0]))
+    ns.near.get = async () => (ns.near.parsePlayers((await ns.near.getPlayers()).eventArgs[0][0][0]))
 }
