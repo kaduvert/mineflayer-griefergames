@@ -8,8 +8,8 @@ module.exports = function load(bot, ns) {
             Object.keys(chatActions).forEach(chatActionKey => {
                 const chatAction = JSON.parse(JSON.stringify(chatActions[chatActionKey]))
                 ns[dataKey][chatActionKey] = function (...args) {
-                    const resolvedCommand = data.commands[chatActionKey]
-                    chatAction.message = bot.buildString(resolvedCommand ? resolvedCommand : chatAction.command, args)
+                    const resolvedCommand = data.commands[chatAction.command ?? chatActionKey]
+                    chatAction.message = bot.buildString(resolvedCommand, args)
 
                     chatAction.patternHead = dataKey
 
