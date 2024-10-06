@@ -3,6 +3,7 @@ const plugins = [
     require('./orbs'),
     require('./perks'),
     require('./antiCopy'),
+    require('./auctionHouse'),
     require('./bank'),
     require('./disguise'),
     require('./itemSign'),

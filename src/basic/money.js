@@ -5,7 +5,7 @@ module.exports = function load(bot, ns) {
     ns.money.log = []
 
     ns.money.toNumberChat = (balStr) => +balStr.replace(/,/g, '')
-    ns.money.toNumberScoreboard = (balStr) => +(balStr.substring(0, balStr.length - 1).replace(/\./g, '').replace(/,/g, '.'))
+    ns.money.toNumberScoreboard = (balStr, cut = true) => +((cut ? balStr.substring(0, balStr.length - 1) : balStr).replace(/\./g, '').replace(/,/g, '.'))
 
     let currentlyListening = false
 
