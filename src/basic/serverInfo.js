@@ -9,13 +9,12 @@ module.exports = function load(bot, ns) {
 
     ns.serverInfo.getPlaytime = () => bot.scoreboard.sidebar.items[11].displayName.toString()
 
-    ns.serverInfo.getTranslatedServer = () => {
-        const scoreboardServer = ns.serverInfo.getCurrentServer()
-        if (serverInfo.scoreboardCitybuildRegex.test(scoreboardServer) || (serverInfo.nonCitybuildServer.includes(scoreboardServer.toLowerCase()) || serverInfo.abnormallyNamedCitybuildServer.includes(scoreboardServer.toLowerCase()))) {
-            return scoreboardServer.toLowerCase()
+    ns.serverInfo.getTranslatedServer = (server = ns.serverInfo.getCurrentServer()) => {
+        if (serverInfo.scoreboardCitybuildRegex.test(server) || (serverInfo.nonCitybuildServer.includes(server.toLowerCase()) || serverInfo.abnormallyNamedCitybuildServer.includes(server.toLowerCase()))) {
+            return server.toLowerCase()
         }
 
-        const switcherName = serverInfo.scoreboardToSwitcherMap[scoreboardServer]
+        const switcherName = serverInfo.scoreboardToSwitcherMap[server]
         if (switcherName) {
             return switcherName
         }
