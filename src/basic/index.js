@@ -10,7 +10,7 @@ const plugins = [
     require('./pathfinder'),
     require('./playerUtils'),
     require('./privateChat'),
-    require('./serverInfo'),
+    require('./scoreboard'),
     require('./slowChat'),
     require('./switch'),
     require('./tpa')
