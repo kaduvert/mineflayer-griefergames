@@ -27,9 +27,9 @@ module.exports = function load(bot, ns) {
         }
     }
 
-    bot.on('misc:serverInfo->join', () => {
-        if (ns.serverInfo.isOnCitybuild()) {
-            ns.money.prev = ns.serverInfo.getNumericBalance()
+    bot.on('misc:scoreboard->join', () => {
+        if (ns.scoreboard.isOnCitybuild()) {
+            ns.money.prev = ns.scoreboard.getNumericBalance()
             if (!currentlyListening) {
                 bot.on('teamUpdated', onTeamUpdated)
                 currentlyListening = true
@@ -57,5 +57,5 @@ module.exports = function load(bot, ns) {
         }
     })
 
-    ns.money.get = () => (ns.serverInfo.getNumericBalance())
+    ns.money.get = () => (ns.scoreboard.getNumericBalance())
 }
