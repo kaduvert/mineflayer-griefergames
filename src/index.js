@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path');
 
-module.exports = function inject(bot, options) {
+module.exports = Object.assign((function inject(bot, options) {
     const modules = fs.readdirSync(path.join(__dirname, 'modules')).map(id =>
     ({
         name: id,
@@ -25,4 +25,9 @@ module.exports = function inject(bot, options) {
             prefix: ns.prefix.get(player.username)
         }
     }
-}
+}), {
+    antiAfk: require('./addons/antiAfk'),
+    chatTerminal: require('./addons/chatTerminal'),
+    logging: require('./addons/logging'),
+    mysteryModSpoof: require('./addons/mysteryModSpoof')
+})
