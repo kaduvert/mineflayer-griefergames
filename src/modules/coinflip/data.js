@@ -14,7 +14,7 @@ module.exports = {
     chatActions: {
         play: {
             successEvent: 'win',
-            failureEvents: ['invalidNumberError', 'insufficientAmountError']
+            failureEvents: ['invalidNumberError', 'insufficientAmountError', 'loss']
         }
     }
 }
