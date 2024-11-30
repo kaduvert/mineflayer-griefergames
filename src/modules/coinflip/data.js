@@ -1,4 +1,3 @@
-const COMMAND_PREFIX = '/coinflip '
 
 module.exports = {
     chatPatterns: {
@@ -10,11 +9,11 @@ module.exports = {
         insufficientAmountError: /^\[Coinflip\] Du hast nicht genug Geld.\.$/
     },
     commands: {
-        play: COMMAND_PREFIX + '$1'
+        play: '/coinflip $1'
     },
     chatActions: {
         play: {
-            successEvent: ['win', 'loss'],
+            successEvent: 'win',
             failureEvents: ['invalidNumberError', 'insufficientAmountError']
         }
     }
