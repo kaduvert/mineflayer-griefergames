@@ -1,4 +1,3 @@
-
 module.exports = {
     chatPatterns: {
         win: /^\[Coinflip\] Herzlichen Glückwunsch! Du hast die Summe von (\d{1,3}(?:\.\d{3})*)\$ auf (\d{1,3}(?:\.\d{3})*)\$ verdoppelt!$/,
