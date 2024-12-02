@@ -1,4 +1,5 @@
 module.exports = {
+    /*
     chatPatterns: {
     },
     commands: {
@@ -145,4 +146,5 @@ module.exports = {
             successEvent: 'windowOpen'
         }
     }
+    */
 }
