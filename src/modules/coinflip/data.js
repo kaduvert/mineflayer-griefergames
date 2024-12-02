@@ -4,6 +4,7 @@ module.exports = {
         loss: /^\[Coinflip\] Du hast leider verloren und (\d{1,3}(?:\.\d{3})*)\$ verloren\.$/,
         help: /^\[Coinflip\] Verwendung \/coinflip <Betrag>$/,
 
+        deactivatedError: /^\[Coinflip\] Coinflip ist deaktiviert\.$/,
         invalidNumberError: /^\[Coinflip\] Gib eine Zahl als Betrag an\.$/,
         insufficientAmountError: /^\[Coinflip\] Du hast nicht genug Geld\.$/
     },
@@ -13,7 +14,7 @@ module.exports = {
     chatActions: {
         play: {
             successEvent: 'win',
-            failureEvents: ['invalidNumberError', 'insufficientAmountError', 'loss']
+            failureEvents: ['deactivatedError', 'invalidNumberError', 'insufficientAmountError', 'loss']
         }
     }
 }
