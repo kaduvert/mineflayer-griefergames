@@ -6,10 +6,7 @@ module.exports = function load(bot, ns) {
 
         if (result.hasSucceeded()) {
             return {
-                win: ({
-                    [coinflip.chatActions.play.flipWon]: true,
-                    [coinflip.chatActions.play.flipLost]: false
-                }[result.event]),
+                win: result.event.endsWith('flipWon'),
                 amount: ns.money.toNumberScoreboard(result.eventArgs[0][win ? 1 : 0], false)
             }
         } else {
