@@ -9,7 +9,7 @@ module.exports = Object.assign((function inject(bot, options) {
         data: (fs.existsSync(path.join(__dirname, 'modules', id, 'data.js')) ? require(`./modules/${id}/data.js`) : null)
     }))
 
-    const mfcmsbase = require('mineflayer-cms-base')('gg', modules)
+    const mfcmsbase = require('mineflayer-cms-base')('gg', require('./regexAliases'), modules)
 
     bot.loadPlugin(mfcmsbase)
 
