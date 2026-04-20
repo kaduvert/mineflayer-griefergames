@@ -5,8 +5,9 @@ module.exports = function load(bot, ns) {
         const result = await ns.coinflip.play(amount)
 
         if (result.hasSucceeded()) {
+            const win = result.event.endsWith('flipWon');
             return {
-                win: result.event.endsWith('flipWon'),
+                win,
                 amount: ns.money.toNumberScoreboard(result.eventArgs[0][win ? 1 : 0], false)
             }
         } else {
