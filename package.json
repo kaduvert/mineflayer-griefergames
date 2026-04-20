@@ -4,7 +4,7 @@
   "description": "rich, high-level API for creating bots for GrieferGames (griefergames.net)",
   "main": "src/index.js",
   "dependencies": {
-    "chalk": "^4.1.0",
+    "chalk": "4.1.2",
     "mineflayer": "^4.37.0",
     "mineflayer-cms-base": "^1.0.0",
     "mineflayer-pathfinder": "^2.4.4"
