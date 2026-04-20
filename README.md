@@ -1,5 +1,15 @@
 # mineflayer-griefergames
-griefergames chat, window, hologram and npc interactions abstracted to a simple to use API located under bot.gg
+
+Implements GrieferGames-server specific functionality for smooth Bot Development.
+
+Features include:
+
+ - chat messages
+ - ui windows
+ - the portalroom
+ - npcs
+ - holograms
+ - prefixes
 
 ##### Usage:
 ```js
@@ -38,15 +48,35 @@ bot.once('misc:serverInfo->join', async () => {
 })
 ```
 
-##### docs?
+# How to use
 
-there are no docs, for functions just debug the bot.gg object and figure out what you need through reading data & code
+Create a basic setup like this:
+```js
+const mineflayer = require('mineflayer')
 
-for events just look at the respective files here and in mineflayer-griefergames-data.
-the common event format is:
-`$(patternCategory):$(fileName)->$(patternKey)`
+let bot = mineflayer.createBot({
+	auth: 'microsoft',
+	host: 'griefergames.net',
+	port: 25565,
+	version: '1.8.9'
+})
 
-- patternCategory: one of chat, windowOpen, misc
-  misc events are always emitted directly by code, if there is a misc version of an event, you probably want to use that, as it contains added logic that you'd want in most cases. this includes resolving nicknames, fake payment checks, aggregating messages, gathering additional data, calculations, parsing,  ...
-- fileName: eg: money, tpa, homes, privateChat, plot
-- patternKey: this is what the pattern is referenced as within the sorrounding patterns object
+bot.loadPlugin(require('mineflayer-griefergames'))
+```
+
+launch it in a debuggable environment like the VSCode Debugger or an interactive node terminal.
+Now you can read the bot.gg object, which should contain everything you want.
+I have not written documentation, as the debugging and code reading should be enough.
+Also it's 2026, just ask AI to summarize
+
+It is expected that you use common sense when interacting with mineflayer-griefergames, as it does not validate your input or reject faulty input, meaning that doing wrong things may not immediately become obvious.
+
+GrieferGames events are emitted in this format:
+```
+(mineflayer-category):(griefergames-category)->(event-name)
+```
+mineflayer-category: one of `chat`, `windowOpen` or `misc`
+
+griefergames-category: one of the folder names in the src/modules directory
+
+event-name: either defined in the respective data.js file or emitted directly by code
