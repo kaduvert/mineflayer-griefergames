@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "dependencies": {
     "chalk": "^4.1.0",
-    "mineflayer": "^4.14.0",
+    "mineflayer": "^4.37.0",
     "mineflayer-cms-base": "^1.0.0",
     "mineflayer-pathfinder": "^2.4.4"
   },
