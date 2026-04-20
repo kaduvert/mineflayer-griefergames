@@ -95,9 +95,11 @@ module.exports = function load(bot, ns) {
 			return
 		}
 
-		if (ns.serverInfo.isHub()) {
+		// hub switching possible now
+		/*if (ns.serverInfo.isHub()) {
 			ns.switch.joinPortalroom()
-		} else if (ns.serverInfo.isPortal()) {
+		} else */
+		if (ns.serverInfo.isPortal()) {
 			if (ns.switch.currentlySwitching) return
 			bot.clearControlStates()
 			await bot.waitForChunksToLoad()
@@ -122,8 +124,20 @@ module.exports = function load(bot, ns) {
 			while (!ns.switch.canJoin(targetServer) || ((switcher.portalroomTimeout - 5000) < (Date.now() - ns.switch.serverJoinedAt))) await bot.delay(10)
 			bot.setControlState(isInPortal ? 'jump' : 'forward', true)
 		} else {
-			ns.switch.toServer(targetServer)
-			ns.switch.currentlySwitching = true
+			if (ns.serverInfo.isHub()) {
+				bot.setControlState('forward', true)
+				bot.setControlState('jump', true)
+				setTimeout(() => {
+					bot.setControlState('forward', false)
+					bot.setControlState('jump', false)
+
+					ns.switch.toServer(targetServer)
+					ns.switch.currentlySwitching = true
+				}, 100)
+			} else {
+				ns.switch.toServer(targetServer)
+				ns.switch.currentlySwitching = true
+			}
 		}
 	}
 
